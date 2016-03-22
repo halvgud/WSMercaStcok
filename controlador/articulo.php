@@ -25,7 +25,7 @@ class ARTICULO
 
     public static function get($peticion)
     {
-        $idUsuario = usuarios::autorizar();
+        $idUsuario = usuario::autorizar();
 
         if (empty($peticion[0]))
             return self::obtenerContactos($idUsuario);
@@ -36,13 +36,13 @@ class ARTICULO
 
     public static function post($segmentos)
     {
-        $idUsuario = usuarios::autorizar();
+        $idUsuario = usuario::autorizar();
 
         $payload = file_get_contents('php://input');
 
         $payload = json_decode($payload);
 
-        $idContacto = contactos::insertar($idUsuario, $payload);
+        $idContacto = articulo::insertar($idUsuario, $payload);
 
         http_response_code(201);
         return [
@@ -56,7 +56,7 @@ class ARTICULO
 
     public static function put($peticion)
     {
-        $idUsuario = usuarios::autorizar();
+        $idUsuario = usuario::autorizar();
 
         if (!empty($peticion[0])) {
             $body = file_get_contents('php://input');
@@ -79,7 +79,7 @@ class ARTICULO
 
     public static function delete($peticion)
     {
-        $idUsuario = usuarios::autorizar();
+        $idUsuario = usuario::autorizar();
 
         if (!empty($peticion[0])) {
             if (self::eliminar($idUsuario, $peticion[0]) > 0) {
