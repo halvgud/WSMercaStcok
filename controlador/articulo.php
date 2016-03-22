@@ -2,8 +2,6 @@
 
 class ARTICULO
 {
-
-    // [contacto]
     const TABLA_INVENTARIO = 'sysinv_inventario';
     const ID_INVENTARIO = "idContacto";
     const ID_ARTICULO = "art_id";
@@ -14,17 +12,12 @@ class ARTICULO
     const FECHA_RESPUESTA = 'fechaRespuesta';
     const EXISTENCIA_EJECUCION = 'existenciaEjecucion';
 
-    // [/contacto]
-
-    // [codigos]
     const ESTADO_EXITO = 100;
     const ESTADO_ERROR = 101;
     const ESTADO_ERROR_BD = 102;
     const ESTADO_MALA_SINTAXIS = 103;
     const ESTADO_NO_ENCONTRADO = 104;
-    // [/codigos]
 
-    // Campos JSON
     const INSERCIONES = "inserciones";
     const MODIFICACIONES = "modificaciones";
     const ELIMINACIONES = 'eliminaciones';

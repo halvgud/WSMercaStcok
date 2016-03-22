@@ -2,14 +2,14 @@
 
 require '/conexion/ConexionBD.php';
 
-class usuarios
+class usuario
 {
     // Datos de la tabla "usuario"
     const NOMBRE_TABLA = "ms_usuario";
     const ID_USUARIO = "idUsuario";
     const NOMBRE = "nombre";
     const CONTRASENA = "contrasena";
-    const CORREO = "correo";
+    const USUARIO = "usuario";
     const CLAVE_API = "claveApi";
 
     const ESTADO_CREACION_EXITOSA = 1;
@@ -49,7 +49,7 @@ class usuarios
                 return
                     [
                         "estado" => self::ESTADO_CREACION_EXITOSA,
-                        "mensaje" => utf8_encode("�Registro con �xito!")
+                        "mensaje" => utf8_encode("Registro con exito!")
                     ];
                 break;
             case self::ESTADO_CREACION_FALLIDA:
@@ -85,7 +85,7 @@ class usuarios
                 self::NOMBRE . "," .
                 self::CONTRASENA . "," .
                 self::CLAVE_API . "," .
-                self::CORREO . ")" .
+                self::USUARIO . ")" .
                 " VALUES(?,?,?,?)";
 
             $sentencia = $pdo->prepare($comando);
@@ -142,7 +142,7 @@ class usuarios
             if ($usuarioBD != NULL) {
                 http_response_code(200);
                 $respuesta["nombre"] = $usuarioBD["nombre"];
-                $respuesta["correo"] = $usuarioBD["correo"];
+                $respuesta["correo"] = $usuarioBD["usuario"];
                 $respuesta["claveApi"] = $usuarioBD["claveApi"];
                 return ["estado" => 1, "usuario" => $respuesta];
             } else {
@@ -158,7 +158,7 @@ class usuarios
     public static function autenticar($correo, $contrasena)
     {
         $comando = "SELECT contrasena FROM " . self::NOMBRE_TABLA .
-            " WHERE " . self::CORREO . "=?";
+            " WHERE " . self::USUARIO . "=?";
 
         try {
 
@@ -193,10 +193,10 @@ class usuarios
         $comando = "SELECT " .
             self::NOMBRE . "," .
             self::CONTRASENA . "," .
-            self::CORREO . "," .
+            self::USUARIO . "," .
             self::CLAVE_API .
             " FROM " . self::NOMBRE_TABLA .
-            " WHERE " . self::CORREO . "=?";
+            " WHERE " . self::USUARIO . "=?";
 
         $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
 
