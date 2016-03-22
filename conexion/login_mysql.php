@@ -3,7 +3,7 @@
  * Provee las constantes para conectarse a la base de datos
  * Mysql.
  */
-define("NOMBRE_HOST", "localhost");// Nombre del host
-define("BASE_DE_DATOS", "people"); // Nombre de la base de controladores
+define("NOMBRE_HOST", "192.168.1.43");// Nombre del host
+define("BASE_DE_DATOS", "sicar"); // Nombre de la base de controladores
 define("USUARIO", "root"); // Nombre del usuario
-define("CONTRASENA", ""); // Constraseña
+define("CONTRASENA", "pwd"); // Constraseña

@@ -5,7 +5,7 @@ require '/conexion/ConexionBD.php';
 class usuarios
 {
     // Datos de la tabla "usuario"
-    const NOMBRE_TABLA = "usuario";
+    const NOMBRE_TABLA = "ms_usuario";
     const ID_USUARIO = "idUsuario";
     const NOMBRE = "nombre";
     const CONTRASENA = "contrasena";

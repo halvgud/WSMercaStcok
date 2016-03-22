@@ -4,7 +4,7 @@ class ARTICULO
 {
 
     // [contacto]
-    const TABLA_INVENTARIO = 'ms_Inventario';
+    const TABLA_INVENTARIO = 'sysinv_inventario';
     const ID_INVENTARIO = "idContacto";
     const ID_ARTICULO = "art_id";
     const EXISTENCIA_SOLICITUD = 'existenciaSolicitud';
@@ -117,7 +117,7 @@ class ARTICULO
         try {
             if (!$idContacto) {
                 $comando = "SELECT * FROM " . self::TABLA_INVENTARIO .
-                    " WHERE " . self::ID_USUARIO . "=?";
+                    " sy inner join articulo a on (a.art_id = sy.art_id)";
 
                 // Preparar sentencia
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
