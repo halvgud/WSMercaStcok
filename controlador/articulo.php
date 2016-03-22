@@ -3,7 +3,7 @@
 class ARTICULO
 {
     const TABLA_INVENTARIO = 'ms_inventario';
-    const ID_INVENTARIO = "idContacto";
+    const ID_INVENTARIO = "idInventario";
     const ID_ARTICULO = "art_id";
     const EXISTENCIA_SOLICITUD = 'existenciaSolicitud';
     const EXISENCIA_RESPUESTA = 'existenciaRespuesta';
