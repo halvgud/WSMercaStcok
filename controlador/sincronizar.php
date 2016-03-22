@@ -1,6 +1,6 @@
 <?php
 
-include_once 'datos/ConexionBD.php';
+include_once 'conexion/ConexionBD.php';
 
 class sync
 {

@@ -1,6 +1,6 @@
 <?php
 
-require '/datos/ConexionBD.php';
+require '/conexion/ConexionBD.php';
 
 class usuarios
 {
