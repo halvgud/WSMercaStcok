@@ -221,8 +221,8 @@ class usuario
 
             $claveApi = $cabeceras["Authorization"];
 
-            if (usuarios::validarClaveApi($claveApi)) {
-                return usuarios::obtenerIdUsuario($claveApi);
+            if (usuario::validarClaveApi($claveApi)) {
+                return usuario::obtenerIdUsuario($claveApi);
             } else {
                 throw new ExcepcionApi(
                     self::ESTADO_CLAVE_NO_AUTORIZADA, "Clave de API no autorizada", 401);
