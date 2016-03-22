@@ -2,7 +2,7 @@
 
 class ARTICULO
 {
-    const TABLA_INVENTARIO = 'sysinv_inventario';
+    const TABLA_INVENTARIO = 'ms_inventario';
     const ID_INVENTARIO = "idContacto";
     const ID_ARTICULO = "art_id";
     const EXISTENCIA_SOLICITUD = 'existenciaSolicitud';
