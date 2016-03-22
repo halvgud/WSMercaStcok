@@ -132,17 +132,17 @@ class usuario
         $body = file_get_contents('php://input');
         $usuario = json_decode($body);
 
-        $correo = $usuario->correo;
+        $correo = $usuario->usuario;
         $contrasena = $usuario->contrasena;
 
 
         if (self::autenticar($correo, $contrasena)) {
-            $usuarioBD = self::obtenerUsuarioPorCorreo($correo);
+            $usuarioBD = self::obtenerUsuarioPorUsuario($correo);
 
             if ($usuarioBD != NULL) {
                 http_response_code(200);
                 $respuesta["nombre"] = $usuarioBD["nombre"];
-                $respuesta["correo"] = $usuarioBD["usuario"];
+                $respuesta["usuario"] = $usuarioBD["usuario"];
                 $respuesta["claveApi"] = $usuarioBD["claveApi"];
                 return ["estado" => 1, "usuario" => $respuesta];
             } else {
@@ -151,7 +151,7 @@ class usuario
             }
         } else {
             throw new ExcepcionApi(self::ESTADO_PARAMETROS_INCORRECTOS,
-                utf8_encode("Correo o contrase�a inv�lidos"));
+                utf8_encode("usuario o contraseña inválidos"));
         }
     }
 
@@ -188,7 +188,7 @@ class usuario
     }
 
 
-    public static function obtenerUsuarioPorCorreo($correo)
+    public static function obtenerUsuarioPorUsuario($correo)
     {
         $comando = "SELECT " .
             self::NOMBRE . "," .
