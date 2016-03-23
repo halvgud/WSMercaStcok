@@ -3,6 +3,7 @@
 require 'controlador/articulo.php';
 require 'controlador/usuario.php';
 require 'controlador/sincronizar.php';
+require 'controlador/sucursal.php';
 require 'vista/VistaJson.php';
 require 'utilidad/ExcepcionApi.php';
 
@@ -49,7 +50,7 @@ if (isset($_GET['PATH_INFO'])) {
 
 // Obtener recurso
 $recurso = array_shift($segmentos);
-$recursos_existentes = array('articulo', 'usuario', 'sincronizar');
+$recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal');
 
 // Comprobar si existe el recurso
 if (!in_array($recurso, $recursos_existentes)) {
