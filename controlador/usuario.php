@@ -129,11 +129,12 @@ class usuario
     {
         $respuesta = array();
 
-        $body = file_get_contents('php://input');
-        $usuario = json_decode($body);
+       // $body = file_get_contents('php://input');
+        //$usuario = json_decode($body);
+        $usuario = json_decode(file_get_contents('php://input'),true);
 
-        $correo = $usuario->usuario;
-        $contrasena = $usuario->contrasena;
+        $correo = $usuario['usuario'];
+        $contrasena = $usuario['contrasena'];
 
 
         if (self::autenticar($correo, $contrasena)) {
@@ -144,7 +145,7 @@ class usuario
                 $respuesta["nombre"] = $usuarioBD["nombre"];
                 $respuesta["usuario"] = $usuarioBD["usuario"];
                 $respuesta["claveApi"] = $usuarioBD["claveApi"];
-                return ["estado" => 1, "usuario" => $respuesta];
+                return ["estado" => 100, "datos" => $respuesta];
             } else {
                 throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
                     "Ha ocurrido un error");

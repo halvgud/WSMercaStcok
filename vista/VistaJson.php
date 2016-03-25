@@ -9,7 +9,7 @@ class VistaJson extends VistaApi
 {
 
     /**
-     * Imprime el cuerpo de la respuesta y setea el código de respuesta
+     * Imprime el cuerpo de la respuesta y setea el cï¿½digo de respuesta
      * @param mixed $cuerpo de la respuesta a enviar
      */
     public function imprimir($cuerpo)
@@ -18,7 +18,7 @@ class VistaJson extends VistaApi
             http_response_code($this->estado);
         }
         header('Content-Type: application/json; charset=utf8');
-        echo json_encode($cuerpo, JSON_PRETTY_PRINT);
+        echo json_encode($cuerpo, JSON_UNESCAPED_UNICODE);
         exit;
     }
 }

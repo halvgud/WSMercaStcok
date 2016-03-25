@@ -30,7 +30,7 @@ switch ($formato) {
 set_exception_handler(function ($exception) use ($vista) {
     $cuerpo = array(
         "estado" => $exception->estado,
-        "mensaje" => utf8_encode($exception->getMessage())
+        "mensaje" => utf8_decode($exception->getMessage())
     );
     if ($exception->getCode()) {
         $vista->estado = $exception->getCode();
