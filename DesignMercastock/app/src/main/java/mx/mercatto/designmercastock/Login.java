@@ -1,29 +1,22 @@
 package mx.mercatto.designmercastock;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
-
-import java.util.ArrayList;
-
+import android.widget.Toast;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Toast;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-
 
 public class Login extends AppCompatActivity {
 
@@ -48,6 +41,7 @@ public class Login extends AppCompatActivity {
         cargarListadoSucursal();
         txtusuario   = (EditText)findViewById(R.id.editText);
         txtpassword   = (EditText)findViewById(R.id.editText2);
+
     }
 
     public void abrirListaDepartamento(View view){
@@ -80,6 +74,7 @@ public class Login extends AppCompatActivity {
                     countryList.add(new listaSucursal(id, name.toUpperCase()));
                 }
             }else{
+                findViewById(R.id.button2).setEnabled(false);
                 return;
             }
 
@@ -88,7 +83,10 @@ public class Login extends AppCompatActivity {
             SucursalAdapter cAdapter = new SucursalAdapter(this, android.R.layout.simple_spinner_item, countryList);
             listaSucSpinner.setAdapter(cAdapter);
 
+
+
             listaSucSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
 
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -99,9 +97,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
-
             });
-
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -118,7 +114,7 @@ public class Login extends AppCompatActivity {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);
             jsonObj1.put("contrasena", password);
-// Create the POST object and add the parameters
+            // Create the POST object and add the parameters
             bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
             JSONObject countryJSON = bgt.execute().get();
             switch (countryJSON.getString("estado")){
@@ -127,15 +123,12 @@ public class Login extends AppCompatActivity {
             }
         } catch(JSONException e){
         showToast(e.toString());
-        }catch (Exception e)
-        {
+        }catch (Exception e){
             showToast(e.toString());
         }
-
     }
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }
-
