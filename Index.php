@@ -4,8 +4,10 @@ require 'controlador/articulo.php';
 require 'controlador/usuario.php';
 require 'controlador/sincronizar.php';
 require 'controlador/sucursal.php';
+require 'controlador/categoria.php';
 require 'vista/VistaJson.php';
 require 'utilidad/ExcepcionApi.php';
+
 
 
 // Constantes de estado
@@ -39,7 +41,6 @@ set_exception_handler(function ($exception) use ($vista) {
     $vista->imprimir($cuerpo);
 }
 );
-
 // Extraer segmento de la url
 if (isset($_GET['PATH_INFO'])) {
     $segmentos = explode('/', $_GET['PATH_INFO']);
@@ -50,7 +51,7 @@ if (isset($_GET['PATH_INFO'])) {
 
 // Obtener recurso
 $recurso = array_shift($segmentos);
-$recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal');
+$recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria');
 
 // Comprobar si existe el recurso
 if (!in_array($recurso, $recursos_existentes)) {
