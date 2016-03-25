@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DesignMercastock</string>
+    <string name="labelUsuario">USUARIO</string>
+    <string name="labelPass">CONTRASEÑA</string>
+    <string name="buttonIniciarSesion">Iniciar Sesión</string>
+</resources>
