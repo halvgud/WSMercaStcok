@@ -118,7 +118,9 @@ public class Login extends AppCompatActivity {
             bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
             JSONObject countryJSON = bgt.execute().get();
             switch (countryJSON.getString("estado")){
-                case "1": showToast("usuario y pwd correctas");break;
+                case "1": //showToast("usuario y pwd correctas");
+                    Intent intent = new Intent(this, ListaDepartamento.class);
+                    this.startActivity(intent);break;
                 case "8": showToast(countryJSON.getString("mensaje"));break;
             }
         } catch(JSONException e){

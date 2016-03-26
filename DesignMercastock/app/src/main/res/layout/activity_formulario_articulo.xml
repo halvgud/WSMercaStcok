@@ -7,6 +7,42 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="mx.mercatto.designmercastock.FormularioArticulo">
+    tools:context="mx.mercatto.designmercastock.FormularioArticulo"
+    android:focusable="true">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cantidad Por Pieza:"
+        android:id="@+id/textView4"
+        android:layout_marginTop="135dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="25dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guardar"
+        android:id="@+id/button3"
+        android:onClick="Confirmacion"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="144dp"
+        android:enabled="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText3"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        android:textIsSelectable="false"
+        android:inputType="number|numberDecimal"
+        android:phoneNumber="false"
+        android:enabled="true"
+        android:singleLine="true"/>
 
 </RelativeLayout>

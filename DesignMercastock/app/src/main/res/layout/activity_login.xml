@@ -24,9 +24,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
+        android:inputType="text"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:inputType="text" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,9 +63,10 @@
         android:layout_height="wrap_content"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/textView3"
-        android:layout_alignEnd="@+id/button"
-        android:layout_marginTop="15dp" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
     <Button
         android:layout_width="wrap_content"
