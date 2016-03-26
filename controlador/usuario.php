@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require '/conexion/ConexionBD.php';
 
@@ -145,7 +145,7 @@ class usuario
                 $respuesta["nombre"] = $usuarioBD["nombre"];
                 $respuesta["usuario"] = $usuarioBD["usuario"];
                 $respuesta["claveApi"] = $usuarioBD["claveApi"];
-                return ["estado" => 100, "datos" => $respuesta];
+                return ["estado" => 1, "datos" => $respuesta];
             } else {
                 throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
                     "Ha ocurrido un error",401);

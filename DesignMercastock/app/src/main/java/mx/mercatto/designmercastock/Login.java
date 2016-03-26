@@ -1,32 +1,29 @@
 package mx.mercatto.designmercastock;
 
 import android.content.Intent;
+<<<<<<< HEAD
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+=======
+>>>>>>> origin/master
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
-
-import java.util.ArrayList;
-
+import android.widget.Toast;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Toast;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import android.content.Context;
-
-
 
 public class Login extends AppCompatActivity {
 
@@ -46,6 +43,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
         if (auth_token_string!=""){
@@ -60,6 +58,14 @@ public class Login extends AppCompatActivity {
             txtusuario = (EditText) findViewById(R.id.editText);
             txtpassword = (EditText) findViewById(R.id.editText2);
         }
+=======
+        setContentView(R.layout.activity_login);
+        setTitle("MercaStock");
+        cargarListadoSucursal();
+        txtusuario   = (EditText)findViewById(R.id.editText);
+        txtpassword   = (EditText)findViewById(R.id.editText2);
+
+>>>>>>> origin/master
     }
 
     public void abrirListaDepartamento(View view){
@@ -92,6 +98,7 @@ public class Login extends AppCompatActivity {
                     countryList.add(new listaSucursal(id, name.toUpperCase()));
                 }
             }else{
+                findViewById(R.id.button2).setEnabled(false);
                 return;
             }
 
@@ -100,7 +107,10 @@ public class Login extends AppCompatActivity {
             SucursalAdapter cAdapter = new SucursalAdapter(this, android.R.layout.simple_spinner_item, countryList);
             listaSucSpinner.setAdapter(cAdapter);
 
+
+
             listaSucSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
 
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -111,9 +121,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
-
             });
-
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -134,9 +142,10 @@ public class Login extends AppCompatActivity {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);
             jsonObj1.put("contrasena", password);
-// Create the POST object and add the parameters
+            // Create the POST object and add the parameters
             bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
             JSONObject countryJSON = bgt.execute().get();
+<<<<<<< HEAD
             switch (BackGroundTask.CodeResponse){
                 case 200: {
                     JSONObject datos = countryJSON.getJSONObject("datos");
@@ -147,18 +156,22 @@ public class Login extends AppCompatActivity {
                     this.startActivity(intent);};break;
                 case 401: showToast(("Usuario y/o password incorrectas"));break;
                 default : showToast(Integer.toString(BackGroundTask.CodeResponse));
+=======
+            switch (countryJSON.getString("estado")){
+                case "1": //showToast("usuario y pwd correctas");
+                    Intent intent = new Intent(this, ListaDepartamento.class);
+                    this.startActivity(intent);break;
+                case "8": showToast(countryJSON.getString("mensaje"));break;
+>>>>>>> origin/master
             }
         } catch(JSONException e){
         showToast(e.toString());
-        }catch (Exception e)
-        {
+        }catch (Exception e){
             showToast(e.toString());
         }
-
     }
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }
-
