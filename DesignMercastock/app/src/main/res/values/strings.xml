@@ -3,4 +3,5 @@
     <string name="labelUsuario">USUARIO</string>
     <string name="labelPass">CONTRASEÑA</string>
     <string name="buttonIniciarSesion">Iniciar Sesión</string>
+    <string name="tipo_cuenta">mx.mercatto.designmercastock.cuenta</string>
 </resources>

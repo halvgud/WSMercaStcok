@@ -1,6 +1,8 @@
 package mx.mercatto.designmercastock;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import android.content.Context;
 
 
 
@@ -30,8 +33,8 @@ public class Login extends AppCompatActivity {
     private static final String TAG_ID = "idSucursal";
     private static final String TAG_NAME = "nombre";
     private static final String TAG_DATA = "datos";
-    private static final String MAP_API_URL = "http://192.168.1.97/wsMercaStock/sucursal";
-    private static final String MAP_API_LOGIN = "http://192.168.1.97/wsMercaStock/usuario/login";
+    private static final String MAP_API_URL = "http://192.168.1.41/wsMercaStock/sucursal";
+    private static final String MAP_API_LOGIN = "http://192.168.1.41/wsMercaStock/usuario/login";
     private static final String TAG_USERNAME = "";
     private static final String TAG_PASSWORD="";
     public static String ClaveApi = "";
@@ -43,11 +46,20 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        setTitle("MercaStock");
-        cargarListadoSucursal();
-        txtusuario   = (EditText)findViewById(R.id.editText);
-        txtpassword   = (EditText)findViewById(R.id.editText2);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+        if (auth_token_string!=""){
+            Intent intent = new Intent(this, ListaDepartamento.class);
+            this.startActivity(intent);
+        }
+        else {
+
+            setContentView(R.layout.activity_login);
+            setTitle("MercaStock");
+            cargarListadoSucursal();
+            txtusuario = (EditText) findViewById(R.id.editText);
+            txtpassword = (EditText) findViewById(R.id.editText2);
+        }
     }
 
     public void abrirListaDepartamento(View view){
@@ -114,6 +126,10 @@ public class Login extends AppCompatActivity {
     public void LogIn(View view){
         String usuario = txtusuario.getText().toString();
         String password = txtpassword.getText().toString();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+
+        SharedPreferences.Editor editor = settings.edit();
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);
@@ -121,9 +137,16 @@ public class Login extends AppCompatActivity {
 // Create the POST object and add the parameters
             bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
             JSONObject countryJSON = bgt.execute().get();
-            switch (countryJSON.getString("estado")){
-                case "1": showToast("usuario y pwd correctas");break;
-                case "8": showToast(countryJSON.getString("mensaje"));break;
+            switch (BackGroundTask.CodeResponse){
+                case 200: {
+                    JSONObject datos = countryJSON.getJSONObject("datos");
+                    ClaveApi=datos.getString("claveApi");
+                    editor.putString("ClaveApi", ClaveApi);
+                    editor.commit();
+                    Intent intent = new Intent(this, ListaDepartamento.class);
+                    this.startActivity(intent);};break;
+                case 401: showToast(("Usuario y/o password incorrectas"));break;
+                default : showToast(Integer.toString(BackGroundTask.CodeResponse));
             }
         } catch(JSONException e){
         showToast(e.toString());

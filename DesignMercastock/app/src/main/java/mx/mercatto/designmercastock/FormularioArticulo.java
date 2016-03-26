@@ -1,5 +1,5 @@
 package mx.mercatto.designmercastock;
-
+/*
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,3 +11,4 @@ public class FormularioArticulo extends AppCompatActivity {
         setContentView(R.layout.activity_formulario_articulo);
     }
 }
+*/

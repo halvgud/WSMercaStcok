@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
-
+    static Integer CodeResponse;
     public BackGroundTask(String url, String method, JSONObject params) {
         this.URL = url;
         this.postparams = params;
@@ -61,8 +62,9 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 HttpClient client = new DefaultHttpClient();
                 HttpResponse response = client.execute(httpPost);
                 HttpEntity httpEntity = response.getEntity();
+                CodeResponse = response.getStatusLine().getStatusCode();
                 is = httpEntity.getContent();
-                Log.d("HTTP", "HTTP: OK");
+
             } else if (method == "GET") {
                 // request method is GET
                 DefaultHttpClient httpClient = new DefaultHttpClient();
