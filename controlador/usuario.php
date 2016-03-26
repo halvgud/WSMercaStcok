@@ -148,11 +148,11 @@ class usuario
                 return ["estado" => 100, "datos" => $respuesta];
             } else {
                 throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
-                    "Ha ocurrido un error");
+                    "Ha ocurrido un error",401);
             }
         } else {
             throw new ExcepcionApi(self::ESTADO_PARAMETROS_INCORRECTOS,
-                utf8_encode("usuario o contraseña inválidos"));
+                utf8_encode("usuario o contraseña inválidos"),401);
         }
     }
 
@@ -179,7 +179,7 @@ class usuario
                 return false;
             }
         } catch (PDOException $e) {
-            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(),401);
         }
     }
 
