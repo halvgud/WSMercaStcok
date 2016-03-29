@@ -1,10 +1,8 @@
 package mx.mercatto.designmercastock;
-<<<<<<< HEAD
-/*
-=======
+
 
 import android.content.Intent;
->>>>>>> origin/master
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.Activity;
@@ -142,9 +140,5 @@ public class FormularioArticulo extends AppCompatActivity {
             findViewById(R.id.button3).setEnabled(true);
         }
     }
-<<<<<<< HEAD
 }
-*/
-=======
-}
->>>>>>> origin/master
+

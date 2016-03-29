@@ -19,23 +19,23 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class ListaArticulo extends AppCompatActivity {
-///////////////////////////////////Temporal//////////////////////
+
 private static final String TAG_ID = "cat_id";//
     private static final String TAG_NAME = "descripcion";//
     private static final String TAG_DATA = "datos";//Falta
     private static final String TAG_QTY = "CANTIDAD";//Falta
-    private static final String MAP_API_URL = "http://192.168.1.97/wsMercaStock/articulo/";
+    private static final String MAP_API_URL = "http://192.168.1.41/wsMercaStock/articulo";
     private BackGroundTask bgt;
     public ListView list;
     String categori="";
-    //////////////////////////////////////
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_articulo);
         setTitle("Lista de " + getIntent().getExtras().getString("articulo"));
-        categori=getIntent().getExtras().getString("categoria");
+        categori=getIntent().getExtras().getString("cat_id");
         cargarListadoCategoria();
     }
 ///////////////////Temporal Prueba///////////////////////////////
@@ -43,12 +43,17 @@ private static final String TAG_ID = "cat_id";//
     JSONArray android = null;
     ArrayList<HashMap<String, String>> oslist = new ArrayList<HashMap<String, String>>();
     public void cargarListadoCategoria() {
-        // Building post parameters, key and value pair
-
-
-        bgt = new BackGroundTask(MAP_API_URL+categori, "POST", null);
-
         try {
+        // Building post parameters, key and value pair
+        JSONObject jsonObj1 = new JSONObject();
+        jsonObj1.put("cat_id", categori);
+        // Create the POST object and add the parameters
+        bgt = new BackGroundTask(MAP_API_URL, "POST", jsonObj1);
+
+      //  bgt = new BackGroundTask(MAP_API_URL+categori, "POST", null);
+
+
+
             JSONObject json = bgt.execute().get();
             android = json.getJSONArray(TAG_DATA);
             for(int i = 0; i < android.length(); i++){

@@ -33,31 +33,28 @@ public class ListaDepartamento extends AppCompatActivity {
     private static final String MAP_API_URL = "http://192.168.1.41/wsMercaStock/categoria";
     private BackGroundTask bgt;
 
-<<<<<<< HEAD
+
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
     }
-/////////////////////
-public ListView list;
+
+
     ArrayList<listaCategoria> countryList = new ArrayList<listaCategoria>();
-=======
+
 public ListView list;
 
 
->>>>>>> origin/master
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_departamento);
         setTitle("Lista de Categorias");
-<<<<<<< HEAD
         cargarListadoCategoria();}
-=======
         //buildCountryDropDown();
-        cargarListadoCategoria();
-    }
->>>>>>> origin/master
+       // cargarListadoCategoria();
+    //}
 
     JSONArray android = null;
     ArrayList<HashMap<String, String>> oslist = new ArrayList<HashMap<String, String>>();
@@ -68,12 +65,11 @@ public ListView list;
             android = json.getJSONArray(TAG_DATA);
             for(int i = 0; i < android.length(); i++){
                 JSONObject c = android.getJSONObject(i);
-<<<<<<< HEAD
-=======
+
                 final String cat_id= c.getString(TAG_ID);
                 // Storing  JSON item in a Variable
                 //String ver = c.getString(TAG_VER);
->>>>>>> origin/master
+
                 String name = c.getString(TAG_NAME);
                 String api = c.getString(TAG_QTY);
                 HashMap<String, String> map = new HashMap<String, String>();

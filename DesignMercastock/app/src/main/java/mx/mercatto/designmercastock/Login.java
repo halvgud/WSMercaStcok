@@ -1,12 +1,9 @@
 package mx.mercatto.designmercastock;
 
 import android.content.Intent;
-<<<<<<< HEAD
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-=======
->>>>>>> origin/master
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -43,7 +40,6 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
         if (auth_token_string!=""){
@@ -58,14 +54,11 @@ public class Login extends AppCompatActivity {
             txtusuario = (EditText) findViewById(R.id.editText);
             txtpassword = (EditText) findViewById(R.id.editText2);
         }
-=======
         setContentView(R.layout.activity_login);
         setTitle("MercaStock");
         cargarListadoSucursal();
         txtusuario   = (EditText)findViewById(R.id.editText);
         txtpassword   = (EditText)findViewById(R.id.editText2);
-
->>>>>>> origin/master
     }
 
     public void abrirListaDepartamento(View view){
@@ -145,24 +138,23 @@ public class Login extends AppCompatActivity {
             // Create the POST object and add the parameters
             bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
             JSONObject countryJSON = bgt.execute().get();
-<<<<<<< HEAD
-            switch (BackGroundTask.CodeResponse){
+
+            switch (BackGroundTask.CodeResponse) {
                 case 200: {
                     JSONObject datos = countryJSON.getJSONObject("datos");
-                    ClaveApi=datos.getString("claveApi");
+                    ClaveApi = datos.getString("claveApi");
                     editor.putString("ClaveApi", ClaveApi);
                     editor.commit();
                     Intent intent = new Intent(this, ListaDepartamento.class);
-                    this.startActivity(intent);};break;
-                case 401: showToast(("Usuario y/o password incorrectas"));break;
-                default : showToast(Integer.toString(BackGroundTask.CodeResponse));
-=======
-            switch (countryJSON.getString("estado")){
-                case "1": //showToast("usuario y pwd correctas");
-                    Intent intent = new Intent(this, ListaDepartamento.class);
-                    this.startActivity(intent);break;
-                case "8": showToast(countryJSON.getString("mensaje"));break;
->>>>>>> origin/master
+                    this.startActivity(intent);
+                }
+                ;
+                break;
+                case 401:
+                    showToast(("Usuario y/o password incorrectas"));
+                    break;
+                default:
+                    showToast(Integer.toString(BackGroundTask.CodeResponse));
             }
         } catch(JSONException e){
         showToast(e.toString());

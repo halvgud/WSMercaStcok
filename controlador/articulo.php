@@ -14,27 +14,26 @@ class ARTICULO
     const ESTADO_ERROR_BD = 102;
     const ESTADO_MALA_SINTAXIS = 103;
     const ESTADO_NO_ENCONTRADO = 104;
-
+    const ESTADO_URL_INCORRECTA=105;
     const DESCRIPCION='descripcion';
 
     public static function post($peticion)
     {
-        if ($peticion[0] != '') {
-            return self::obtenerArticulo($peticion[0]);
+        if ($peticion != '') {
+            return self::obtenerArticulo();
         }
         else {
             throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
         }
     }
 
-    public static function obtenerArticulo($cat_id)
+    public static function obtenerArticulo()
     {
         try {
-
+            $post = json_decode(file_get_contents('php://input'),true);
                 $comando = "SELECT a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION." FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
                 MI ON ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
-                WHERE a.".self::ID_CATEGORIA."=".$cat_id
-                ;
+                WHERE a.".self::ID_CATEGORIA."=".$post['cat_id'] ;
 
                 // Preparar sentencia
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
