@@ -30,13 +30,17 @@ public class ListaDepartamento extends AppCompatActivity {
     private static final String TAG_NAME = "nombre";//
     private static final String TAG_DATA = "datos";//Falta
     private static final String TAG_QTY = "CANTIDAD";//Falta
-    private static final String MAP_API_URL = "http://192.168.1.41/wsMercaStock/categoria";
+    private static final String MAP_API_URL = "http://192.168.1.17/wsMercaStock/categoria";
     private BackGroundTask bgt;
 
 
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+        //showToast("Cargando Lista");
+        Toast.makeText(ListaDepartamento.this, "Cargando la lista", Toast.LENGTH_SHORT).show();
+        findViewById(R.id.ListView).setEnabled(false);
+
     }
 
 
@@ -59,6 +63,7 @@ public ListView list;
     JSONArray android = null;
     ArrayList<HashMap<String, String>> oslist = new ArrayList<HashMap<String, String>>();
     public void cargarListadoCategoria() {
+
         bgt = new BackGroundTask(MAP_API_URL, "GET", null);
         try {
             JSONObject json = bgt.execute().get();
@@ -82,7 +87,7 @@ public ListView list;
 
                 ListAdapter adapter = new SimpleAdapter(ListaDepartamento.this, oslist,
                         R.layout.list_v,
-                        new String[] {TAG_NAME, TAG_QTY,TAG_ID }, new int[] {R.id.name, R.id.api,R.id.cat_id});
+                        new String[] {TAG_NAME, TAG_QTY }, new int[] {R.id.name, R.id.api});
 
                 list.setAdapter(adapter);
 
@@ -91,13 +96,17 @@ public ListView list;
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
+
                         Toast.makeText(ListaDepartamento.this, "Se ha seleccionado "+oslist.get(+position).get("nombre"), Toast.LENGTH_SHORT).show();
                         String articulo =oslist.get(+position).get("nombre");
                         String categoria =oslist.get(+position).get("cat_id");
+                        //showToast( "Cargando la lista", Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(ListaDepartamento.this,ListaArticulo.class);
                         myIntent.putExtra("articulo", articulo);
-                        myIntent.putExtra("cat_id",categoria);
-                                startActivity(myIntent);
+                        myIntent.putExtra("cat_id", categoria);
+                        startActivity(myIntent);
+
+
                     }
                 });
             }

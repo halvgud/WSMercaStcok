@@ -1,6 +1,7 @@
 package mx.mercatto.designmercastock;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,10 +22,12 @@ import java.util.concurrent.ExecutionException;
 public class ListaArticulo extends AppCompatActivity {
 
 private static final String TAG_ID = "cat_id";//
-    private static final String TAG_NAME = "descripcion";//
+    private static final String TAG_NAME = "NombreArticulo";//
+      private static final String TAG_UNIDAD ="Unidad";
     private static final String TAG_DATA = "datos";//Falta
     private static final String TAG_QTY = "CANTIDAD";//Falta
-    private static final String MAP_API_URL = "http://192.168.1.41/wsMercaStock/articulo";
+
+    private static final String MAP_API_URL = "http://192.168.1.17/wsMercaStock/articulo";
     private BackGroundTask bgt;
     public ListView list;
     String categori="";
@@ -35,14 +38,18 @@ private static final String TAG_ID = "cat_id";//
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_articulo);
         setTitle("Lista de " + getIntent().getExtras().getString("articulo"));
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
         categori=getIntent().getExtras().getString("cat_id");
-        cargarListadoCategoria();
+        cargarListadoArticulo();
+
+
     }
 ///////////////////Temporal Prueba///////////////////////////////
 
     JSONArray android = null;
     ArrayList<HashMap<String, String>> oslist = new ArrayList<HashMap<String, String>>();
-    public void cargarListadoCategoria() {
+    public void cargarListadoArticulo() {
+
         try {
         // Building post parameters, key and value pair
         JSONObject jsonObj1 = new JSONObject();
@@ -63,6 +70,7 @@ private static final String TAG_ID = "cat_id";//
                 //String ver = c.getString(TAG_VER);
                 String name = c.getString(TAG_NAME);
                 String api = c.getString(TAG_ID);
+                String unit = c.getString(TAG_UNIDAD);
 
                 // Adding value HashMap key => value
 
@@ -71,13 +79,14 @@ private static final String TAG_ID = "cat_id";//
                 //map.put(TAG_VER, ver);
                 map.put(TAG_NAME, name);
                 map.put(TAG_ID, api);
+                map.put(TAG_UNIDAD,unit);
 
                 oslist.add(map);
                 list=(ListView)findViewById(R.id.ListView);
 
                 ListAdapter adapter = new SimpleAdapter(ListaArticulo.this, oslist,
                         R.layout.list_v,
-                        new String[] {TAG_NAME, TAG_ID }, new int[] {R.id.name, R.id.api});
+                        new String[] {TAG_NAME, TAG_ID}, new int[] {R.id.name, R.id.api});
 
                 list.setAdapter(adapter);
 
@@ -86,10 +95,12 @@ private static final String TAG_ID = "cat_id";//
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        Toast.makeText(ListaArticulo.this, "Se ha seleccionado " + oslist.get(+position).get("nombre"), Toast.LENGTH_SHORT).show();
-                        String articulo2 =oslist.get(+position).get("nombre");
+                        Toast.makeText(ListaArticulo.this, "Se ha seleccionado " + oslist.get(+position).get(TAG_NAME), Toast.LENGTH_SHORT).show();
+                        String articulo2 =oslist.get(+position).get(TAG_NAME);
+                        String unidad =oslist.get(+position).get(TAG_UNIDAD);
                         Intent myIntent = new Intent(ListaArticulo.this,FormularioArticulo.class);
-                        myIntent.putExtra("articulo2", articulo2);
+                        myIntent.putExtra(TAG_NAME, articulo2);
+                        myIntent.putExtra(TAG_UNIDAD, unidad);
                         startActivity(myIntent);
                     }
                 });
@@ -101,6 +112,9 @@ private static final String TAG_ID = "cat_id";//
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        }
+        finally {
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
     }
     public void showToast(String msg) {

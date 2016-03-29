@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.view.View.OnClickListener;
 import android.content.DialogInterface;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.EditText;
 import android.view.View.OnKeyListener;
@@ -18,13 +19,18 @@ import android.text.Editable;
 
 public class FormularioArticulo extends AppCompatActivity {
 
-
+    private static final String TAG_NAME = "NombreArticulo";//
+    private static final String TAG_UNIDAD ="Unidad";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_articulo);
-        setTitle(getIntent().getExtras().getString("articulo2"));
+        setTitle("Artículo");
         EditText txt1 = (EditText) findViewById(R.id.editText3);
+        TextView txtV = (TextView) findViewById(R.id.textView5);
+        txtV.setText(getIntent().getExtras().getString(TAG_NAME));
+        TextView txtV2 = (TextView) findViewById(R.id.textView4);
+        txtV2.setText("Cantidad por "+getIntent().getExtras().getString(TAG_UNIDAD)+":");
         txt1.addTextChangedListener(new TextWatcher() {
             String value="";
             String gg = "";
