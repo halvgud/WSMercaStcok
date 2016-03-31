@@ -11,6 +11,11 @@ class usuario
     const CONTRASENA = "contrasena";
     const USUARIO = "usuario";
     const CLAVE_API = "claveApi";
+    //const NOMBRE = "nombre";
+    const APELLIDO = "apellido";
+    const SEXO = "sexo";
+    const ID_SUCURSAL = "idSucursal";
+    const CONTACTO = "contacto";
 
     const ESTADO_CREACION_EXITOSA = 1;
     const ESTADO_CREACION_FALLIDA = 2;
@@ -67,13 +72,15 @@ class usuario
      */
     public static function crear($datosUsuario)
     {
+        $idusuario=$datosUsuario->idUsuario;
+        $usuario=$datosUsuario->usuario;
         $nombre = $datosUsuario->nombre;
-
         $contrasena = $datosUsuario->contrasena;
         $contrasenaEncriptada = self::encriptarContrasena($contrasena);
-
-        $correo = $datosUsuario->correo;
-
+        $apellido = $datosUsuario->apellido;
+        $sexo=$datosUsuario->sexo;
+        $contacto=$datosUsuario->contacto;
+        $idsucursal=$datosUsuario->idSucursal;
         $claveApi = self::generarClaveApi();
 
         try {
@@ -82,19 +89,29 @@ class usuario
 
             // Sentencia INSERT
             $comando = "INSERT INTO " . self::NOMBRE_TABLA . " ( " .
-                self::NOMBRE . "," .
+                self::ID_USUARIO . ",".
+                self::USUARIO . ",".
                 self::CONTRASENA . "," .
-                self::CLAVE_API . "," .
-                self::USUARIO . ")" .
-                " VALUES(?,?,?,?)";
+                self::NOMBRE . "," .
+                self::APELLIDO . "," .
+                self::SEXO . "," .
+                self::CONTACTO . "," .
+                self::ID_SUCURSAL . "," .
+                self::CLAVE_API . ")" .
+                " VALUES(?,?,?,?,?,?,?,?,?)";
 
             $sentencia = $pdo->prepare($comando);
 
-            $sentencia->bindParam(1, $nombre);
-            $sentencia->bindParam(2, $contrasenaEncriptada);
-            $sentencia->bindParam(3, $claveApi);
-            $sentencia->bindParam(4, $correo);
-
+            $sentencia->bindParam(1, $idusuario);
+            $sentencia->bindParam(2, $usuario);
+            $sentencia->bindParam(3, $contrasenaEncriptada);
+            $sentencia->bindParam(4, $nombre);
+            $sentencia->bindParam(5, $apellido);
+            $sentencia->bindParam(6, $sexo);
+            $sentencia->bindParam(7, $contacto);
+            $sentencia->bindParam(8, $idsucursal);
+            $sentencia->bindParam(9, $claveApi);
+            
             $resultado = $sentencia->execute();
 
             if ($resultado) {

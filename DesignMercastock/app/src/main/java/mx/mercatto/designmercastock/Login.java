@@ -27,8 +27,8 @@ public class Login extends AppCompatActivity {
     private static final String TAG_ID = "idSucursal";
     private static final String TAG_NAME = "nombre";
     private static final String TAG_DATA = "datos";
-    private static final String MAP_API_URL = "http://192.168.1.53/wsMercaStock/sucursal";
-    private static final String MAP_API_LOGIN = "http://192.168.1.53/wsMercaStock/usuario/login";
+    private static final String MAP_API_URL = "http://192.168.1.17/wsMercaStock/sucursal";
+    private static final String MAP_API_LOGIN = "http://192.168.1.17/wsMercaStock/usuario/login";
     private static final String TAG_USERNAME = "";
     private static final String TAG_PASSWORD="";
     public static String ClaveApi = "";

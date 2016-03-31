@@ -17,9 +17,9 @@
         </activity>
         <activity android:name=".ListaDepartamento" />
         <activity android:name=".ListaArticulo" />
-        <activity android:name=".FormularioArticulo"></activity>
-        <activity android:name=".Login2"></activity>
-        <activity android:name=".Registro"></activity>
+        <activity android:name=".FormularioArticulo" />
+        <activity android:name=".Login2" />
+        <activity android:name=".Registro"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

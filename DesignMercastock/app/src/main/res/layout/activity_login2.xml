@@ -9,7 +9,7 @@
         android:text="Teclee el PIN de acceso"
         android:id="@+id/textView6"
         android:textSize="30dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:layout_gravity="center_horizontal"
         android:textAlignment="center" />
 
@@ -25,6 +25,6 @@
         android:onClick="abrirRegistro"
         android:id="@+id/button5"
         android:layout_gravity="center_horizontal"
-        android:textSize="25dp" />
+        android:textSize="20dp" />
 
 </LinearLayout>
