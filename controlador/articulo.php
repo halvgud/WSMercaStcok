@@ -42,10 +42,11 @@ class ARTICULO
                 // Ligar idContacto e idUsuario<
                 //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
                 //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
-                for ($i = 0 ;$i<100000000;$i++){
+                //for ($i = 0 ;$i<100000000;$i++){
                     
                     
-                }
+                //}
+                
             // Ejecutar sentencia preparada
             if ($sentencia->execute()) {
                 http_response_code(200);

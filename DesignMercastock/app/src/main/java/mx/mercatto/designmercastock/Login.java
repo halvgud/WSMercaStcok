@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity {
         List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
         apiParams.add(new BasicNameValuePair("call", "countrylist"));
 
-        bgt = new BackGroundTask(MAP_API_URL, "GET", null);
+        bgt = new BackGroundTask(MAP_API_URL, "GET", null,this);
 
         try {
             JSONObject countryJSON = bgt.execute().get();
@@ -136,7 +136,7 @@ public class Login extends AppCompatActivity {
             jsonObj1.put("usuario", usuario);
             jsonObj1.put("contrasena", password);
             // Create the POST object and add the parameters
-            bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
+            bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1,this);
             JSONObject countryJSON = bgt.execute().get();
 
             switch (BackGroundTask.CodeResponse) {

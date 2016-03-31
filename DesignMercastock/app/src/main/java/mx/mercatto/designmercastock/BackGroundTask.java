@@ -27,8 +27,12 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
@@ -45,14 +49,22 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         this.postparams = params;
         this.method = method;
     }
-
+    public BackGroundTask(String url, String method, JSONObject params,Activity activity) {
+        this.URL = url;
+        this.postparams = params;
+        this.method = method;
+        this.activity=activity;
+    }
+    public Activity activity;
     @Override
     protected JSONObject doInBackground(String... params) {
         // TODO Auto-generated method stub
         // Making HTTP request
+
         try {
             // Making HTTP request
             // check for request method
+
 
             if (method.equals("POST")) {
                 HttpPost httpPost = new HttpPost(URL);
@@ -107,4 +119,29 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         return jObj;
 
     }
+    ProgressDialog dialog;
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        //dialog = new ProgressDialog(activity);
+        //dialog.setIndeterminate(true);
+        //dialog.setCancelable(false);
+        //dialog.show();
+
+    }
+
+
+    protected void onPostExecute(JSONObject result) {
+       // list.setAdapter(result);
+       // dialog.show();
+        try {
+            Thread.sleep(2000);
+
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+      //  dialog.dismiss();
+    }
+
 }
