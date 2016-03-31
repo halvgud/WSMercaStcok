@@ -58,7 +58,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void abrirListaDepartamento(View view){
-        Intent intent = new Intent(this, ListaDepartamento.class);
+        Intent intent = new Intent(this, Login2.class);
         this.startActivity(intent);
     }
     public void cargarListadoSucursal() {
