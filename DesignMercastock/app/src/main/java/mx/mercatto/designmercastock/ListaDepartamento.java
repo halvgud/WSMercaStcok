@@ -30,7 +30,7 @@ public class ListaDepartamento extends AppCompatActivity {
     private static final String TAG_NAME = "nombre";//
     private static final String TAG_DATA = "datos";//Falta
     private static final String TAG_QTY = "CANTIDAD";//Falta
-    private static final String MAP_API_URL = "http://192.168.1.41/wsMercaStock/categoria";
+    private static final String MAP_API_URL = "http://192.168.1.53/wsMercaStock/categoria";
     private BackGroundTask bgt;
 
 

@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutionException;
 
 public class ListaArticulo extends AppCompatActivity {
 
-private static final String TAG_ID = "cat_id";//
+    private static final String TAG_ID = "cat_id";//
     private static final String TAG_NAME = "descripcion";//
     private static final String TAG_DATA = "datos";//Falta
     private static final String TAG_QTY = "CANTIDAD";//Falta
-    private static final String MAP_API_URL = "http://192.168.1.41/wsMercaStock/articulo";
+    private static final String MAP_API_URL = "http://192.168.1.53/wsMercaStock/articulo";
     private BackGroundTask bgt;
     public ListView list;
     String categori="";
