@@ -24,7 +24,7 @@ public class ListaArticulo extends AppCompatActivity {
     private static final String TAG_NAME = "descripcion";//
     private static final String TAG_DATA = "datos";//Falta
     private static final String TAG_QTY = "CANTIDAD";//Falta
-    private static final String MAP_API_URL = "http://192.168.1.53/wsMercaStock/articulo";
+    private static final String MAP_API_URL = "http://192.168.1.17/wsMercaStock/articulo";
     private BackGroundTask bgt;
     public ListView list;
     String categori="";
@@ -40,7 +40,7 @@ public class ListaArticulo extends AppCompatActivity {
     }
 ///////////////////Temporal Prueba///////////////////////////////
 
-    JSONArray android = null;
+   JSONArray android = null;
     ArrayList<HashMap<String, String>> oslist = new ArrayList<HashMap<String, String>>();
     public void cargarListadoCategoria() {
         try {
@@ -86,10 +86,10 @@ public class ListaArticulo extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        Toast.makeText(ListaArticulo.this, "Se ha seleccionado " + oslist.get(+position).get("nombre"), Toast.LENGTH_SHORT).show();
-                        String articulo2 =oslist.get(+position).get("nombre");
+                        Toast.makeText(ListaArticulo.this, "Se ha seleccionado " + oslist.get(+position).get("descripcion"), Toast.LENGTH_SHORT).show();
+                        String articulo2 =oslist.get(+position).get("descripcion");
                         Intent myIntent = new Intent(ListaArticulo.this,FormularioArticulo.class);
-                        myIntent.putExtra("articulo2", articulo2);
+                        myIntent.putExtra("descripcion", articulo2);
                         startActivity(myIntent);
                     }
                 });

@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -58,7 +59,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void abrirListaDepartamento(View view){
-        Intent intent = new Intent(this, Login2.class);
+        Intent intent = new Intent(this, ListaDepartamento.class);
         this.startActivity(intent);
     }
     public void cargarListadoSucursal() {
@@ -92,14 +93,15 @@ public class Login extends AppCompatActivity {
             }
 
             // bind adapter to spinner
-            listaSucSpinner = (Spinner) findViewById(R.id.spinner1);
-            SucursalAdapter cAdapter = new SucursalAdapter(this, android.R.layout.simple_spinner_item, countryList);
-            listaSucSpinner.setAdapter(cAdapter);
+            //listaSucSpinner = (Spinner) findViewById(R.id.spinner1);
+            //SucursalAdapter cAdapter = new SucursalAdapter(this, android.R.layout.simple_spinner_item, countryList);
+           // listaSucSpinner.setAdapter(cAdapter);
+            TextView txtSucursal = (TextView) findViewById(R.id.textView13);
+            txtSucursal.setText(countryList.get(0).toString());
 
 
-
-            listaSucSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
+           // listaSucSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+/*
 
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -110,7 +112,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
-            });
+            });*/
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
