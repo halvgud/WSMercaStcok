@@ -1,10 +1,10 @@
 <?php
 
-class ARTICULO
+class INVENTARIO
 {
     const TABLA_INVENTARIO = 'ms_inventario';
     const ID_INVENTARIO = "idInventario";
-    const ID_ARTICULO = "art_id";
+   // const ID_INVENTARIO = "art_id";
     const EXISTENCIA_SOLICITUD = 'existenciaSolicitud';
     const EXISENCIA_RESPUESTA = 'existenciaRespuesta';
     const ID_USUARIO = 'idUsuario';
@@ -42,7 +42,7 @@ class ARTICULO
 
         $payload = json_decode($payload);
 
-        $idContacto = articulo::insertar($idUsuario, $payload);
+        $idContacto = inventario::insertar($idUsuario, $payload);
 
         http_response_code(201);
         return [
@@ -119,9 +119,9 @@ class ARTICULO
 
             } else {
                 $comando = "SELECT * FROM " . self::TABLA_INVENTARIO .
-                    " WHERE " . self::ID_INVENTARIO . "=? AND " .
-                    self::ID_USUARIO . "=?";
-
+                    " sy inner join articulo a on (a.art_id = sy.art_id) "
+                    ."where a.art_id = ".$idContacto."";
+                //var_dump($comando);
                 // Preparar sentencia
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 // Ligar idContacto e idUsuario

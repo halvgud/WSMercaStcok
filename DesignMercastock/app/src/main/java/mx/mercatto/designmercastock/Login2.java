@@ -13,6 +13,7 @@ public class Login2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
+        setTitle("Registro");
     }
     public void abrirRegistro(View view){
         Intent intent = new Intent(this, Registro.class);

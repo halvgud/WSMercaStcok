@@ -134,13 +134,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     protected void onPostExecute(JSONObject result) {
        // list.setAdapter(result);
        // dialog.show();
-        try {
-            Thread.sleep(2000);
 
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
       //  dialog.dismiss();
     }
 
