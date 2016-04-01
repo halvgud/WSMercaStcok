@@ -5,8 +5,11 @@
     require 'controlador/sincronizar.php';
     require 'controlador/sucursal.php';
     require 'controlador/categoria.php';
+    require 'controlador/inventario.php';
+    require 'controlador/parametro.php';
     require 'vista/VistaJson.php';
     require 'utilidad/ExcepcionApi.php';
+    
     
     
     
@@ -51,7 +54,7 @@
     
     // Obtener recurso
     $recurso = array_shift($segmentos);
-    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria');
+    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro');
     
     // Comprobar si existe el recurso
     if (!in_array($recurso, $recursos_existentes)) {
