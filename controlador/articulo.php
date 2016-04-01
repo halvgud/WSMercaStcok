@@ -33,7 +33,7 @@ class ARTICULO
     {
         try {
             $post = json_decode(file_get_contents('php://input'),true);
-                $comando = "SELECT a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION." AS NombreArticulo, U.".self::UNIDAD." AS Unidad  FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
+                $comando = "SELECT a.".self::ID_ARTICULO.", a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION." AS NombreArticulo, U.".self::UNIDAD." AS Unidad  FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
                 MI ON ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
                 INNER JOIN Unidad U ON (a.UnidadCompra=U.Uni_ID) WHERE a.".self::ID_CATEGORIA."=".$post['cat_id']." AND a.".self::SERVICIO."=0 AND ".self::EXISTENCIA." >0" ;
 
