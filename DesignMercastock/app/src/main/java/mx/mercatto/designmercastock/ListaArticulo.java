@@ -69,7 +69,7 @@ private static String TAG_ID ;//
                 oslist.add(map);
                 list=(ListView)findViewById(R.id.ListView);
 
-                ListAdapter adapter = new SimpleAdapter(ListaArticulo.this, oslist,
+                ListAdapter adapter = new ListaAdaptador(ListaArticulo.this, oslist,
                         R.layout.list_v,
                         new String[] {TAG_NAME }, new int[] {R.id.name});
 
