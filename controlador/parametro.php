@@ -20,15 +20,15 @@
         public static function post($peticion){
             if ($peticion[0] == 'accion') {
                                 return self::obtenerConfiguracion($peticion[1],$peticion[3]);
-            //}
-            } else if($peticion[0]=='parametro') {
-               // return self::loguear();
-                                return self::obtenerConfiguracion($peticion[1]);
             }
-            //else {
-               // throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
-              // return self::obtenerConfiguracion($peticion[1]);
+           // } else if {
+               // return self::loguear();
+                              //   return self::obtenerConfiguracion($peticion[1]);
             //}
+            else {
+               // throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
+               return self::obtenerConfiguracion($peticion[1]);
+            }
         }
         
         public static function get($peticion){

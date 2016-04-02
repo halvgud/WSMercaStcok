@@ -28,7 +28,6 @@ ArrayList<listaSucursal> data = null;
         return super.getView(position, convertView, parent);
     }
 
-
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         View row = convertView;

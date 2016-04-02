@@ -67,11 +67,9 @@ public ListView list;
                 oslist.add(map);
                 list = (ListView) findViewById(R.id.ListView);
 
-
-                ListAdapter adapter = new ListaAdaptador(ListaDepartamento.this, oslist,
+                ListAdapter adapter = new SimpleAdapter(ListaDepartamento.this, oslist,
                         R.layout.list_v,
                         new String[]{TAG_NAME, TAG_QTY, TAG_ID}, new int[]{R.id.name, R.id.api});
-
                 list.setAdapter(adapter);
 
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

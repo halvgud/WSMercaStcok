@@ -8,8 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="mx.mercatto.designmercastock.FormularioArticulo"
-    android:focusable="true"
-    android:background="@drawable/x">
+    android:focusable="true">
 
     <TextView
         android:layout_width="wrap_content"
