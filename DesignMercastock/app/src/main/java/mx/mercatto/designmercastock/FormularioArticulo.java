@@ -11,15 +11,23 @@ import android.widget.EditText;
 import android.text.TextWatcher;
 import android.text.Editable;
 
-public class FormularioArticulo extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    private static final String TAG_NAME = "NombreArticulo";
+import java.util.concurrent.ExecutionException;
+
+public class FormularioArticulo extends AppCompatActivity {
+   // private static String TAG_ID_INVENTARIO ="idInventario";
+    private static  String TAG_VALOR_ID_INVENTARIO;
+    //private static final String MAP_API_URL_FORMULARIOARTICULO = "http://192.168.1.17/wsMercaStock/articulo/actualizar";
+    private BackGroundTask bgt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_articulo);
         setTitle("Artículo");
-
+        TAG_VALOR_ID_INVENTARIO = getIntent().getExtras().getString(Configuracion.getIdInventario());
         EditText txt1 = (EditText) findViewById(R.id.editText3);
         TextView txtV = (TextView) findViewById(R.id.textView5);
         txtV.setText(getIntent().getExtras().getString("articulo2"));
@@ -71,6 +79,7 @@ public class FormularioArticulo extends AppCompatActivity {
         });
 
     }
+
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
@@ -80,7 +89,8 @@ public class FormularioArticulo extends AppCompatActivity {
         valor = (EditText) findViewById(R.id.editText3);
         showToast(Double.parseDouble(getIntent().getExtras().getString("existencia2"))+" "+Double.parseDouble(valor.getText().toString()));
         if (Double.parseDouble(getIntent().getExtras().getString("existencia2"))==(Double.parseDouble(valor.getText().toString()))) {
-showToast(":)");
+        aceptar();
+            //showToast(":)");
         }
         else {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
@@ -103,9 +113,22 @@ showToast(":)");
     }
 
     public void aceptar() {
+        try{
+            //showToast(TAG_VALOR_ID_INVENTARIO);
+        JSONObject jsobj = new JSONObject();
+        jsobj.put("idInventario",TAG_VALOR_ID_INVENTARIO);
+        jsobj.put("cantidad",findViewById(R.id.editText3).toString());
+        bgt = new BackGroundTask(Configuracion.getApiUrlInventario(), "POST",jsobj );
+            JSONObject json = bgt.execute().get();
         Toast t=Toast.makeText(this,"Se ha guardado correctamente.", Toast.LENGTH_SHORT);
         t.show();
-        finish();
+        }catch(JSONException e){
+            showToast(e.getMessage());
+        }catch (InterruptedException e){}
+        catch(ExecutionException e){}
+        finally {
+            finish();
+        }
     }
 
     public void cancelar() {

@@ -19,11 +19,11 @@
         
         public static function post($peticion){
             if ($peticion[0] == 'accion') {
-                                return self::obtenerConfiguracion($peticion[1],$peticion[3]);
-            //}
-            } else if($peticion[0]=='parametro') {
-               // return self::loguear();
                                 return self::obtenerConfiguracion($peticion[1]);
+            //}
+            } else if($peticion[2]=='parametro') {
+               // return self::loguear();
+                                return self::obtenerConfiguracion($peticion[1],$peticion[3]);
             }
             //else {
                // throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
