@@ -77,7 +77,9 @@ class ARTICULO
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
             //return var_dump($post);
-                $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado ='X'
+                $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado =(SELECT VALOR FROM MS_PARAMETRO WHERE PARAMETRO='ID_ESTADO_PROCESADO'),
+                fechaRespuesta=NOW(), existenciaRespuesta='".$post['existenciaRespuesta']."' ,
+                existenciaEjecucion=(SELECT EXISTENCIA FROM ARTICULO WHERE art_id='".$post['art_id']."')
                 WHERE idInventario='".$post['idInventario']."'";
 
                 // Preparar sentencia

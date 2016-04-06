@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -20,20 +19,21 @@ import java.util.concurrent.ExecutionException;
 
 public class ListaArticulo extends AppCompatActivity {
 
-private static String TAG_ID ;//
-    private static final String TAG_NAME = "descripcion";//
-    private static final String TAG_DATA = "datos";//Falta
-    private static final String TAG_QTY = "CANTIDAD";//Falta
-    private static final String TAG_UNIDAD ="Unidad";
-    private static  final  String TAG_EXIST = "NombreArticulo";
-    private static final String MAP_API_URL = "http://192.168.1.17/wsMercaStock/articulo";
+//private static String TAG_ID_LISTAARTICULO="cat_id" ;//
+    //private static final String TAG_NAME_LISTAARTICULO = "NombreArticulo";//
+    //private static final String TAG_DATA_LISTAARTICULO = "datos";//Falta
+    //private static final String TAG_UNIDAD_LISTAARTICULO ="Unidad";
+    //private static  final  String TAG_EXIST_LISTAARTICULO = "Existencia";
+    //private static  final  String TAG_ID_INVENTARIO_LISTAARTICULO = "idInventario";
+
+    //private static final String MAP_API_URL_LISTAARTICULO = "http://192.168.1.17/wsMercaStock/articulo/obtener";
     private BackGroundTask bgt;
     public ListView list;
     String categori="";
+    String fd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        TAG_ID="cat_id";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_articulo);
         setTitle("Lista de " + getIntent().getExtras().getString("articulo2"));
@@ -49,30 +49,36 @@ private static String TAG_ID ;//
         JSONObject jsonObj1 = new JSONObject();
         jsonObj1.put("cat_id", categori);
 
-        bgt = new BackGroundTask(MAP_API_URL, "POST", jsonObj1);
+        bgt = new BackGroundTask(Configuracion.getApiUrlArticulo(), "POST", jsonObj1);
 
             JSONObject json = bgt.execute().get();
-            android = json.getJSONArray(TAG_DATA);
+            android = json.getJSONArray(Configuracion.getDatos());
+
             for(int i = 0; i < android.length(); i++){
+
                 JSONObject c = android.getJSONObject(i);
 
-                String name = c.getString(TAG_NAME);
-                String api = c.getString(TAG_ID);
-                String unidad = c.getString(TAG_UNIDAD);
-                String exitencia = c.getString(TAG_EXIST);
+                String name = c.getString(Configuracion.getDescripcioArticulo());
+                String art_id = c.getString(Configuracion.getIdArticulo());
+                String unidad = c.getString(Configuracion.getUnidadArticulo());
+                String exitencia = c.getString(Configuracion.getExistenciaArticulo());
+
                 HashMap<String, String> map = new HashMap<String, String>();
 
-                map.put(TAG_NAME, name);
-                map.put(TAG_ID, api);
-                map.put(TAG_UNIDAD, unidad);
-                map.put(TAG_EXIST,exitencia);
+                map.put(Configuracion.getDescripcioArticulo(), name);
+                map.put(Configuracion.getIdArticulo(), art_id);
+                map.put(Configuracion.getUnidadArticulo(), unidad);
+                map.put(Configuracion.getExistenciaArticulo(), exitencia);
+
+                map.put(Configuracion.getIdInventarioArticulo(),c.getString(Configuracion.getIdInventarioArticulo()));
                 oslist.add(map);
+
                 list=(ListView)findViewById(R.id.ListView);
 
-                ListAdapter adapter = new ListaAdaptador(ListaArticulo.this, oslist,
+                final ListAdapter adapter = new ListaAdaptador(ListaArticulo.this, oslist,
                         R.layout.list_v,
-                        new String[] {TAG_NAME }, new int[] {R.id.name});
-
+                        new String[] {Configuracion.getDescripcioArticulo() }, new int[] {R.id.name})
+                        ;
                 list.setAdapter(adapter);
 
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -80,19 +86,23 @@ private static String TAG_ID ;//
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        Toast.makeText(ListaArticulo.this, "Se ha seleccionado " + oslist.get(+position).get("descripcion"), Toast.LENGTH_SHORT).show();
-                        String articulo2 =oslist.get(+position).get("descripcion");
-                        String unidad2=oslist.get(+position).get(TAG_UNIDAD);
-                        String existencia2=oslist.get(+position).get("NombreArticulo");
-                        Intent myIntent = new Intent(ListaArticulo.this,FormularioArticulo.class);
+
+                        Toast.makeText(ListaArticulo.this, "Se ha seleccionado " + oslist.get(+position).get(Configuracion.getDescripcioArticulo()), Toast.LENGTH_SHORT).show();
+                        String articulo2 = oslist.get(+position).get(Configuracion.getDescripcioArticulo());
+                        String unidad2 = oslist.get(+position).get(Configuracion.getUnidadArticulo());
+                        String existencia2 = oslist.get(+position).get(Configuracion.getExistenciaArticulo());
+                        String idInventario = oslist.get(+position).get(Configuracion.getIdInventarioArticulo());
+                        String idArticulo = oslist.get(+position).get(Configuracion.getIdArticulo());
+                        Intent myIntent = new Intent(ListaArticulo.this, FormularioArticulo.class);
                         myIntent.putExtra("articulo2", articulo2);
-                        myIntent.putExtra("unidad2",unidad2);
+                        myIntent.putExtra("unidad2", unidad2);
                         myIntent.putExtra("existencia2", existencia2);
+                        myIntent.putExtra("idInventario",idInventario);
+                        myIntent.putExtra("art_id",idArticulo);
                         startActivity(myIntent);
                     }
                 });
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -104,5 +114,4 @@ private static String TAG_ID ;//
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
-    /////////////////////////////////////////////////
 }

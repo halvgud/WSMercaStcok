@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 public class FormularioArticulo extends AppCompatActivity {
    // private static String TAG_ID_INVENTARIO ="idInventario";
-    private static  String TAG_VALOR_ID_INVENTARIO;
+    private static  String TAG_VALOR_INVENTARIO;
     //private static final String MAP_API_URL_FORMULARIOARTICULO = "http://192.168.1.17/wsMercaStock/articulo/actualizar";
     private BackGroundTask bgt;
 
@@ -27,7 +27,7 @@ public class FormularioArticulo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_articulo);
         setTitle("Artículo");
-        TAG_VALOR_ID_INVENTARIO = getIntent().getExtras().getString(Configuracion.getIdInventario());
+        TAG_VALOR_INVENTARIO = getIntent().getExtras().getString(Configuracion.getIdInventario());
         EditText txt1 = (EditText) findViewById(R.id.editText3);
         TextView txtV = (TextView) findViewById(R.id.textView5);
         txtV.setText(getIntent().getExtras().getString("articulo2"));
@@ -85,11 +85,11 @@ public class FormularioArticulo extends AppCompatActivity {
     }
     public void Confirmacion(View View) {
         String txtexistencia=getIntent().getExtras().getString("exitencia2");
-        EditText valor;
+        final EditText valor;
         valor = (EditText) findViewById(R.id.editText3);
-        showToast(Double.parseDouble(getIntent().getExtras().getString("existencia2"))+" "+Double.parseDouble(valor.getText().toString()));
+        //showToast(Double.parseDouble(getIntent().getExtras().getString("existencia2"))+" "+Double.parseDouble(valor.getText().toString()));
         if (Double.parseDouble(getIntent().getExtras().getString("existencia2"))==(Double.parseDouble(valor.getText().toString()))) {
-        aceptar();
+        aceptar(valor.getText().toString());
             //showToast(":)");
         }
         else {
@@ -99,7 +99,7 @@ public class FormularioArticulo extends AppCompatActivity {
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-                    aceptar();
+                    aceptar(valor.getText().toString());
 
                 }
             });
@@ -112,12 +112,13 @@ public class FormularioArticulo extends AppCompatActivity {
         }
     }
 
-    public void aceptar() {
+    public void aceptar(String valor) {
         try{
             //showToast(TAG_VALOR_ID_INVENTARIO);
         JSONObject jsobj = new JSONObject();
-        jsobj.put("idInventario",TAG_VALOR_ID_INVENTARIO);
-        jsobj.put("cantidad",findViewById(R.id.editText3).toString());
+        jsobj.put("idInventario",TAG_VALOR_INVENTARIO);
+        jsobj.put("existenciaRespuesta",valor);
+            jsobj.put("art_id",getIntent().getExtras().getString("art_id"));
         bgt = new BackGroundTask(Configuracion.getApiUrlInventario(), "POST",jsobj );
             JSONObject json = bgt.execute().get();
         Toast t=Toast.makeText(this,"Se ha guardado correctamente.", Toast.LENGTH_SHORT);
