@@ -7,13 +7,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 /**
  * Created by Juan Carlos De León on 05/04/2016.
  */
 public class Configuracion {
-   public static void Inicializar(){
+    public static void Inicializar(){
         BackGroundTask bgt;
         try {
             JSONObject config=new JSONObject();
@@ -31,6 +30,7 @@ public class Configuracion {
                     setDatos(c.getString("parametro").equals("TAG_DATOS") ? c.getString("valor") : getDatos());
                     setIdLogin(c.getString("parametro").equals("TAG_ID_LOGIN") ? c.getString("valor") : getIdLogin());
                     setDescripcionLogin(c.getString("parametro").equals("TAG_DESCRIPCION_LOGIN") ? c.getString("valor") : getDescripcionLogin());
+
                     setApiUrlLogin(c.getString("parametro").equals("API_URL_LOGIN") ? c.getString("valor") : getApiUrlLogin());
                     setIdCategoria(c.getString("parametro").equals("TAG_ID_CATEGORIA") ? c.getString("valor") : getIdCategoria());
                     setDescripcionCategoria(c.getString("parametro").equals("TAG_DESCRIPCION_CATEGORIA") ? c.getString("valor") : getDescripcionCategoria());
@@ -48,6 +48,11 @@ public class Configuracion {
                     setIdRegistro(c.getString("parametro").equals("TAG_ID_REGISTRO") ? c.getString("valor") : getIdRegistro());
                     setDescripcioRegistro(c.getString("parametro").equals("TAG_DESCRIPCION_REGISTRO") ? c.getString("valor") : getDescripcioRegistro());
                     setApiUrlRegistro(c.getString("parametro").equals("API_URL_REGISTRO") ? c.getString("valor") : getApiUrlRegistro());
+                    //if(getApiUrl().length() == 0) {
+                        setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : getApiUrl());
+                    //}
+                    setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : getConfirmacion_Mensaje_Gurdado());
+                    setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : getConfirmacion_Habilitar_Decimales());
                 }
             }
         }catch (JSONException e){
@@ -94,7 +99,9 @@ public class Configuracion {
         //setTagMapApiLoginRegistro(json.Object("MAP_API_LOGIN_REGISTRO"));
 */
     }
-
+    private static String _ApiUrl="";
+    public  static String getApiUrl(){ return  _ApiUrl;}
+    private  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
 
     private static String _ValorVerdadero="TRUE";
     public static String getValorVerdadero() { return _MostrarMensajeBienvenida; }
@@ -116,8 +123,8 @@ public class Configuracion {
     public static String getDescripcionLogin(){ return _DescripcionLogin;}
     private static void setDescripcionLogin(String DescripcionLogin) {_DescripcionLogin=DescripcionLogin;}
 
-    private static String _ApiUrlLogin="http://192.168.1.17/wsMercaStock/sucursal";
-    public static String getApiUrlLogin(){ return _ApiUrlLogin;}
+    private static String _ApiUrlLogin="wsMercaStock/sucursal";
+    public static String getApiUrlLogin(){return ((_ApiUrlLogin.contains("http://")?_ApiUrlLogin:getApiUrl()+_ApiUrlLogin));}
     private static void setApiUrlLogin(String ApiUrlLogin) {_ApiUrlLogin=ApiUrlLogin;}
 
     private static String _IdCategoria="cat_id";
@@ -128,12 +135,12 @@ public class Configuracion {
     public static String getDescripcionCategoria(){ return _DescripcionCategoria;}
     private static void setDescripcionCategoria(String DescripcionCategoria) {_DescripcionCategoria=DescripcionCategoria;}
 
-    private static String _CantidadCategoria="CANTIDAD";
+    private static String _CantidadCategoria="cantidad";
     public static String getCantidadCategoria(){ return _CantidadCategoria;}
     private static void setCantidadCategoria(String CantidadCategoria) {_CantidadCategoria=CantidadCategoria;}
 
-    private static String _ApiUrlCategoria="http://192.168.1.17/wsMercaStock/categoria";
-    public static String getApiUrlCategoria(){ return _ApiUrlCategoria;}
+    private static String _ApiUrlCategoria="wsMercaStock/categoria";
+    public static String getApiUrlCategoria(){return ((_ApiUrlCategoria.contains("http://")?_ApiUrlCategoria:getApiUrl()+_ApiUrlCategoria));}
     private static void setApiUrlCategoria(String ApiUrlCategoria) {_ApiUrlCategoria=ApiUrlCategoria;}
 
     private static String _IdArticulo="cat_id";
@@ -156,8 +163,8 @@ public class Configuracion {
     public static String getIdInventarioArticulo(){ return _IdInventarioArticulo;}
     private static void setIdInventarioArticulo(String IdInventarioArticulo) {_IdInventarioArticulo=IdInventarioArticulo;}
 
-    private static String _ApiUrlArticulo="http://192.168.1.17/wsMercaStock/articulo/obtener";
-    public static String getApiUrlArticulo(){ return _ApiUrlArticulo;}
+    private static String _ApiUrlArticulo="wsMercaStock/articulo/obtener";
+    public static String getApiUrlArticulo(){return ((_ApiUrlArticulo.contains("http://")?_ApiUrlArticulo:getApiUrl()+_ApiUrlArticulo));}
     private static void setApiUrlArticulo(String ApiUrlArticulo) {_ApiUrlArticulo=ApiUrlArticulo;}
 
     private static String _IdInventario="idInventario";
@@ -168,8 +175,8 @@ public class Configuracion {
     public static String getValorInventario(){ return _ValorInventario;}
     private static void setValorInventario(String ValorInventario) {_ValorInventario=ValorInventario;}
 
-    private static String _ApiUrlInventario="http://192.168.1.17/wsMercaStock/articulo/actualizar";
-    public static String getApiUrlInventario(){ return _ApiUrlInventario;}
+    private static String _ApiUrlInventario="wsMercaStock/articulo/actualizar";
+    public static String getApiUrlInventario(){return ((_ApiUrlInventario.contains("http://")?_ApiUrlInventario:getApiUrl()+_ApiUrlInventario));}
     private static void setApiUrlInventario(String ApiUrlInventario) {_ApiUrlInventario=ApiUrlInventario;}
 
     private static String _IdRegistro="idSucursal";
@@ -180,9 +187,15 @@ public class Configuracion {
     public static String getDescripcioRegistro(){ return _DescripcioRegistro;}
     private static void setDescripcioRegistro(String DescripcioRegistro) {_DescripcioRegistro=DescripcioRegistro;}
 
-    private static String _ApiUrlRegistro="http://192.168.1.17/wsMercaStock/usuario/registro";
-    public static String getApiUrlRegistro(){ return _ApiUrlRegistro;}
-    private static void setApiUrlRegistro(String TagApiUrlRegistro) {_ApiUrlRegistro=TagApiUrlRegistro;}
+    private static String _ApiUrlRegistro="wsMercaStock/usuario/registro";
+    public static String getApiUrlRegistro(){return ((_ApiUrlRegistro.contains("http://")?_ApiUrlRegistro:getApiUrl()+_ApiUrlRegistro));}
+    private static void setApiUrlRegistro(String ApiUrlRegistro) {_ApiUrlRegistro=ApiUrlRegistro;}
 
+    private static String _Confirmacion_Mensaje_Gurdado="TRUE";
+    public static  String getConfirmacion_Mensaje_Gurdado() {return _Confirmacion_Mensaje_Gurdado;}
+    private static void setConfirmacion_Mensaje_Gurdado(String Confirmacion_Mensaje_Gurdado) {_Confirmacion_Mensaje_Gurdado =Confirmacion_Mensaje_Gurdado;}
 
+    private static String _Confirmacion_Habilitar_Decimales="TRUE";
+    public  static  String getConfirmacion_Habilitar_Decimales() {return  _Confirmacion_Habilitar_Decimales;}
+    private static  void setConfirmacion_Habilitar_Decimales(String Confirmacion_Habilitar_Decimales) {_Confirmacion_Habilitar_Decimales=Confirmacion_Habilitar_Decimales;}
 }
