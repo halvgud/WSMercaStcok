@@ -1,5 +1,6 @@
 package mx.mercatto.mercastock;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,14 +30,6 @@ import java.util.concurrent.ExecutionException;
 
 
 public class RegistroUsuario extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private static final String TAG_ID = "idSucursal";
     private static final String TAG_NAME = "nombre";
     private static final String TAG_DATA = "datos";
@@ -61,21 +55,24 @@ public class RegistroUsuario extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     private String[] arraySpinner;
+    protected View rootView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
         //super.onCreateView(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
+        this.rootView = inflater.inflate(R.layout.fragment_registro_usuario, container, false);
+        // setContentView(R.whatever);
 
-        //cargarListadoSucursal(rootView);
         arraySpinner=new String[]{
                 "Masculino","Femenino"
         };
-        Spinner s = (Spinner) getActivity().findViewById(R.id.spinnerSexo);
+        txtsexo = (Spinner) rootView.findViewById(R.id.spinnerSexo);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, arraySpinner);
-        s.setAdapter(adapter);
-        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        txtsexo.setAdapter(adapter);
+        txtsexo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -90,12 +87,13 @@ public class RegistroUsuario extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        txtusuario = (EditText) getActivity().findViewById(R.id.editText5);
-        txtpassword = (EditText) getActivity().findViewById(R.id.editText6);
-        txtpassword2= (EditText) getActivity().findViewById(R.id.editText7);
-        txtnombre = (EditText) getActivity().findViewById(R.id.editText8);
-        txtapellido = (EditText) getActivity().findViewById(R.id.editText9);
-        txtsexo = (Spinner) getActivity().findViewById(R.id.spinnerSexo);
+        txtusuario = (EditText) mActivity.findViewById(R.id.editText5);
+        txtpassword = (EditText) mActivity.findViewById(R.id.editText6);
+        txtpassword2= (EditText) mActivity.findViewById(R.id.editText7);
+        txtnombre = (EditText) mActivity.findViewById(R.id.editText8);
+        txtapellido = (EditText) mActivity.findViewById(R.id.editText9);
+        cargarListadoSucursal(rootView);
+        // txtsexo = (Spinner) rootView.findViewById(R.id.spinnerSexo);
         return rootView;
     }
 
@@ -113,6 +111,12 @@ public class RegistroUsuario extends Fragment {
         }
     }*/
 
+    protected FragmentActivity mActivity;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = (FragmentActivity)activity;
+    }
 
 
 
@@ -145,12 +149,12 @@ public class RegistroUsuario extends Fragment {
                     countryList.add(new ListaSucursal(id, name.toUpperCase()));
                 }
             }else{
-                getActivity().findViewById(R.id.button2).setEnabled(false);
+                rootView.findViewById(R.id.button2).setEnabled(false);
                 return;
             }
 
-            listaSucSpinner = (Spinner) getActivity().findViewById(R.id.spinnerRegistroUsuario);
-            SucursalAdapter cAdapter = new SucursalAdapter(getActivity(), android.R.layout.simple_spinner_item, countryList);
+            listaSucSpinner = (Spinner) rootView.findViewById(R.id.spinnerRegistroUsuario);
+            SucursalAdapter cAdapter = new SucursalAdapter(mActivity, android.R.layout.simple_spinner_item, countryList);
             listaSucSpinner.setAdapter(cAdapter);
 
             listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -208,9 +212,9 @@ public class RegistroUsuario extends Fragment {
                         switch (BackGroundTask.CodeResponse) {
                             case 200: {
                                 showToast("Su registró correctamente");
-                               // Intent refresh = new Intent(this, Registro.class);
-                              //  this.finish();
-                              //  startActivity(refresh);
+                                // Intent refresh = new Intent(this, Registro.class);
+                                //  this.finish();
+                                //  startActivity(refresh);
                             }
                             ;
                             break;
@@ -241,7 +245,7 @@ public class RegistroUsuario extends Fragment {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
     public void Regresar(View view){
-     //   Intent intent = new Intent(this, Login.class);
-    //    this.startActivity(intent);
+        //   Intent intent = new Intent(this, Login.class);
+        //    this.startActivity(intent);
     }
 }

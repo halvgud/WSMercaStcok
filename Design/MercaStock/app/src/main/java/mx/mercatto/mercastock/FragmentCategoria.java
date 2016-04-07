@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 
 public class FragmentCategoria extends Fragment {
-    private static final String MAP_API_URL = "http://192.168.1.56/wsMercaStock/categoria";
+    //private static final String MAP_API_URL = "http://192.168.1.56/wsMercaStock/categoria";
     private BackGroundTask bgt;
     public FragmentCategoria() {
 
@@ -38,7 +38,7 @@ public class FragmentCategoria extends Fragment {
 
 
     public void cargarListadoCategoria() {
-        bgt = new BackGroundTask(MAP_API_URL, "GET", null,getActivity(),3);
+        bgt = new BackGroundTask(Configuracion.getApiUrlCategoria(), "GET", null,getActivity(),3);
         try {
            bgt.execute();
         } catch (Exception e) {

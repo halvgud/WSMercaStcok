@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.app.FragmentManager;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,6 +43,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 
 public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
@@ -68,6 +70,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         this.method = method;
         this.Codigo = codigo;
         this.activity = activity;
+        if (activity!= null)
         asyncDialog = new ProgressDialog(activity);
     }
 
@@ -95,12 +98,17 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             case 4: {
                 asyncDialog.setMessage("Cargando Lista de Articulos");
             }
+            case 5:{
+               // asyncDialog.setMessage("Cargando Configuraciones...");
+            }
             break;
         }
-        asyncDialog.setIndeterminate(false);
-        asyncDialog.setCancelable(false);
-        asyncDialog.setProgress(0);
-        asyncDialog.show();
+        if(activity!=null) {
+            asyncDialog.setIndeterminate(false);
+            asyncDialog.setCancelable(false);
+            asyncDialog.setProgress(0);
+            asyncDialog.show();
+        }
 
     }
 
@@ -134,16 +142,17 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
+            Log.d("a",json);
             switch(Codigo){
                 case 1:{}break;
                 case 2:{
-                    _JsonGenerico = jObj.getJSONArray(TAG_DATOS);
+               /*     _JsonGenerico = jObj.getJSONArray(TAG_DATOS);
                     for (int i = 0; i < _JsonGenerico.length(); i++) {
                         JSONObject c = _JsonGenerico.getJSONObject(i);
                         String idSucursal = c.getString(TAG_ID_SUCURSAL);
                         String nombreSucursal = c.getString(TAG_NOMBRE_SUCURSAL);
                         listaSuc.add(new ListaSucursal(idSucursal, nombreSucursal.toUpperCase()));
-                    }
+                    }*/
                 }break;
                 case 3:{
 
@@ -190,16 +199,70 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 case 4:{
                     ListViewArticulos(file_url);
                 }break;
+                case 5:{
+                    CargarConfiguraciones(file_url);
+                    BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(true), "GET", null,activity,2);
+                    bgt.execute();
+                }break;
+                case 6:{
+                    FormularioArticulo(file_url);
+                }
             }
 
 
         } catch (Exception e) {
             showToast(e.toString());
         }
-        asyncDialog.dismiss();
+        if(activity!=null) {
+            asyncDialog.dismiss();
+        }
     }
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+    }
+
+    private void CargarConfiguraciones(JSONObject file_url){
+        try {
+            if(file_url!= null) {
+                JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
+
+                // looping through All countries
+                for (int i = 0; i < countries.length(); i++) {
+
+                    JSONObject c = countries.getJSONObject(i);
+                    Configuracion.setDatos(c.getString("parametro").equals("TAG_DATOS") ? c.getString("valor") : Configuracion.getDatos());
+                    Configuracion.setIdLogin(c.getString("parametro").equals("TAG_ID_LOGIN") ? c.getString("valor") : Configuracion.getIdLogin());
+                    Configuracion.setDescripcionLogin(c.getString("parametro").equals("TAG_DESCRIPCION_LOGIN") ? c.getString("valor") : Configuracion.getDescripcionLogin());
+                    Configuracion.setApiUrlLogIn(c.getString("parametro").equals("API_URL_LOGIN") ? c.getString("valor") : Configuracion.getApiUrlLogIn());
+                    Configuracion.setApiUrlSucursal(c.getString("parametro").equals("API_URL_SUCURSAL") ? c.getString("valor") : Configuracion.getApiUrlSucursal(false));
+                    Configuracion.setIdCategoria(c.getString("parametro").equals("TAG_ID_CATEGORIA") ? c.getString("valor") : Configuracion.getIdCategoria());
+                    Configuracion.setDescripcionCategoria(c.getString("parametro").equals("TAG_DESCRIPCION_CATEGORIA") ? c.getString("valor") : Configuracion.getDescripcionCategoria());
+                    Configuracion.setCantidadCategoria(c.getString("parametro").equals("TAG_CANTIDAD_CATEGORIA") ? c.getString("valor") : Configuracion.getCantidadCategoria());
+                    Configuracion.setApiUrlCategoria(c.getString("parametro").equals("API_URL_CATEGORIA") ? c.getString("valor") : Configuracion.getApiUrlCategoria());
+                    Configuracion.setIdArticulo(c.getString("parametro").equals("TAG_ID_ARTICULO") ? c.getString("valor") : Configuracion.getIdArticulo());
+                    Configuracion.setDescripcioArticulo(c.getString("parametro").equals("TAG_DESCRIPCION_ARTICULO") ? c.getString("valor") : Configuracion.getDescripcioArticulo());
+                    Configuracion.setUnidadArticulo(c.getString("parametro").equals("TAG_UNIDAD_ARTICULO") ? c.getString("valor") : Configuracion.getUnidadArticulo());
+                    Configuracion.setExistenciaArticulo(c.getString("parametro").equals("TAG_EXISTENCIA_ARTICULO") ? c.getString("valor") : Configuracion.getExistenciaArticulo());
+                    Configuracion.setIdInventarioArticulo(c.getString("parametro").equals("TAG_CANTIDAD_ARTICULO") ? c.getString("valor") : Configuracion.getIdInventarioArticulo());
+                    Configuracion.setApiUrlArticulo(c.getString("parametro").equals("API_URL_ARTICULO") ? c.getString("valor") : Configuracion.getApiUrlArticulo());
+                    Configuracion.setIdInventario(c.getString("parametro").equals("TAG_ID_INVENTARIO") ? c.getString("valor") : Configuracion.getIdInventario());
+                    Configuracion.setValorInventario(c.getString("parametro").equals("TAG_VALOR_ID_INVENTARIO") ? c.getString("valor") : Configuracion.getValorInventario());
+                    Configuracion.setApiUrlInventario(c.getString("parametro").equals("API_URL_INVENTARIO") ? c.getString("valor") : Configuracion.getApiUrlInventario());
+                    Configuracion.setIdRegistro(c.getString("parametro").equals("TAG_ID_REGISTRO") ? c.getString("valor") : Configuracion.getIdRegistro());
+                    Configuracion.setDescripcionRegistro(c.getString("parametro").equals("TAG_DESCRIPCION_REGISTRO") ? c.getString("valor") : Configuracion.getDescripcionRegistro());
+                    Configuracion.setApiUrlRegistro(c.getString("parametro").equals("API_URL_REGISTRO") ? c.getString("valor") : Configuracion.getApiUrlRegistro());
+                    //if(getApiUrl().length() == 0) {
+                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL2") ? c.getString("valor") : Configuracion.getApiUrl());
+                    //}
+                    Configuracion.setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : Configuracion.getConfirmacion_Mensaje_Gurdado());
+                    Configuracion.setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : Configuracion.getConfirmacion_Habilitar_Decimales());
+                }
+            }
+            Configuracion.Finalizado=true;
+        }catch(JSONException e)
+        {
+            showToast(e.getMessage());
+        }
     }
     private void Login(JSONObject file_url){
         try{
@@ -235,6 +298,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
     ArrayList<ListaSucursal> countryList = new ArrayList<>();
     private void spinnerSucursal(JSONObject file_url){
+        Log.d("a","paso 4");
         try {
             JSONArray countries = file_url.getJSONArray(TAG_DATOS);
             for (int i = 0; i < countries.length(); i++) {
@@ -267,25 +331,22 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             }
         });*/
     }
-    private final static String TAG_ID_CATEGORIA="cat_id";
-    private final static String TAG_ID_ARTICULO="art_id";
-    private final static String TAG_NOMBRE_CATEGORIA = "nombre";
     private final static String TAG_CANTIDAD = "CANTIDAD";
     private void ListViewCategorias(JSONObject file_url){
         try {
-            _JsonGenerico = file_url.getJSONArray(TAG_DATOS);
+            _JsonGenerico = file_url.getJSONArray(Configuracion.getDatos());
 
             for (int i = 0; i < _JsonGenerico.length(); i++) {
                 JSONObject c = _JsonGenerico.getJSONObject(i);
 
-                String cat_id = c.getString(TAG_ID_CATEGORIA);
+                String cat_id = c.getString(Configuracion.getIdCategoria());
                 //String art_id = c.getString(TAG_ID_ARTICULO);
-                String nombreCategoria = c.getString(TAG_NOMBRE_CATEGORIA);
-                String cantidad = c.getString(TAG_CANTIDAD);
+                String nombreCategoria = c.getString(Configuracion.getDescripcionCategoria());
+                String cantidad = c.getString(Configuracion.getCantidadCategoria());
                 HashMap<String, String> map = new HashMap<>();
-                map.put(TAG_NOMBRE_CATEGORIA,nombreCategoria);
-                map.put(TAG_CANTIDAD, cantidad);
-                map.put(TAG_ID_CATEGORIA, cat_id);
+                map.put(Configuracion.getDescripcionCategoria(),nombreCategoria);
+                map.put(Configuracion.getCantidadCategoria(), cantidad);
+                map.put(Configuracion.getIdCategoria(), cat_id);
                 //map.put(TAG_ID_ARTICULO, art_id);
 
                 _Listado.add(map);
@@ -293,7 +354,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
                 ListAdapter adapter = new SimpleAdapter(activity, _Listado,
                         R.layout.list_v,
-                        new String[]{TAG_NOMBRE_CATEGORIA, TAG_CANTIDAD, TAG_ID_CATEGORIA}, new int[]{R.id.descripcionColumna, R.id.api, R.id.cat_id});
+                        new String[]{Configuracion.getDescripcionCategoria(), TAG_CANTIDAD, Configuracion.getIdCategoria()}, new int[]{R.id.descripcionColumna, R.id.api, R.id.cat_id});
 
                 list.setAdapter(adapter);
 
@@ -327,19 +388,21 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         }
     }
 
-    private static final String TAG_UNIDAD="Unidad";
+
     private void ListViewArticulos(JSONObject file_url){
         try {
             _JsonGenerico = file_url.getJSONArray(TAG_DATOS);
             for (int i = 0; i < _JsonGenerico.length(); i++) {
                 JSONObject jsonTemporal = _JsonGenerico.getJSONObject(i);
-                String nombreArticulo = jsonTemporal.getString(TAG_NOMBRE_ARTICULO);
-                String idCategoria = jsonTemporal.getString(TAG_UNIDAD);
-                String idArticulo = jsonTemporal.getString(TAG_ID_ARTICULO);
+                String nombreArticulo = jsonTemporal.getString(Configuracion.getDescripcioArticulo());
+                String idCategoria = jsonTemporal.getString(Configuracion.getIdCategoria());
+                String idArticulo = jsonTemporal.getString(Configuracion.getIdArticulo());
+                String idInventario = jsonTemporal.getString(Configuracion.getIdInventario());
                 HashMap<String, String> mappeo = new HashMap<>();
-                mappeo.put(TAG_NOMBRE_ARTICULO, nombreArticulo);
-                mappeo.put(TAG_ID_ARTICULO, idArticulo);
-                mappeo.put(TAG_UNIDAD,idCategoria);
+                mappeo.put(Configuracion.getDescripcioArticulo(), nombreArticulo);
+                mappeo.put(Configuracion.getIdArticulo(), idArticulo);
+                mappeo.put(Configuracion.getIdCategoria(),idCategoria);
+                mappeo.put(Configuracion.getIdInventario(),idInventario);
                 _Listado.add(mappeo);
 
             }
@@ -347,7 +410,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
             adapter = new SimpleAdapter(activity, _Listado,
                     R.layout.list_v,
-                    new String[]{TAG_NOMBRE_ARTICULO}, new int[]{R.id.descripcionColumna});
+                    new String[]{Configuracion.getDescripcioArticulo()}, new int[]{R.id.descripcionColumna});
             list.setAdapter(adapter);
 
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -355,10 +418,11 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    Toast.makeText(activity, "Se ha seleccionado " + _Listado.get(+position).get("nombre"), Toast.LENGTH_SHORT).show();
-                    String descripcionArticulo = _Listado.get(+position).get(TAG_NOMBRE_ARTICULO);
-                    String art_id = _Listado.get(+position).get(TAG_ID_ARTICULO);
-                    String unidad = _Listado.get(+position).get(TAG_UNIDAD);
+                    Toast.makeText(activity, "Se ha seleccionado " + _Listado.get(+position).get(Configuracion.getDescripcioArticulo()), Toast.LENGTH_SHORT).show();
+                    String descripcionArticulo = _Listado.get(+position).get(Configuracion.getDescripcioArticulo());
+                    String art_id = _Listado.get(+position).get(Configuracion.getIdArticulo());
+                    String unidad = _Listado.get(+position).get(Configuracion.getUnidadArticulo());
+                    String idInventario = _Listado.get(+position).get(Configuracion.getIdInventario());
                     FragmentFormularioArticulo fragment = new FragmentFormularioArticulo();
                     FragmentManager fragmentManager = activity.getFragmentManager();
                     Bundle args = Bundle.EMPTY;
@@ -367,9 +431,10 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     } else {
                         args = new Bundle(args);
                     }
-                    args.putString("art_id", art_id);
-                    args.putString("Unidad", unidad);
-                    args.putString("NombreArticulo", descripcionArticulo);
+                    args.putString(Configuracion.getIdArticulo(),art_id);
+                    args.putString(Configuracion.getIdInventario(),idInventario);
+                    args.putString(Configuracion.getUnidadArticulo(), unidad);
+                    args.putString(Configuracion.getDescripcioArticulo(), descripcionArticulo);
                     fragment.setArguments(args);
                     fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 }
@@ -377,6 +442,10 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         }catch (JSONException e){
             showToast(e.getMessage());
         }
+    }
+
+    private void FormularioArticulo(JSONObject file_url){
+
     }
 }
 
