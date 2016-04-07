@@ -1,7 +1,7 @@
 package mx.mercatto.designmercastock;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,10 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
-public class ListaArticulo extends AppCompatActivity {
+public class ListaArticulo extends ActionBarActivity {
 
 //private static String TAG_ID_LISTAARTICULO="cat_id" ;//
-    //private static final String TAG_NAME_LISTAARTICULO = "NombreArticulo";//
+   // private static final String TAG_GRANEL = "granel";//
+    //private static final String TAG_CODIGO="clave";
     //private static final String TAG_DATA_LISTAARTICULO = "datos";//Falta
     //private static final String TAG_UNIDAD_LISTAARTICULO ="Unidad";
     //private static  final  String TAG_EXIST_LISTAARTICULO = "Existencia";
@@ -62,6 +63,8 @@ public class ListaArticulo extends AppCompatActivity {
                 String art_id = c.getString(Configuracion.getIdArticulo());
                 String unidad = c.getString(Configuracion.getUnidadArticulo());
                 String exitencia = c.getString(Configuracion.getExistenciaArticulo());
+                String granel = c.getString(Configuracion.getGranelArticulo());
+                String clave = c.getString(Configuracion.getClaveArticulo());
 
                 HashMap<String, String> map = new HashMap<String, String>();
 
@@ -69,6 +72,8 @@ public class ListaArticulo extends AppCompatActivity {
                 map.put(Configuracion.getIdArticulo(), art_id);
                 map.put(Configuracion.getUnidadArticulo(), unidad);
                 map.put(Configuracion.getExistenciaArticulo(), exitencia);
+                map.put(Configuracion.getGranelArticulo(),granel);
+                map.put(Configuracion.getClaveArticulo(),clave);
 
                 map.put(Configuracion.getIdInventarioArticulo(),c.getString(Configuracion.getIdInventarioArticulo()));
                 oslist.add(map);
@@ -93,7 +98,11 @@ public class ListaArticulo extends AppCompatActivity {
                         String existencia2 = oslist.get(+position).get(Configuracion.getExistenciaArticulo());
                         String idInventario = oslist.get(+position).get(Configuracion.getIdInventarioArticulo());
                         String idArticulo = oslist.get(+position).get(Configuracion.getIdArticulo());
+                        String grane=oslist.get(+position).get(Configuracion.getGranelArticulo());
+                        String clave=oslist.get(+position).get(Configuracion.getClaveArticulo());
                         Intent myIntent = new Intent(ListaArticulo.this, FormularioArticulo.class);
+                        myIntent.putExtra("grane",grane);
+                        myIntent.putExtra("clave",clave);
                         myIntent.putExtra("articulo2", articulo2);
                         myIntent.putExtra("unidad2", unidad2);
                         myIntent.putExtra("existencia2", existencia2);

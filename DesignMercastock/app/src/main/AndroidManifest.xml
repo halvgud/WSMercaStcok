@@ -26,4 +26,5 @@
 
     <!-- Autenticación -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+
 </manifest>

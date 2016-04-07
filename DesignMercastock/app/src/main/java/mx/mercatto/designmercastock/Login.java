@@ -3,12 +3,11 @@ package mx.mercatto.designmercastock;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,42 +20,24 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import android.content.Context;
 
-public class Login extends AppCompatActivity {
+public class Login extends ActionBarActivity {
 
-    private static final String TAG_ID = "idSucursal";
-    private static final String TAG_NAME = "nombre";
-    private static final String TAG_DATA = "datos";
-
-    private static final String MAP_API_URL = "http://192.168.1.17/wsMercaStock/sucursal";
-    private static final String MAP_API_LOGIN = "http://192.168.1.17/wsMercaStock/usuario/login";
+    private static final String MAP_API_LOGIN_LOGIN = "http://192.168.1.17/wsMercaStock/usuario/login";
 
     private static final String TAG_USERNAME = "";
     private static final String TAG_PASSWORD="";
-    public static String ClaveApi = "";
+    public static String CLAVEAPI_LOGIN = "";
     private BackGroundTask bgt;
     Spinner listaSucSpinner;
     EditText txtusuario;
     EditText txtpassword;
     ArrayList<listaSucursal> countryList = new ArrayList<listaSucursal>();
+    int contador;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
-        if (auth_token_string!=""){
-            Intent intent = new Intent(this, ListaDepartamento.class);
-            this.startActivity(intent);
-        }
-        else {
-
-            setContentView(R.layout.activity_login);
-            setTitle("MercaStock");
-            cargarListadoSucursal();
-            txtusuario = (EditText) findViewById(R.id.editText);
-            txtpassword = (EditText) findViewById(R.id.editText2);
-        }
+        Configuracion.Inicializar();
         setContentView(R.layout.activity_login);
         setTitle("MercaStock");
         cargarListadoSucursal();
@@ -72,53 +53,28 @@ public class Login extends AppCompatActivity {
         // Building post parameters, key and value pair
         List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
         apiParams.add(new BasicNameValuePair("call", "countrylist"));
-
-        bgt = new BackGroundTask(MAP_API_URL, "GET", null);
-
+        Log.d("suc", Configuracion.getApiUrlLogin());
+        bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null);
         try {
             JSONObject countryJSON = bgt.execute().get();
-            // Getting Array of countries
             if(countryJSON!= null){
-                JSONArray countries = countryJSON.getJSONArray(TAG_DATA);
+                JSONArray countries = countryJSON.getJSONArray(Configuracion.getDatos());
 
-                // looping through All countries
                 for (int i = 0; i < countries.length(); i++) {
 
                     JSONObject c = countries.getJSONObject(i);
+                    String id = c.getString(Configuracion.getIdLogin());
+                    String name = c.getString(Configuracion.getDescripcionLogin());
 
-                    // Storing each json item in variable
-                    String id = c.getString(TAG_ID);
-                    String name = c.getString(TAG_NAME);
-
-                    // add Country
                     countryList.add(new listaSucursal(id, name.toUpperCase()));
                 }
             }else{
                 findViewById(R.id.button2).setEnabled(false);
                 return;
             }
-
-            // bind adapter to spinner
-            //listaSucSpinner = (Spinner) findViewById(R.id.spinner1);
-            //SucursalAdapter cAdapter = new SucursalAdapter(this, android.R.layout.simple_spinner_item, countryList);
-           // listaSucSpinner.setAdapter(cAdapter);
             TextView txtSucursal = (TextView) findViewById(R.id.textView13);
             txtSucursal.setText(countryList.get(0).toString());
 
-
-           // listaSucSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-/*
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    listaSucursal selectedCountry = countryList.get(position);
-                    showToast(selectedCountry.getName() + " was selected!");
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });*/
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -132,30 +88,62 @@ public class Login extends AppCompatActivity {
         String usuario = txtusuario.getText().toString();
         String password = txtpassword.getText().toString();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        //String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
-
         SharedPreferences.Editor editor = settings.edit();
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);
             jsonObj1.put("contrasena", password);
-            // Create the POST object and add the parameters
-            bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
+            bgt = new BackGroundTask(MAP_API_LOGIN_LOGIN, "POST", jsonObj1);
             JSONObject countryJSON = bgt.execute().get();
 
             switch (BackGroundTask.CodeResponse) {
                 case 200: {
                     JSONObject datos = countryJSON.getJSONObject("datos");
-                    ClaveApi = datos.getString("claveApi");
-                    editor.putString("ClaveApi", ClaveApi);
+                    CLAVEAPI_LOGIN = datos.getString("claveApi");
+                    editor.putString("ClaveApi", CLAVEAPI_LOGIN);
                     editor.commit();
                     Intent intent = new Intent(this, ListaDepartamento.class);
                     this.startActivity(intent);
                 }
                 ;
                 break;
-                case 401:
-                    showToast(("Usuario y/o password incorrectas"));
+                case 400:{
+
+                    String subEstado=countryJSON.getString("estado");
+                    switch (subEstado){
+                        case "11":
+                            showToast(countryJSON.getString("mensaje"));
+                            break;
+                        default:
+                            showToast("Usuario o contraseña incorrectas");
+                    }
+                    //JSONObject datos = countryJSON.getJSONObject("mensaje");
+                    //showToast(datos.getString("mensaje"));
+                }break;
+                case 401:{
+                    if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
+                        if(contador>=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())){
+                            try {
+                                JSONObject jsonObj2 = new JSONObject();
+                                jsonObj2.put("usuario", usuario);
+                                bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2);
+                                bgt.execute().get();
+                                //JSONObject datos = countryJSON.getJSONObject("datos");
+                            }catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            showToast("Se ha bloqueado el usuario por 3 intentos erroneos");
+                        }
+                        contador++;
+                    }
+                    if(contador<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                        showToast(("Usuario y/o password incorrectas"));
+
+                    }}
                     break;
                 default:
                     showToast(Integer.toString(BackGroundTask.CodeResponse));
@@ -166,7 +154,6 @@ public class Login extends AppCompatActivity {
             showToast(e.toString());
         }
     }
-
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }

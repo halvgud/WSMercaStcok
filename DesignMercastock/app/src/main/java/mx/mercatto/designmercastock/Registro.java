@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,13 +23,13 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Juan Carlos De León on 31/03/2016.
  */
-public class Registro extends AppCompatActivity {
+public class Registro extends ActionBarActivity {
 
-    private static final String TAG_ID = "idSucursal";
-    private static final String TAG_NAME = "nombre";
-    private static final String TAG_DATA = "datos";
-    private static final String MAP_API_URL = "http://192.168.1.17/wsMercaStock/sucursal";
-    private static final String MAP_API_LOGIN = "http://192.168.1.17/wsMercaStock/usuario/registro";
+    //private static final String TAG_ID_REGISTRO = "idSucursal";
+    //private static final String TAG_NAME_REGISTRO = "nombre";
+    //private static final String TAG_DATA_REGISTRO = "datos";
+    //private static final String MAP_API_URL_REGISTRO = "http://192.168.1.17/wsMercaStock/sucursal";
+    //private static final String MAP_API_LOGIN_REGISTRO = "http://192.168.1.17/wsMercaStock/usuario/registro";
     private String sexo="M";
     private BackGroundTask bgt;
     Spinner listaSucSpinner;
@@ -82,19 +82,19 @@ public class Registro extends AppCompatActivity {
         List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
         apiParams.add(new BasicNameValuePair("call", "countrylist"));
 
-        bgt = new BackGroundTask(MAP_API_URL, "GET", null);
+        bgt = new BackGroundTask(Configuracion.getApiUrlRegistro(), "GET", null);
 
         try {
             JSONObject countryJSON = bgt.execute().get();
             if(countryJSON!= null){
-                JSONArray countries = countryJSON.getJSONArray(TAG_DATA);
+                JSONArray countries = countryJSON.getJSONArray(Configuracion.getDatos());
 
                 for (int i = 0; i < countries.length(); i++) {
 
                     JSONObject c = countries.getJSONObject(i);
 
-                    String id = c.getString(TAG_ID);
-                    String name = c.getString(TAG_NAME);
+                    String id = c.getString(Configuracion.getIdRegistro());
+                    String name = c.getString(Configuracion.getDescripcioRegistro());
 
                     countryList.add(new listaSucursal(id, name.toUpperCase()));
                 }
@@ -155,7 +155,7 @@ public class Registro extends AppCompatActivity {
                     jsonObj1.put("idSucursal", idsucursal);
                     jsonObj1.put("claveApi", claveapi);
                     // Create the POST object and add the parameters
-                    bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1);
+                    bgt = new BackGroundTask(Configuracion.getApiUrlRegistro(), "POST", jsonObj1);
                     JSONObject countryJSON = bgt.execute().get();
 
                     switch (BackGroundTask.CodeResponse) {

@@ -32,6 +32,7 @@ public class Configuracion {
                     setDescripcionLogin(c.getString("parametro").equals("TAG_DESCRIPCION_LOGIN") ? c.getString("valor") : getDescripcionLogin());
 
                     setApiUrlLogin(c.getString("parametro").equals("API_URL_LOGIN") ? c.getString("valor") : getApiUrlLogin());
+                    setApiUrlSucursal(c.getString("parametro").equals("API_URL_SUCURSAL") ? c.getString("valor") : getApiUrlSucursal());
                     setIdCategoria(c.getString("parametro").equals("TAG_ID_CATEGORIA") ? c.getString("valor") : getIdCategoria());
                     setDescripcionCategoria(c.getString("parametro").equals("TAG_DESCRIPCION_CATEGORIA") ? c.getString("valor") : getDescripcionCategoria());
                     setCantidadCategoria(c.getString("parametro").equals("TAG_CANTIDAD_CATEGORIA") ? c.getString("valor") : getCantidadCategoria());
@@ -48,11 +49,15 @@ public class Configuracion {
                     setIdRegistro(c.getString("parametro").equals("TAG_ID_REGISTRO") ? c.getString("valor") : getIdRegistro());
                     setDescripcioRegistro(c.getString("parametro").equals("TAG_DESCRIPCION_REGISTRO") ? c.getString("valor") : getDescripcioRegistro());
                     setApiUrlRegistro(c.getString("parametro").equals("API_URL_REGISTRO") ? c.getString("valor") : getApiUrlRegistro());
-                    //if(getApiUrl().length() == 0) {
-                        setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : getApiUrl());
-                    //}
+                    setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : getApiUrl());
                     setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : getConfirmacion_Mensaje_Gurdado());
                     setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : getConfirmacion_Habilitar_Decimales());
+                    setGranelArticulo(c.getString("parametro").equals("TAG_GRANEL_ARTICULO") ? c.getString("valor") : getGranelArticulo());
+                    setClaveArticulo(c.getString("parametro").equals("TAG_CLAVE_ARTICULO") ? c.getString("valor") : getClaveArticulo());
+                    setFlagBloqueoPorIntentos(c.getString("parametro").equals("FLAG_BLOQUEO_POR_INTENTOS") ? c.getString("valor") : getFlagBloqueoPorIntentos());
+                    setFlagBloqueoCantidad(c.getString("parametro").equals("FLAG_BLOQUEO_CANTIDAD") ? c.getString("valor") : getFlagBloqueoCantidad());
+                    setFlagBloqueoTiempo(c.getString("parametro").equals("FLAG_BLOQUEO_TIEMPO") ? c.getString("valor") : getFlagBloqueoTiempo());
+                    setApiUrlBloqueo(c.getString("parametro").equals("API_URL_BLOQUEO") ? c.getString("valor") : getApiUrlBloqueo());
                 }
             }
         }catch (JSONException e){
@@ -63,41 +68,6 @@ public class Configuracion {
         //utilizar Backgroundtask para realizar esta funcion
         //setMostrarMensajeBienvenida(json.Object("MOSTRAR_MENSAJE"));
 
-        //Generales
-      /*  setDatos(json.Object("TAG_DATOS"));
-
-        //Login
-        setIdLogin(json.Object("TAG_ID_LOGIN"));
-        setDescripcionLogin(json.Object("TAG_DESCRIPCION_LOGIN"));
-        setApiUrlLogin(json.Object("API_URL_LOGIN"));
-        //setTagApiLoginLogin(json.Object("MAP_API_LOGIN_LOGIN"));
-        //setClaveApi(json.Object("CLAVE_API_LOGIN"));
-
-        //Lista Departamentos
-        setIdCategoria(json.Object("TAG_ID_CATEGORIA"));
-        setDescripcionCategoria(json.Object("TAG_DESCRIPCION_CATEGORIA"));
-        setCantidadCategoria(json.Object("TAG_CANTIDAD_CATEGORIA"));
-        setApiUrlCategoria(json.Object("API_URL_CATEGORIA"));
-
-        //Lista Artículo
-        setIdArticulo(json.Object("TAG_ID_ARTICULO"));
-        setDescripcioArticulo(json.Object("TAG_DESCRIPCION_ARTICULO"));
-        setUnidadArticulo(json.Object("TAG_UNIDAD_ARTICULO"));
-        setExistenciaArticulo(json.Object("TAG_EXISTENCIA_ARTICULO"));
-        setIdInventarioArticulo(json.Object("TAG_CANTIDAD_ARTICULO"));
-        setApiUrlArticulo(json.Object("API_URL_ARTICULO"));
-
-        //Formulario Artículo
-        setIdInventario(json.Object("TAG_ID_INVENTARIO"));
-        setValorInventario(json.Object("TAG_VALOR_ID_INVENTARIO"));
-        setApiUrlInventario(json.Object("API_URL_INVENTARIO"));
-
-        //Registro
-        setIdRegistro(json.Object("TAG_ID_REGISTRO"));
-        setDescripcioRegistro(json.Object("TAG_DESCRIPCION_REGISTRO"));
-        setApiUrlRegistro(json.Object("API_URL_REGISTRO"));
-        //setTagMapApiLoginRegistro(json.Object("MAP_API_LOGIN_REGISTRO"));
-*/
     }
     private static String _ApiUrl="";
     public  static String getApiUrl(){ return  _ApiUrl;}
@@ -123,9 +93,13 @@ public class Configuracion {
     public static String getDescripcionLogin(){ return _DescripcionLogin;}
     private static void setDescripcionLogin(String DescripcionLogin) {_DescripcionLogin=DescripcionLogin;}
 
-    private static String _ApiUrlLogin="wsMercaStock/sucursal";
+    private static String _ApiUrlLogin="wsMercaStock/usuario/login";
     public static String getApiUrlLogin(){return ((_ApiUrlLogin.contains("http://")?_ApiUrlLogin:getApiUrl()+_ApiUrlLogin));}
     private static void setApiUrlLogin(String ApiUrlLogin) {_ApiUrlLogin=ApiUrlLogin;}
+
+    private static String _ApiUrlSucursal="wsMercaStock/sucursal";
+    public static String getApiUrlSucursal(){return ((_ApiUrlSucursal.contains("http://")?_ApiUrlSucursal:getApiUrl()+_ApiUrlSucursal));}
+    private static void setApiUrlSucursal(String ApiUrlSucursal) {_ApiUrlSucursal=ApiUrlSucursal;}
 
     private static String _IdCategoria="cat_id";
     public static String getIdCategoria(){ return _IdCategoria;}
@@ -192,10 +166,34 @@ public class Configuracion {
     private static void setApiUrlRegistro(String ApiUrlRegistro) {_ApiUrlRegistro=ApiUrlRegistro;}
 
     private static String _Confirmacion_Mensaje_Gurdado="TRUE";
-    public static  String getConfirmacion_Mensaje_Gurdado() {return _Confirmacion_Mensaje_Gurdado;}
+    public static String getConfirmacion_Mensaje_Gurdado() {return _Confirmacion_Mensaje_Gurdado;}
     private static void setConfirmacion_Mensaje_Gurdado(String Confirmacion_Mensaje_Gurdado) {_Confirmacion_Mensaje_Gurdado =Confirmacion_Mensaje_Gurdado;}
 
     private static String _Confirmacion_Habilitar_Decimales="TRUE";
     public  static  String getConfirmacion_Habilitar_Decimales() {return  _Confirmacion_Habilitar_Decimales;}
     private static  void setConfirmacion_Habilitar_Decimales(String Confirmacion_Habilitar_Decimales) {_Confirmacion_Habilitar_Decimales=Confirmacion_Habilitar_Decimales;}
+
+    private static String _GranelArticulo="granel";
+    public static String getGranelArticulo(){return  _GranelArticulo;}
+    private static void setGranelArticulo(String GranelArticulo){_GranelArticulo=GranelArticulo;}
+
+    private static String _ClaveArticulo="clave";
+    public static String getClaveArticulo (){return  _ClaveArticulo;}
+    private  static  void  setClaveArticulo(String ClaveArticulo){_ClaveArticulo=ClaveArticulo;}
+
+    private static String _FlagBloqueoPorIntentos="TRUE";
+    public static String getFlagBloqueoPorIntentos(){return _FlagBloqueoPorIntentos;}
+    private static void setFlagBloqueoPorIntentos(String FlagBloqueoPorIntentos){_FlagBloqueoPorIntentos=FlagBloqueoPorIntentos;}
+
+    private  static String _FlagBloqueoCantidad="3";
+    public static  String getFlagBloqueoCantidad(){return  _FlagBloqueoCantidad;}
+    private  static void  setFlagBloqueoCantidad(String FlagBloqueoCantidad){_FlagBloqueoCantidad=FlagBloqueoCantidad;}
+
+    private static String _FlagBloqueoTiempo="2";
+    public static String getFlagBloqueoTiempo(){return  _FlagBloqueoTiempo;}
+    private static void setFlagBloqueoTiempo(String FlagBloqueoTiempo){_FlagBloqueoTiempo=FlagBloqueoTiempo;}
+
+    private static String _ApiUrlBloqueo="wsMercaStock/usuario/bloqueo";
+    public static  String getApiUrlBloqueo(){return ((_ApiUrlBloqueo.contains("http://")?_ApiUrlBloqueo:getApiUrl()+_ApiUrlBloqueo));}
+    private static void setApiUrlBloqueo(String ApiUrlBloqueo){_ApiUrlBloqueo=ApiUrlBloqueo;}
 }

@@ -26,6 +26,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     ///compile 'com.android.support:appcompat-v7:21.+'
     //compile 'com.android.support:appcompat-v7:21.0.0'
-    compile "com.android.support:appcompat-v7:22.1.0"
+    compile "com.android.support:appcompat-v7:21.0.0"
     compile 'com.mcxiaoke.volley:library:1.0.19'
 }

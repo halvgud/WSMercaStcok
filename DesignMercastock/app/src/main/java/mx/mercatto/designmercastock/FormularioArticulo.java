@@ -1,9 +1,11 @@
 package mx.mercatto.designmercastock;
 
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,23 +18,26 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
-public class FormularioArticulo extends AppCompatActivity {
+public class FormularioArticulo extends ActionBarActivity {
    // private static String TAG_ID_INVENTARIO ="idInventario";
     private static  String TAG_VALOR_INVENTARIO;
     //private static final String MAP_API_URL_FORMULARIOARTICULO = "http://192.168.1.17/wsMercaStock/articulo/actualizar";
     private BackGroundTask bgt;
-
+    EditText txt1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_articulo);
         setTitle("Artículo");
         TAG_VALOR_INVENTARIO = getIntent().getExtras().getString(Configuracion.getIdInventario());
-        EditText txt1 = (EditText) findViewById(R.id.editText3);
+        txt1 = (EditText) findViewById(R.id.editText3);
         TextView txtV = (TextView) findViewById(R.id.textView5);
         txtV.setText(getIntent().getExtras().getString("articulo2"));
+        TextView txtXV = (TextView) findViewById(R.id.textView15);
+        txtXV.setText(getIntent().getExtras().getString("clave"));
+
         TextView txtV2 = (TextView) findViewById(R.id.textView4);
-        txtV2.setText("Cantidad por "+getIntent().getExtras().getString("unidad2")+":");
+        txtV2.setText("Cantidad por " + getIntent().getExtras().getString("unidad2") + ":");
         txt1.addTextChangedListener(new TextWatcher() {
             String value = "";
             String gg = "";
@@ -78,37 +83,54 @@ public class FormularioArticulo extends AppCompatActivity {
             }
         });
 
+
+       if(getIntent().getExtras().getString("grane").equals("1")){
+           txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+       }
+        else
+       {
+           txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_VARIATION_NORMAL);
+       }
     }
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
     public void Confirmacion(View View) {
-        String txtexistencia=getIntent().getExtras().getString("exitencia2");
         final EditText valor;
         valor = (EditText) findViewById(R.id.editText3);
-        //showToast(Double.parseDouble(getIntent().getExtras().getString("existencia2"))+" "+Double.parseDouble(valor.getText().toString()));
-        if (Double.parseDouble(getIntent().getExtras().getString("existencia2"))==(Double.parseDouble(valor.getText().toString()))) {
-        aceptar(valor.getText().toString());
-            //showToast(":)");
+        if(Configuracion.getConfirmacion_Mensaje_Gurdado().toString().equals("TRUE")) {
+
+            String txtexistencia = getIntent().getExtras().getString("exitencia2");
+
+            //showToast(Double.parseDouble(getIntent().getExtras().getString("existencia2"))+" "+Double.parseDouble(valor.getText().toString()));
+            //if (Double.parseDouble(getIntent().getExtras().getString("existencia2")) == (Double.parseDouble(valor.getText().toString()))) {
+               // aceptar(valor.getText().toString());
+                //showToast(":)");
+            //}
+            //else {
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+                dialogo1.setTitle("Aviso");
+                dialogo1.setMessage("Se va a registrar la cantidad de \n" + valor.getText().toString() + "\n ¿Desea continuar?");
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        aceptar(valor.getText().toString());
+
+                    }
+                });
+                dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        cancelar();
+                    }
+                });
+                AlertDialog dialogo=dialogo1.show();
+            TextView messageView = (TextView)dialogo.findViewById(android.R.id.message);
+            messageView.setGravity(Gravity.CENTER);
+            //}
         }
         else {
-            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-            dialogo1.setTitle("Aviso");
-            dialogo1.setMessage("La cantidad ingresada no concuerda ¿Desea continuar?");
-            dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-                    aceptar(valor.getText().toString());
-
-                }
-            });
-            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-                    cancelar();
-                }
-            });
-            dialogo1.show();
+            aceptar(valor.getText().toString());
         }
     }
 

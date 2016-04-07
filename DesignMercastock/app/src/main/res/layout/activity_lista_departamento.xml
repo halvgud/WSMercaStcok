@@ -9,6 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="mx.mercatto.designmercastock.ListaDepartamento"
     android:background="@drawable/x"
+    android:clickable="true"
     >
 
     <ListView
@@ -16,8 +17,8 @@
         android:layout_height="fill_parent"
         android:id="@+id/ListView"
         android:layout_alignParentTop="false"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="21dp" />
+        android:state_activated="true"
+        android:state_selected="true" />
 
     <!--    <ProgressDialog
            android:id="@+id/loadingPanel"
