@@ -8,6 +8,7 @@
     require 'controlador/inventario.php';
     require 'controlador/parametro.php';
     require 'controlador/actualizar.php';
+    require 'controlador/actualizar_parametro.php';
     require 'vista/VistaJson.php';
     require 'utilidad/ExcepcionApi.php';
     
@@ -55,7 +56,7 @@
     
     // Obtener recurso
     $recurso = array_shift($segmentos);
-    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar');
+    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar','actualizar_parametro');
     
     // Comprobar si existe el recurso
     if (!in_array($recurso, $recursos_existentes)) {

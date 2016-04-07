@@ -16,7 +16,9 @@ class usuario
     const SEXO = "sexo";
     const ID_SUCURSAL = "idSucursal";
     const CONTACTO = "contacto";
-
+    const ID_ESTADO = "idEstado";
+    const FECHA_ESTADO = "fechaEstado";
+    
     const ESTADO_CREACION_EXITOSA = 1;
     const ESTADO_CREACION_FALLIDA = 2;
     const ESTADO_ERROR_BD = 3;
@@ -25,6 +27,7 @@ class usuario
     const ESTADO_URL_INCORRECTA = 6;
     const ESTADO_FALLA_DESCONOCIDA = 7;
     const ESTADO_PARAMETROS_INCORRECTOS = 8;
+    const ESTADO_EXITO=9;
 
     public static function post($peticion)
     {
@@ -32,7 +35,12 @@ class usuario
             return self::registrar();
         } else if ($peticion[0] == 'login') {
             return self::loguear();
-        } else {
+
+        } else if ($peticion[0] == 'bloqueo') {
+            return self::bloqueo();
+        }else if ($peticion[0] == 'buscar_bloqueo') {
+            return self::buscar_bloqueo();
+        }else {
             throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
         }
     }
@@ -293,6 +301,51 @@ class usuario
             return $resultado['idUsuario'];
         } else
             return null;
+    }
+    public static function bloqueo()
+    {
+        try {
+            $post = json_decode(file_get_contents('php://input'),true);
+            //return var_dump($post);
+                $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::ID_ESTADO." ='B', fechaEstado=NOW() WHERE usuario='".$post['usuario']."'";
+                // Preparar sentencia
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            // Ejecutar sentencia preparada
+            if ($sentencia->execute()) {
+                http_response_code(200);
+                return
+                    [
+                        "estado" => self::ESTADO_EXITO,
+                        "datos" => $sentencia->rowCount()
+                    ];
+            } else
+                throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+        }
+    }
+    public static function buscar_bloqueo()
+    {
+        try {
+            $post = json_decode(file_get_contents('php://input'),true);
+            //return var_dump($post);
+                $comando = "SELECT idEstado FROM ".self::NOMBRE_TABLA." WHERE usuario='".$post['usuario']."'";
+                // Preparar sentencia
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+
+        $sentencia->bindParam(1, $usuario);
+
+        if ($sentencia->execute()) {
+            $resultado = $sentencia->fetch();
+            return $resultado['usuario'];
+        } else
+            return null;
+
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+        }
     }
 }
 
