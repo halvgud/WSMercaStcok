@@ -202,12 +202,15 @@
                         if (self::validarEstado($resultado['IDESTADO'])) {
                             return true;
                         }else {
-                            return false;
+                          //   http_response_code(401);
+                        //return ["estado" => 11, "datos" => "Usuario Bloqueado"];
+                        return false;
                         }
+                        
                     }else {
-                        http_response_code(401);
-                        return ["estado" => 11, "datos" => "Usuario Bloqueado"];
-                        //return false;
+                        //http_response_code(401);
+                        //return ["estado" => 11, "datos" => "Usuario Bloqueado"];
+                        return false;
                         }
                 } else {
                     return false;
@@ -219,6 +222,7 @@
     
         public static function validarContrasena($contrasenaPlana, $contrasenaHash)
         {
+    //        return var_dump(password_verify($contrasenaPlana, $contrasenaHash));
             return password_verify($contrasenaPlana, $contrasenaHash);
         }
     

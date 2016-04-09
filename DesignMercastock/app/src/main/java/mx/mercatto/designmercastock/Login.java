@@ -34,6 +34,8 @@ public class Login extends ActionBarActivity {
     EditText txtpassword;
     ArrayList<listaSucursal> countryList = new ArrayList<listaSucursal>();
     int contador;
+    String variable_Usuario_Inicial;
+    String variable_Usuario_Final;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,26 +123,51 @@ public class Login extends ActionBarActivity {
                     //showToast(datos.getString("mensaje"));
                 }break;
                 case 401:{
+
+                           /*
+                            contador=0;
+                        }else{
+                            contador++;
+                        }*/
                     if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
-                        if(contador>=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())){
-                            try {
-                                JSONObject jsonObj2 = new JSONObject();
-                                jsonObj2.put("usuario", usuario);
-                                bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2);
-                                bgt.execute().get();
-                                //JSONObject datos = countryJSON.getJSONObject("datos");
-                            }catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            }
-                            showToast("Se ha bloqueado el usuario por 3 intentos erroneos");
+                        if(contador==0) {
+                            variable_Usuario_Inicial = txtusuario.getText().toString();
+                            variable_Usuario_Final="";
                         }
-                        contador++;
+
+                        if(variable_Usuario_Inicial.equals(variable_Usuario_Final)){
+                            if(contador>=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                                try {
+                                    JSONObject jsonObj2 = new JSONObject();
+                                    jsonObj2.put("usuario", usuario);
+                                    bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2);
+                                    bgt.execute().get();
+                                    //JSONObject datos = countryJSON.getJSONObject("datos");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                }
+                                if(txtusuario.getText().toString().equals(variable_Usuario_Final)) {
+                                    showToast("Se ha bloqueado el usuario por 3 intentos erroneos");
+                                }
+                                
+                                if(!txtusuario.getText().toString().equals(variable_Usuario_Final)){
+                                    variable_Usuario_Inicial=txtusuario.getText().toString();
+                                    contador=0;
+                                }
+                                //contador=0;
+                            }
+                        }else{
+                            variable_Usuario_Final = variable_Usuario_Inicial;
+                            //contador++;
+                            //showToast(("Usuario y/o password incorrectas"));
+                        }
                     }
-                    if(contador<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                    if(contador<Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                        contador++;
                         showToast(("Usuario y/o password incorrectas"));
 
                     }}
