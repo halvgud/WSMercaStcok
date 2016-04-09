@@ -1,4 +1,4 @@
-package mx.mercatto.designmercastock;
+﻿package mx.mercatto.designmercastock;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,7 +52,7 @@ public class Login extends ActionBarActivity {
         this.startActivity(intent);
     }
     public void cargarListadoSucursal() {
-        // Building post parameters, key and value pair
+        // Building post parameters, key and value pair :)
         List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
         apiParams.add(new BasicNameValuePair("call", "countrylist"));
         Log.d("suc", Configuracion.getApiUrlLogin());
