@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.app.FragmentManager;
-import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,7 +42,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
+
 
 
 public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
@@ -63,7 +62,6 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     Integer Codigo;
     Activity activity;
     ProgressDialog asyncDialog;
-    ArrayList<ListaSucursal> listaSuc= new ArrayList<>();
     public BackGroundTask(String url, String method, JSONObject params, Activity activity, Integer codigo) {
         this.URL = url;
         this.postparams = params;
@@ -175,12 +173,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         return jObj;
 
     }
-    private final static String TAG_DATOS = "datos";
-    private final static String TAG_NOMBRE_ARTICULO = "NombreArticulo";
-
     public static String ClaveApi = "";
-    private static final String TAG_ID_SUCURSAL = "idSucursal";
-    private static final String TAG_NOMBRE_SUCURSAL = "nombre";
     //Spinner listaSucSpinner;
     @Override
     protected void onPostExecute(JSONObject file_url) {
@@ -256,6 +249,16 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     //}
                     Configuracion.setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : Configuracion.getConfirmacion_Mensaje_Gurdado());
                     Configuracion.setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : Configuracion.getConfirmacion_Habilitar_Decimales());
+                    Configuracion.setGranelArticulo(c.getString("parametro").equals("TAG_GRANEL_ARTICULO") ? c.getString("valor") : Configuracion.getGranelArticulo());
+                    Configuracion.setClaveArticulo(c.getString("parametro").equals("TAG_CLAVE_ARTICULO") ? c.getString("valor") : Configuracion.getClaveArticulo());
+                    Configuracion.setFlagBloqueoPorIntentos(c.getString("parametro").equals("FLAG_BLOQUEO_POR_INTENTOS") ? c.getString("valor") : Configuracion.getFlagBloqueoPorIntentos());
+                    Configuracion.setFlagBloqueoCantidad(c.getString("parametro").equals("FLAG_BLOQUEO_CANTIDAD") ? c.getString("valor") : Configuracion.getFlagBloqueoCantidad());
+                    Configuracion.setFlagBloqueoTiempo(c.getString("parametro").equals("FLAG_BLOQUEO_TIEMPO") ? c.getString("valor") : Configuracion.getFlagBloqueoTiempo());
+                    Configuracion.setApiUrlBloqueo(c.getString("parametro").equals("API_URL_BLOQUEO") ? c.getString("valor") : Configuracion.getApiUrlBloqueo());
+
+                    Configuracion.setidSucursal(c.getString("parametro").equals("ID_SUCURSAL") ? c.getString("valor") : Configuracion.getIdSucursal());
+                    Configuracion.setDescripcionSucursal(c.getString("parametro").equals("DESCRIPCION_SUCURSAL") ? c.getString("valor") : Configuracion.getDescripcionSucursal());
+
                 }
             }
             Configuracion.Finalizado=true;
@@ -264,9 +267,10 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             showToast(e.getMessage());
         }
     }
+    int contador = 0;
     private void Login(JSONObject file_url){
         try{
-
+            TextView txtusuario = (TextView) activity.findViewById(R.id.editText);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         //String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
         SharedPreferences.Editor editor = settings.edit();
@@ -284,11 +288,41 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 }
                 break;
+                case 400:{
+
+                    String subEstado=file_url.getString("estado");
+                    switch (subEstado){
+                        case "11":
+                            showToast(file_url.getString("mensaje"));
+                            break;
+                        default:
+                            showToast("Usuario o contraseña incorrectas");
+                    }
+                    //JSONObject datos = countryJSON.getJSONObject("mensaje");
+                    //showToast(datos.getString("mensaje"));
+                }break;
                 case 401:
-                    showToast(("Usuario y/o password incorrectas"));
-                    // activity.findViewById(R.id.button2).setEnabled(false);
-                    break;
-                default:
+                    if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
+                        if(contador>=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())){
+                            try {
+                                JSONObject jsonObj2 = new JSONObject();
+                                jsonObj2.put("usuario", txtusuario.getText().toString());
+                               BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2,activity,7);
+                                bgt.execute();
+                            }catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            showToast("Se ha bloqueado el usuario por 3 intentos erroneos");
+                        }
+                        contador++;
+                    }
+                    if(contador<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                        showToast(("Usuario y/o password incorrectas"));
+
+                    }
+            break;
+
+            default:
                     showToast(Integer.toString(BackGroundTask.CodeResponse));
             }
         }catch(JSONException e){
@@ -300,11 +334,11 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     private void spinnerSucursal(JSONObject file_url){
         Log.d("a","paso 4");
         try {
-            JSONArray countries = file_url.getJSONArray(TAG_DATOS);
+            JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
             for (int i = 0; i < countries.length(); i++) {
                 JSONObject c = countries.getJSONObject(i);
-                String id = c.getString(TAG_ID_SUCURSAL);
-                String name = c.getString(TAG_NOMBRE_SUCURSAL);
+                String id = c.getString(Configuracion.getIdSucursal());
+                String name = c.getString(Configuracion.getDescripcionSucursal());
 
                 // add Country
                 countryList.add(new ListaSucursal(id, name.toUpperCase()));
@@ -391,18 +425,27 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
     private void ListViewArticulos(JSONObject file_url){
         try {
-            _JsonGenerico = file_url.getJSONArray(TAG_DATOS);
+            _JsonGenerico = file_url.getJSONArray(Configuracion.getDatos());
             for (int i = 0; i < _JsonGenerico.length(); i++) {
                 JSONObject jsonTemporal = _JsonGenerico.getJSONObject(i);
                 String nombreArticulo = jsonTemporal.getString(Configuracion.getDescripcioArticulo());
                 String idCategoria = jsonTemporal.getString(Configuracion.getIdCategoria());
                 String idArticulo = jsonTemporal.getString(Configuracion.getIdArticulo());
                 String idInventario = jsonTemporal.getString(Configuracion.getIdInventario());
+                String Unidad = jsonTemporal.getString(Configuracion.getUnidadArticulo());
+                String exitencia = jsonTemporal.getString(Configuracion.getExistenciaArticulo());
+                String granel = jsonTemporal.getString(Configuracion.getGranelArticulo());
+                String clave = jsonTemporal.getString(Configuracion.getClaveArticulo());
                 HashMap<String, String> mappeo = new HashMap<>();
                 mappeo.put(Configuracion.getDescripcioArticulo(), nombreArticulo);
                 mappeo.put(Configuracion.getIdArticulo(), idArticulo);
                 mappeo.put(Configuracion.getIdCategoria(),idCategoria);
                 mappeo.put(Configuracion.getIdInventario(),idInventario);
+                mappeo.put(Configuracion.getUnidadArticulo(),Unidad);
+                mappeo.put(Configuracion.getExistenciaArticulo(), exitencia);
+                mappeo.put(Configuracion.getGranelArticulo(),granel);
+                mappeo.put(Configuracion.getClaveArticulo(),clave);
+
                 _Listado.add(mappeo);
 
             }
@@ -424,6 +467,10 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     String unidad = _Listado.get(+position).get(Configuracion.getUnidadArticulo());
                     String idInventario = _Listado.get(+position).get(Configuracion.getIdInventario());
                     FragmentFormularioArticulo fragment = new FragmentFormularioArticulo();
+                    String existencia = _Listado.get(+position).get(Configuracion.getExistenciaArticulo());
+                    String granel=_Listado.get(+position).get(Configuracion.getGranelArticulo());
+                    String clave=_Listado.get(+position).get(Configuracion.getClaveArticulo());
+
                     FragmentManager fragmentManager = activity.getFragmentManager();
                     Bundle args = Bundle.EMPTY;
                     if (args == null) {
@@ -431,10 +478,16 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     } else {
                         args = new Bundle(args);
                     }
-                    args.putString(Configuracion.getIdArticulo(),art_id);
-                    args.putString(Configuracion.getIdInventario(),idInventario);
+                    args.putString(Configuracion.getIdArticulo(), art_id);
+                    Log.d("art_id", art_id);
+                    Log.d("unidad", Configuracion.getUnidadArticulo());
+                    Log.d("idInventario",idInventario);
+                    args.putString(Configuracion.getIdInventario(), idInventario);
                     args.putString(Configuracion.getUnidadArticulo(), unidad);
                     args.putString(Configuracion.getDescripcioArticulo(), descripcionArticulo);
+                    args.putString(Configuracion.getGranelArticulo(),granel);
+                    args.putString(Configuracion.getClaveArticulo(),clave);
+                    args.putString(Configuracion.getExistenciaArticulo(),existencia);
                     fragment.setArguments(args);
                     fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 }

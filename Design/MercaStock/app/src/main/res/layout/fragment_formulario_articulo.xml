@@ -7,15 +7,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="mx.mercatto.designmercastock.FragmentFormularioArticulo"
-    android:focusable="true">
+    tools:context="mx.mercatto.mercastock.FragmentFormularioArticulo"
+    android:focusable="true"
+    >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView4"
         android:textSize="25dp"
-        android:layout_below="@+id/textView5"
+        android:layout_below="@+id/FormularioArticulotxtTituloInferior"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="58dp" />
 
@@ -46,12 +47,23 @@
         android:layout_toStartOf="@+id/button3" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView5"
+        android:id="@+id/FormularioArticulotxtTituloInferior"
         android:textSize="28dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/FormularioArticulotxtCodigoDeBarras"
+        android:textSize="25dp"
+        android:layout_below="@+id/FormularioArticulotxtTituloInferior"
+        android:layout_toStartOf="@+id/button3"
+        android:layout_alignParentEnd="true"
         android:textAlignment="center" />
 
 </RelativeLayout>

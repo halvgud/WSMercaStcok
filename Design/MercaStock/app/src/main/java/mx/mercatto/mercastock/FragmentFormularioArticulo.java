@@ -3,14 +3,12 @@ package mx.mercatto.mercastock;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,35 +19,40 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
+import org.w3c.dom.Text;
 
 public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
 
-  //  private static final String TAG_UNIDAD ="Unidad";
-  //  private static final String TAG_ID_CATEGORIA="cat_id";
- //   private static String TAG_NOMBRE_ARTICULO="NombreArticulo";
- //   private static String TAG_ID_ARTICULO="art_id";
+    private static String idInventario="";
     private static String NombreArticulo="";
     private static String cat_id="";
     private static String art_id="";
+    private static String existencia="";
+    private static String esGranel="0";
+    private static String clave="";
     private BackGroundTask bgt;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
         Bundle args = getArguments();
+        idInventario = args.getString(Configuracion.getIdInventario());
         NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
         TAG_VALOR_INVENTARIO = args.getString(Configuracion.getIdInventario());
         cat_id = args.getString(Configuracion.getIdCategoria());
         art_id = args.getString(Configuracion.getIdArticulo());
+        existencia = args.getString(Configuracion.getExistenciaArticulo());
+        esGranel=args.getString(Configuracion.getGranelArticulo());
+        clave = args.getString(Configuracion.getClaveArticulo());
         getActivity().setTitle("Lista de " + NombreArticulo);
 
         EditText txt1 = (EditText) rootView.findViewById(R.id.editText3);
-        TextView txtV = (TextView) rootView.findViewById(R.id.textView5);
-        txtV.setText(args.getString(NombreArticulo));
-        TextView txtV2 = (TextView) rootView.findViewById(R.id.textView4);
-        txtV2.setText("Cantidad por "+args.getString(Configuracion.getUnidadArticulo())+":");
+        TextView txtTituloInferior = (TextView) rootView.findViewById(R.id.FormularioArticulotxtTituloInferior);
+        TextView txtCodigoDeBarras = (TextView) rootView.findViewById(R.id.FormularioArticulotxtCodigoDeBarras);
+        txtTituloInferior.setText(NombreArticulo);
+        txtCodigoDeBarras.setText(clave);
+        TextView txtCantidad = (TextView) rootView.findViewById(R.id.textView4);
+        txtCantidad.setText("Cantidad por " + args.getString(Configuracion.getUnidadArticulo()) + ":");
         Button upButton = (Button) rootView.findViewById(R.id.button3);
         upButton.setOnClickListener(this);
 
@@ -100,29 +103,28 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
 
             }
         });
-
+        if(esGranel.equals("1")){
+            txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        }
+        else
+        {
+            txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        }
 
         return rootView;
     }
     @Override
     public void onClick(View v) {
-        String txtexistencia=TAG_VALOR_INVENTARIO;
         final EditText valor;
-        valor = (EditText) v.findViewById(R.id.editText3);
-        //showToast(Double.parseDouble(getIntent().getExtras().getString("existencia2"))+" "+Double.parseDouble(valor.getText().toString()));
-        if (Double.parseDouble(TAG_VALOR_INVENTARIO)==(Double.parseDouble(valor.getText().toString()))) {
-            aceptar(valor.getText().toString());
-            //showToast(":)");
-        }
-        else {
+        valor = (EditText) getActivity().findViewById(R.id.editText3);
+        if (Configuracion.getConfirmacion_Mensaje_Gurdado().toString().equals("TRUE")) {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getActivity());
             dialogo1.setTitle("Aviso");
-            dialogo1.setMessage("La cantidad ingresada no concuerda ¿Desea continuar?");
+            dialogo1.setMessage("Se va a registrar la cantidad de \n" + valor.getText().toString() + "\n ¿Desea continuar?");
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     aceptar(valor.getText().toString());
-
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -130,8 +132,15 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
                     cancelar();
                 }
             });
-            dialogo1.show();
+            AlertDialog dialogo=dialogo1.show();
+            TextView messageView = (TextView)dialogo.findViewById(android.R.id.message);
+            messageView.setGravity(Gravity.CENTER);
+            //}
         }
+        else {
+            aceptar(valor.getText().toString());
+        }
+
     }
 
     private static  String TAG_VALOR_INVENTARIO;
@@ -139,9 +148,9 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         try{
             //showToast(TAG_VALOR_ID_INVENTARIO);
             JSONObject jsobj = new JSONObject();
-            jsobj.put("idInventario",TAG_VALOR_INVENTARIO);
+            jsobj.put("idInventario",idInventario);
             jsobj.put("existenciaRespuesta",valor);
-            jsobj.put("art_id",Configuracion.getIdArticulo());
+            jsobj.put("art_id",art_id);
             bgt = new BackGroundTask(Configuracion.getApiUrlInventario(), "POST",jsobj,getActivity(),6 );
             bgt.execute();
             Toast t=Toast.makeText(getActivity(),"Se ha guardado correctamente.", Toast.LENGTH_SHORT);

@@ -170,6 +170,7 @@
                     $respuesta["nombre"] = $usuarioBD["nombre"];
                     $respuesta["usuario"] = $usuarioBD["usuario"];
                     $respuesta["claveApi"] = $usuarioBD["claveApi"];
+                    $respuesta['idNivelAutorizacion']=$usuarioBD["idNivelAutorizacion"];
                     return ["estado" => 1, "datos" => $respuesta];
                 } else {
                     throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
@@ -183,7 +184,7 @@
         
         public static function autenticar($correo, $contrasena)
         {
-            $comando = "SELECT contrasena,IDESTADO FROM " . self::NOMBRE_TABLA .
+            $comando = "SELECT contrasena,IDESTADO,idNivelAutorizacion FROM " . self::NOMBRE_TABLA .
                 " WHERE " . self::USUARIO . "=? ";
     
             try {
@@ -229,7 +230,8 @@
                 self::NOMBRE . "," .
                 self::CONTRASENA . "," .
                 self::USUARIO . "," .
-                self::CLAVE_API .
+                self::CLAVE_API .",".
+                "idNivelAutorizacion".
                 " FROM " . self::NOMBRE_TABLA .
                 " WHERE " . self::USUARIO . "=?";
     

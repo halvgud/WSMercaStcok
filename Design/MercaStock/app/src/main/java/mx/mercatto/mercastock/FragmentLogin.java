@@ -4,8 +4,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -59,6 +62,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             txtusuario = (EditText) rootView.findViewById(R.id.editText);
             txtpassword = (EditText) rootView.findViewById(R.id.editText2);
         }
+
         return rootView;
     }
 
@@ -66,7 +70,8 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         if(Configuracion.Finalizado==true){
         Log.d("aqui_no", Configuracion.getApiUrlSucursal(true));
         bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(true), "GET", null,getActivity(),2);
-        bgt.execute();}
+        bgt.execute();
+        }
         /*else{
             cargarListadoSucursal(rootView);
         }*/
@@ -74,6 +79,10 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+     //   Main.CambiarEstadoSucursal(false);
+        Main.b=false;
+        getActivity().invalidateOptionsMenu();
+        Log.d("kkk",getActivity().getTitle().toString());
         String usuario = txtusuario.getText().toString();
         String password = txtpassword.getText().toString();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -87,13 +96,20 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             // Create the POST object and add the parameters
             bgt = new BackGroundTask(Configuracion.getApiUrlLogIn(), "POST", jsonObj1,getActivity(),1);
             bgt.execute();
+            //Main.CambiarEstadoSucursal(false);
+
+
         } catch(JSONException e){
             showToast(e.toString());
         }catch (Exception e){
             showToast(e.toString());
         }
     }
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
 
     public void showToast(String msg) {
