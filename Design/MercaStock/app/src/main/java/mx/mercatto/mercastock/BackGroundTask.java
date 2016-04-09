@@ -386,7 +386,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 _Listado.add(map);
                 list = (ListView) activity.findViewById(R.id.ListView);
 
-                ListAdapter adapter = new SimpleAdapter(activity, _Listado,
+                ListAdapter adapter = new ListaAdaptador(activity, _Listado,
                         R.layout.list_v,
                         new String[]{Configuracion.getDescripcionCategoria(), TAG_CANTIDAD, Configuracion.getIdCategoria()}, new int[]{R.id.descripcionColumna, R.id.api, R.id.cat_id});
 
@@ -451,7 +451,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             }
             list = (ListView) activity.findViewById(R.id.ListView1);
 
-            adapter = new SimpleAdapter(activity, _Listado,
+            adapter = new ListaAdaptador(activity, _Listado,
                     R.layout.list_v,
                     new String[]{Configuracion.getDescripcioArticulo()}, new int[]{R.id.descripcionColumna});
             list.setAdapter(adapter);
