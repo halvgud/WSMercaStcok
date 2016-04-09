@@ -28,7 +28,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String cat_id="";
     private static String art_id="";
     private static String existencia="";
-    private static String esGranel="0";
+    private static String esGranel="1";
     private static String clave="";
     private BackGroundTask bgt;
     @Override
