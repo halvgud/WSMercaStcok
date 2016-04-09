@@ -22,8 +22,6 @@ class ARTICULO
     const ESTADO_NO_ENCONTRADO = 104;
     const ESTADO_URL_INCORRECTA=105;
     const DESCRIPCION='descripcion';
-    const GRANEL = 'granel';
-    const CODIGO = 'clave';
 
     public static function post($peticion)
     {
@@ -43,12 +41,11 @@ class ARTICULO
     {
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-                $comando = "SELECT mi.idInventario, a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, a.".self::CODIGO." AS clave, a.".self::GRANEL." AS granel, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO." FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
+                $comando = "SELECT mi.idInventario, a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO.",a.granel,a.clave FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
                 MI ON ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
                 INNER JOIN Unidad U ON (a.UnidadCompra=U.Uni_ID) WHERE a.".self::ID_CATEGORIA."=".$post['cat_id']." AND a.".self::SERVICIO."=0 AND ".self::EXISTENCIA." >0
                 AND MI.".self::ID_ESTADO." IN (SELECT ".self::VALOR_FILTRO." FROM ".self::TABLA_PARAMETRO." WHERE ACCION='".self::ACCION_FILTRO."' AND
                 PARAMETRO='".self::PARAMETRO_FILTRO."')";
-
                 // Preparar sentencia
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 // Ligar idContacto e idUsuario<

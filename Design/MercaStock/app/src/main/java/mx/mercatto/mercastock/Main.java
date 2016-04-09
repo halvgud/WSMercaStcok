@@ -1,9 +1,12 @@
 package mx.mercatto.mercastock;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.app.FragmentManager;
+import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -63,42 +66,71 @@ public class Main extends AppCompatActivity
         else
             super.onBackPressed();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        final MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main_drawer, menu);
+        SeleccionarSucursal = menu.findItem(R.id.seleccionarsucursal);
+        CambiarContrasena =  menu.findItem(R.id.cambiarcontrasena);
+        ConfigurarServidor =  menu.findItem(R.id.configurarservidor);
+        CrearUsuario = menu.findItem(R.id.crearusuario);
+      //  return true;
+        SeleccionarSucursal.setEnabled(!b);
+        CambiarContrasena.setEnabled(b);
+        ConfigurarServidor.setEnabled(b);
+        CrearUsuario.setEnabled(b);
+        return true;
+    }
+    public static boolean b = false;
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        super.onPrepareOptionsMenu(menu);
+        menu.setGroupVisible(0,false);
+
+
+      //  invalidateOptionsMenu();
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+     public static MenuItem SeleccionarSucursal;
+    public static MenuItem CambiarContrasena;
+    public static MenuItem ConfigurarServidor;
+    public static MenuItem CrearUsuario;
 
-        //noinspection SimplifiableIfStatement
-       /* if (id == R.id.action_settings) {
-            return true;
-        }*/
 
-        return super.onOptionsItemSelected(item);
+    public static void CambiarEstadoSucursal(boolean bandera){
+        SeleccionarSucursal.setEnabled(bandera);
+    }
+    public static void CambiarEstadoContrasena(boolean bandera){
+        CambiarContrasena.setEnabled(bandera);
+    }
+    public static  void CambiarConfigurarServidor(boolean bandera){
+        ConfigurarServidor.setEnabled(bandera);
+    }
+    public static  void CambiarCrearUsuario(boolean bandera){
+        CrearUsuario.setEnabled(bandera);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Log.d("id", Integer.toString(id));
+        //item f = findViewById(R.id.Crear_Usuario);
+        if (id == R.id.crearusuario) {
 
-        if (id == R.id.nav_manage) {
             RegistroUsuario fragment = new RegistroUsuario();
             FragmentManager fragmentManager = this.getFragmentManager();
-
-           // fragment.setArguments(args);
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+        }else if(id==R.id.configurarservidor){
+
+        }else if(id==R.id.seleccionarsucursal){
+
+        }else if(id==R.id.cambiarcontrasena){
+
         }
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

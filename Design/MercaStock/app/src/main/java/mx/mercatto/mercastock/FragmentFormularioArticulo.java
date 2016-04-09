@@ -5,35 +5,56 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FragmentFormularioArticulo extends Fragment {
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
-    private static final String TAG_NAME = "NombreArticulo";//
-    private static final String TAG_UNIDAD ="Unidad";
+public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
 
+    private static String idInventario="";
+    private static String NombreArticulo="";
+    private static String cat_id="";
+    private static String art_id="";
+    private static String existencia="";
+    private static String esGranel="0";
+    private static String clave="";
+    private BackGroundTask bgt;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
         Bundle args = getArguments();
-        String articulo = args.getString("NombreArticulo");
-        getActivity().setTitle("Lista de " + articulo);
+        idInventario = args.getString(Configuracion.getIdInventario());
+        NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
+        TAG_VALOR_INVENTARIO = args.getString(Configuracion.getIdInventario());
+        cat_id = args.getString(Configuracion.getIdCategoria());
+        art_id = args.getString(Configuracion.getIdArticulo());
+        existencia = args.getString(Configuracion.getExistenciaArticulo());
+        esGranel=args.getString(Configuracion.getGranelArticulo());
+        clave = args.getString(Configuracion.getClaveArticulo());
+        getActivity().setTitle("Lista de " + NombreArticulo);
 
         EditText txt1 = (EditText) rootView.findViewById(R.id.editText3);
-        TextView txtV = (TextView) rootView.findViewById(R.id.textView5);
-        txtV.setText(args.getString(TAG_NAME));
-        TextView txtV2 = (TextView) rootView.findViewById(R.id.textView4);
-        txtV2.setText("Cantidad por "+args.getString(TAG_UNIDAD)+":");
-
+        TextView txtTituloInferior = (TextView) rootView.findViewById(R.id.FormularioArticulotxtTituloInferior);
+        TextView txtCodigoDeBarras = (TextView) rootView.findViewById(R.id.FormularioArticulotxtCodigoDeBarras);
+        txtTituloInferior.setText(NombreArticulo);
+        txtCodigoDeBarras.setText(clave);
+        TextView txtCantidad = (TextView) rootView.findViewById(R.id.textView4);
+        txtCantidad.setText("Cantidad por " + args.getString(Configuracion.getUnidadArticulo()) + ":");
+        Button upButton = (Button) rootView.findViewById(R.id.button3);
+        upButton.setOnClickListener(this);
 
         txt1.addTextChangedListener(new TextWatcher() {
             String value = "";
@@ -41,8 +62,6 @@ public class FragmentFormularioArticulo extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //Toast.makeText(getApplicationContext(), "Your1 message.",
-                //      Toast.LENGTH_SHORT).show();
                 EditText text = (EditText) rootView.findViewById(R.id.editText3);
                 String value = text.getText().toString();
                 String gg = "";
@@ -84,53 +103,64 @@ public class FragmentFormularioArticulo extends Fragment {
 
             }
         });
-
+        if(esGranel.equals("1")){
+            txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        }
+        else
+        {
+            txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        }
 
         return rootView;
     }
-    //validar();
-
-       /* txt1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                EditText text = (EditText) findViewById(R.id.editText3);
-                String value = text.getText().toString();
-                //Toast t=Toast.makeText(this, "Se ha guardado correctamente."+value, Toast.LENGTH_SHORT);
-                //t.show();
-                String gg = "";
-                if (value.equals(gg)) {
-                    findViewById(R.id.button3).setEnabled(false);
-                } else {
-                    findViewById(R.id.button3).setEnabled(true);
+    @Override
+    public void onClick(View v) {
+        final EditText valor;
+        valor = (EditText) getActivity().findViewById(R.id.editText3);
+        if (Configuracion.getConfirmacion_Mensaje_Gurdado().toString().equals("TRUE")) {
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getActivity());
+            dialogo1.setTitle("Aviso");
+            dialogo1.setMessage("Se va a registrar la cantidad de \n" + valor.getText().toString() + "\n ¿Desea continuar?");
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    aceptar(valor.getText().toString());
                 }
-            }
-        });*/
+            });
+            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    cancelar();
+                }
+            });
+            AlertDialog dialogo=dialogo1.show();
+            TextView messageView = (TextView)dialogo.findViewById(android.R.id.message);
+            messageView.setGravity(Gravity.CENTER);
+            //}
+        }
+        else {
+            aceptar(valor.getText().toString());
+        }
 
-
-    public void Confirmacion(View View) {
-
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getActivity());
-        dialogo1.setTitle("Aviso");
-        dialogo1.setMessage("La cantidad ingresada no concuerda ¿Desea continuar?");
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                aceptar();
-
-            }
-        });
-        dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                cancelar();
-            }
-        });
-        dialogo1.show();
     }
 
-    public void aceptar() {
-        Toast t= Toast.makeText(getActivity(), "Se ha guardado correctamente.", Toast.LENGTH_SHORT);
-        t.show();
-        getActivity().finish();
+    private static  String TAG_VALOR_INVENTARIO;
+    public void aceptar(String valor) {
+        try{
+            //showToast(TAG_VALOR_ID_INVENTARIO);
+            JSONObject jsobj = new JSONObject();
+            jsobj.put("idInventario",idInventario);
+            jsobj.put("existenciaRespuesta",valor);
+            jsobj.put("art_id",art_id);
+            bgt = new BackGroundTask(Configuracion.getApiUrlInventario(), "POST",jsobj,getActivity(),6 );
+            bgt.execute();
+            Toast t=Toast.makeText(getActivity(),"Se ha guardado correctamente.", Toast.LENGTH_SHORT);
+            t.show();
+        }catch(JSONException e){
+            showToast(e.getMessage());
+        }
+        finally {
+            getActivity().getFragmentManager().popBackStack();
+        }
     }
 
     public void cancelar() {
@@ -151,6 +181,10 @@ public class FragmentFormularioArticulo extends Fragment {
         else{
             rootView.findViewById(R.id.button3).setEnabled(true);
         }
+    }
+
+    public void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 }
 
