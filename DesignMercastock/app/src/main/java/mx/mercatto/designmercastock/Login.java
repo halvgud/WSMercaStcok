@@ -151,9 +151,9 @@ public class Login extends ActionBarActivity {
                                     e.printStackTrace();
                                 }
                                 if(txtusuario.getText().toString().equals(variable_Usuario_Final)) {
-                                    showToast("Se ha bloqueado el usuario por 3 intentos erroneos");
+                                    showToast("Se ha bloqueado el usuario por intentos erroneos");
                                 }
-                                
+
                                 if(!txtusuario.getText().toString().equals(variable_Usuario_Final)){
                                     variable_Usuario_Inicial=txtusuario.getText().toString();
                                     contador=0;
