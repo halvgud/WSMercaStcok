@@ -357,7 +357,7 @@
                 if($sentencia->execute()){
                     $resultado = $sentencia->fetch();
                    
-                    if(isset($resultado['VALOR'])){
+                    if(isset($resultado['valor'])){
                         return true;
                     }else{
                         
