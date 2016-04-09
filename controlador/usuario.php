@@ -184,7 +184,7 @@
         
         public static function autenticar($correo, $contrasena)
         {
-            $comando = "SELECT contrasena,IDESTADO,idNivelAutorizacion FROM " . self::NOMBRE_TABLA .
+            $comando = "SELECT idUsuario,contrasena,IDESTADO,idNivelAutorizacion FROM " . self::NOMBRE_TABLA .
                 " WHERE " . self::USUARIO . "=? ";
     
             try {
@@ -198,9 +198,10 @@
                 if ($sentencia) {
                     $resultado = $sentencia->fetch();
                     //return var_dump(self::validarEstado($resultado['IDESTADO']));
+                    if (self::validarEstado($resultado['IDESTADO'],$resultado['idUsuario'])) {
                     if(self::validarContrasena($contrasena, $resultado['contrasena'])){
                         
-                        if (self::validarEstado($resultado['IDESTADO'])) {
+                        
                             return true;
                         }else {
                           //   http_response_code(401);
@@ -211,6 +212,7 @@
                     }else {
                         //http_response_code(401);
                         //return ["estado" => 11, "datos" => "Usuario Bloqueado"];
+                        
                         return false;
                         }
                 } else {
@@ -340,19 +342,26 @@
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
         }
-        public static function validarEstado($idEstado)
+        public static function validarEstado($idEstado,$idUsuario)
         {
             try{
-                $comando = "SELECT VALOR FROM ms_parametro WHERE accion='CONFIGURACION_GENERAL' AND parametro='ESTADO_VALIDO_LOGIN' and valor = ?";
+                $comando ="select valor, fechaEstado from ms_usuario mu left join
+                ms_parametro mp on (mp.accion='CONFIGURACION_GENERAL' and mp.parametro='ESTADO_VALIDO_LOGIN'
+                and valor = ?) where mu.idUsuario = ?";
+               // $comando = "SELECT VALOR FROM ms_parametro mp
+               // inner join ms_usuario mu (mp.idUsuario = ? ) WHERE accion='CONFIGURACION_GENERAL' AND parametro='ESTADO_VALIDO_LOGIN' and valor = ?";
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 $sentencia->bindParam(1,$idEstado);
+                $sentencia->bindParam(2,$idUsuario);
+                
                 if($sentencia->execute()){
                     $resultado = $sentencia->fetch();
                    
                     if(isset($resultado['VALOR'])){
                         return true;
                     }else{
-                        throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'usuario bloqueado',401);
+                        
+                        throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'usuario bloqueado '.$resultado['fechaEstado'],401);
                     }
                     
                 }else {return false;}

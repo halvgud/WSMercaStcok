@@ -16,6 +16,7 @@ import android.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -42,7 +43,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.concurrent.ExecutionException;
 
 
 public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
@@ -80,33 +81,40 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        asyncDialog.setIndeterminate(false);
+        asyncDialog.setCancelable(false);
+        asyncDialog.setProgress(0);
         switch (Codigo) {
             case 1: {
                 asyncDialog.setMessage("Cargando Usuario");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }
             }
             break;
             case 2: {
-                asyncDialog.setMessage("Cargando Lista de Sucursales");
+                //asyncDialog.setMessage("Cargando Lista de Sucursales");
             }
             break;
             case 3: {
                 asyncDialog.setMessage("Cargando Lista de Categorias");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }
             }
             break;
             case 4: {
                 asyncDialog.setMessage("Cargando Lista de Articulos");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }
             }
             case 5:{
                // asyncDialog.setMessage("Cargando Configuraciones...");
             }
             break;
         }
-        if(activity!=null) {
-            asyncDialog.setIndeterminate(false);
-            asyncDialog.setCancelable(false);
-            asyncDialog.setProgress(0);
-            asyncDialog.show();
-        }
+
 
     }
 
@@ -245,7 +253,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     Configuracion.setDescripcionRegistro(c.getString("parametro").equals("TAG_DESCRIPCION_REGISTRO") ? c.getString("valor") : Configuracion.getDescripcionRegistro());
                     Configuracion.setApiUrlRegistro(c.getString("parametro").equals("API_URL_REGISTRO") ? c.getString("valor") : Configuracion.getApiUrlRegistro());
                     //if(getApiUrl().length() == 0) {
-                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL2") ? c.getString("valor") : Configuracion.getApiUrl());
+                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : Configuracion.getApiUrl());
                     //}
                     Configuracion.setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : Configuracion.getConfirmacion_Mensaje_Gurdado());
                     Configuracion.setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : Configuracion.getConfirmacion_Habilitar_Decimales());
@@ -267,10 +275,17 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             showToast(e.getMessage());
         }
     }
-    int contador = 0;
+
+
     private void Login(JSONObject file_url){
+        EditText txtusuario;
+        EditText txtpassword;
+        txtusuario   = (EditText)activity.findViewById(R.id.editText);
+        txtpassword   = (EditText)activity.findViewById(R.id.editText2);
+        String usuario = txtusuario.getText().toString();
+        String password = txtpassword.getText().toString();
         try{
-            TextView txtusuario = (TextView) activity.findViewById(R.id.editText);
+            //TextView txtusuario = (TextView) activity.findViewById(R.id.editText);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         //String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
         SharedPreferences.Editor editor = settings.edit();
@@ -302,24 +317,49 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     //showToast(datos.getString("mensaje"));
                 }break;
                 case 401:
+                {/*
+                            contador=0;
+                        }else{
+                            contador++;
+                        }*/
                     if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
-                        if(contador>=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())){
-                            try {
-                                JSONObject jsonObj2 = new JSONObject();
-                                jsonObj2.put("usuario", txtusuario.getText().toString());
-                               BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2,activity,7);
-                                bgt.execute();
-                            }catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            showToast("Se ha bloqueado el usuario por 3 intentos erroneos");
+                        if(FragmentLogin.contador==0) {
+                            FragmentLogin.variable_Usuario_Inicial = txtusuario.getText().toString();
+                            FragmentLogin.variable_Usuario_Final="";
                         }
-                        contador++;
-                    }
-                    if(contador<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
-                        showToast(("Usuario y/o password incorrectas"));
 
+                        if(FragmentLogin.variable_Usuario_Inicial.equals(FragmentLogin.variable_Usuario_Final)){
+                            if(FragmentLogin.contador>=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                                try {
+                                    JSONObject jsonObj2 = new JSONObject();
+                                    jsonObj2.put("usuario", usuario);
+                                    BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2,activity,0);
+                                    bgt.execute();
+                                    //JSONObject datos = countryJSON.getJSONObject("datos");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                if(txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)) {
+                                    showToast(file_url.getString("mensaje"));
+                                }
+
+                                if(!txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)){
+                                    FragmentLogin.variable_Usuario_Inicial=txtusuario.getText().toString();
+                                    FragmentLogin.contador=0;
+                                }
+                                //contador=0;
+                            }
+                        }else{
+                            FragmentLogin.variable_Usuario_Final = FragmentLogin.variable_Usuario_Inicial;
+                            //contador++;
+                            //showToast(("Usuario y/o password incorrectas"));
+                        }
                     }
+                    if(FragmentLogin.contador<Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                        FragmentLogin.contador++;
+                        showToast((file_url.getString("mensaje")));
+
+                    }}
             break;
 
             default:

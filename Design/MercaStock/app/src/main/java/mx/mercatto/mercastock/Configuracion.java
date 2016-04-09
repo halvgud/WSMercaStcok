@@ -18,7 +18,7 @@ public class Configuracion {
         try {
             JSONObject config = new JSONObject();
             config.put("", "");
-            bgt = new BackGroundTask("http://192.168.1.74/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "POST", config, activity, 5);
+            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "POST", config, activity, 5);
             bgt.execute();
 
         }catch (JSONException e){
