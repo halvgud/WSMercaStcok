@@ -42,7 +42,7 @@ public class Configuracion {
     public static String getFlagBloqueoTiempo(){return  _FlagBloqueoTiempo;}
     public static void setFlagBloqueoTiempo(String FlagBloqueoTiempo){_FlagBloqueoTiempo=FlagBloqueoTiempo;}
 
-    private static String _idSucursal="1";
+    private static String _idSucursal="idSucursal";
     public static String getIdSucursal(){return  _idSucursal;}
     public static void setidSucursal(String idSucursal){_idSucursal=idSucursal;}
 

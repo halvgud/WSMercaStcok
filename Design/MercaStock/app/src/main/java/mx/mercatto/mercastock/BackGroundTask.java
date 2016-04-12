@@ -207,7 +207,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     //spinnerSucursal2(file_url);
                 }break;
                 case 2:{
-                    cargarListadoSucursal(file_url);
+                    spinnerSucursal(file_url);
                 }break;
                 case 3:{
                     ListViewCategorias(file_url);
@@ -288,8 +288,8 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     Configuracion.setFlagBloqueoTiempo(c.getString("parametro").equals("FLAG_BLOQUEO_TIEMPO") ? c.getString("valor") : Configuracion.getFlagBloqueoTiempo());
                     Configuracion.setApiUrlBloqueo(c.getString("parametro").equals("API_URL_BLOQUEO") ? c.getString("valor") : Configuracion.getApiUrlBloqueo());
 
-                    Configuracion.setidSucursal(c.getString("parametro").equals("ID_SUCURSAL") ? c.getString("valor") : Configuracion.getIdSucursal());
-                    Configuracion.setDescripcionSucursal(c.getString("parametro").equals("DESCRIPCION_SUCURSAL") ? c.getString("valor") : Configuracion.getDescripcionSucursal());
+                    Configuracion.setidSucursal(c.getString("parametro").equals("TAG_ID_SUCURSAL") ? c.getString("valor") : Configuracion.getIdSucursal());
+                    Configuracion.setDescripcionSucursal(c.getString("parametro").equals("TAG_DESCRIPCION_SUCURSAL") ? c.getString("valor") : Configuracion.getDescripcionSucursal());
 
                 }
             }
@@ -408,16 +408,16 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 countryList.add(new ListaSucursal(id, name.toUpperCase()));
             }
             TextView txtSucursal = (TextView) activity.findViewById(R.id.textView13);
-          //  txtSucursal.setText(countryList.get(0).toString());
+           txtSucursal.setText(countryList.get(0).toString());
         }catch(JSONException e)
         {
             showToast(e.getMessage());
         }
-       listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
+       //listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
         //SucursalAdapter cAdapter = new SucursalAdapter(activity, android.R.layout.simple_spinner_item, listaSuc);
        // listaSucSpinner.setAdapter(cAdapter);
-        listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+        //listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+/*
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                // ListaSucursal selectedCountry = listaSucSpinner.get(position);
@@ -427,7 +427,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
-        });
+        });*/
     }
 
     private final static String TAG_CANTIDAD = "CANTIDAD";
