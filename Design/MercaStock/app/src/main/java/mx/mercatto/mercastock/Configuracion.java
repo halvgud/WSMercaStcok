@@ -27,9 +27,10 @@ public class Configuracion {
 
     }
     public static Boolean Finalizado=false;
-    private static String _ApiUrl="";
+    private static String _ApiUrl="http://192.168.1.17/";
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
+
     private static String _FlagBloqueoPorIntentos="TRUE";
     public static String getFlagBloqueoPorIntentos(){return _FlagBloqueoPorIntentos;}
     public static void setFlagBloqueoPorIntentos(String FlagBloqueoPorIntentos){_FlagBloqueoPorIntentos=FlagBloqueoPorIntentos;}
@@ -77,8 +78,7 @@ public class Configuracion {
     public static void setDescripcionLogin(String DescripcionLogin) {_DescripcionLogin=DescripcionLogin;}
 
     private static String _ApiUrlSucursal ="wsMercaStock/sucursal";
-    public static String getApiUrlSucursal(Boolean http){
-        return (http?(getApiUrl()+ _ApiUrlSucursal):_ApiUrlSucursal);}
+    public static String getApiUrlSucursal(){return ((_ApiUrlSucursal.contains("http://")? _ApiUrlSucursal : getApiUrl()+ _ApiUrlSucursal));}
     public static void setApiUrlSucursal(String ApiUrlSucursal) {
         _ApiUrlSucursal =ApiUrlSucursal;}
 

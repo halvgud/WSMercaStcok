@@ -16,11 +16,4 @@
         android:layout_alignParentTop="true"
         android:listSelector="#ce0007"
        />
-    <ProgressBar
-        android:id="@+id/loadingPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

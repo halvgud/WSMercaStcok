@@ -61,7 +61,7 @@ public class Main extends AppCompatActivity
             super.onBackPressed();
         }
         */
-        if(getFragmentManager().getBackStackEntryCount() > 0)
+        if(getFragmentManager().getBackStackEntryCount() > 2)
             getFragmentManager().popBackStack();
         else
             super.onBackPressed();
@@ -75,7 +75,7 @@ public class Main extends AppCompatActivity
         ConfigurarServidor =  menu.findItem(R.id.configurarservidor);
         CrearUsuario = menu.findItem(R.id.crearusuario);
       //  return true;
-        SeleccionarSucursal.setEnabled(!b);
+        SeleccionarSucursal.setEnabled(b);
         CambiarContrasena.setEnabled(b);
         ConfigurarServidor.setEnabled(b);
         CrearUsuario.setEnabled(b);
@@ -118,16 +118,19 @@ public class Main extends AppCompatActivity
         Log.d("id", Integer.toString(id));
         //item f = findViewById(R.id.Crear_Usuario);
         if (id == R.id.crearusuario) {
-
             RegistroUsuario fragment = new RegistroUsuario();
             FragmentManager fragmentManager = this.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         }else if(id==R.id.configurarservidor){
 
         }else if(id==R.id.seleccionarsucursal){
-
+            FragmentSucursal fragment = new FragmentSucursal();
+            FragmentManager fragmentManager = this.getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         }else if(id==R.id.cambiarcontrasena){
-
+            FragmentPassword fragment = new FragmentPassword();
+            FragmentManager fragmentManager = this.getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         }
 
 

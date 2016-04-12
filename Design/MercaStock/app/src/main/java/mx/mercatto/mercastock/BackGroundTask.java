@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,13 +105,26 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             }
             break;
             case 4: {
-                asyncDialog.setMessage("Cargando Lista de Articulos");
+                asyncDialog.setMessage("Cargando Lista de Artículos");
                 if(activity!=null) {
                     asyncDialog.show();
                 }
             }
             case 5:{
                // asyncDialog.setMessage("Cargando Configuraciones...");
+
+            }
+            case 6:{
+               /* asyncDialog.setMessage("Guardando Inventario");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }*/
+            }
+            case 8:{
+                /* asyncDialog.setMessage("Cargando Artículo");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }*/
             }
             break;
         }
@@ -148,7 +162,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
-            Log.d("a",json);
+            Log.d("a", json);
             switch(Codigo){
                 case 1:{}break;
                 case 2:{
@@ -182,7 +196,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
     }
     public static String ClaveApi = "";
-    //Spinner listaSucSpinner;
+    Spinner listaSucSpinner;
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
@@ -190,9 +204,10 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             switch (Codigo){
                 case 1:{
                     Login(file_url);
+                    //spinnerSucursal2(file_url);
                 }break;
                 case 2:{
-                    spinnerSucursal(file_url);
+                    cargarListadoSucursal(file_url);
                 }break;
                 case 3:{
                     ListViewCategorias(file_url);
@@ -202,12 +217,21 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 }break;
                 case 5:{
                     CargarConfiguraciones(file_url);
-                    BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(true), "GET", null,activity,2);
+                    BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null,activity,2);
                     bgt.execute();
                 }break;
                 case 6:{
                     FormularioArticulo(file_url);
                 }
+                case 7:{
+                    RegistrarUsuario(file_url);
+                }
+                case 8:{
+                    FormularioArticulo(file_url);
+                }
+                case 9:{
+                    cargarListadoSucursal(file_url);
+                }break;
             }
 
 
@@ -235,7 +259,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     Configuracion.setIdLogin(c.getString("parametro").equals("TAG_ID_LOGIN") ? c.getString("valor") : Configuracion.getIdLogin());
                     Configuracion.setDescripcionLogin(c.getString("parametro").equals("TAG_DESCRIPCION_LOGIN") ? c.getString("valor") : Configuracion.getDescripcionLogin());
                     Configuracion.setApiUrlLogIn(c.getString("parametro").equals("API_URL_LOGIN") ? c.getString("valor") : Configuracion.getApiUrlLogIn());
-                    Configuracion.setApiUrlSucursal(c.getString("parametro").equals("API_URL_SUCURSAL") ? c.getString("valor") : Configuracion.getApiUrlSucursal(false));
+                    Configuracion.setApiUrlSucursal(c.getString("parametro").equals("API_URL_SUCURSAL") ? c.getString("valor") : Configuracion.getApiUrlSucursal());
                     Configuracion.setIdCategoria(c.getString("parametro").equals("TAG_ID_CATEGORIA") ? c.getString("valor") : Configuracion.getIdCategoria());
                     Configuracion.setDescripcionCategoria(c.getString("parametro").equals("TAG_DESCRIPCION_CATEGORIA") ? c.getString("valor") : Configuracion.getDescripcionCategoria());
                     Configuracion.setCantidadCategoria(c.getString("parametro").equals("TAG_CANTIDAD_CATEGORIA") ? c.getString("valor") : Configuracion.getCantidadCategoria());
@@ -384,27 +408,28 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 countryList.add(new ListaSucursal(id, name.toUpperCase()));
             }
             TextView txtSucursal = (TextView) activity.findViewById(R.id.textView13);
-            txtSucursal.setText(countryList.get(0).toString());
+          //  txtSucursal.setText(countryList.get(0).toString());
         }catch(JSONException e)
         {
             showToast(e.getMessage());
         }
-       // listaSucSpinner = (Spinner) activity.findViewById(R.id.spinSucursal);
+       listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
         //SucursalAdapter cAdapter = new SucursalAdapter(activity, android.R.layout.simple_spinner_item, listaSuc);
-      //  listaSucSpinner.setAdapter(cAdapter);
-     //   listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+       // listaSucSpinner.setAdapter(cAdapter);
+        listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-        /*    @Override
+            @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ListaSucursal selectedCountry = listaSuc.get(position);
-                showToast(selectedCountry.getName() + " was selected!");
+               // ListaSucursal selectedCountry = listaSucSpinner.get(position);
+             //   showToast(selectedCountry.getName() + " was selected!");
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
-        });*/
+        });
     }
+
     private final static String TAG_CANTIDAD = "CANTIDAD";
     private void ListViewCategorias(JSONObject file_url){
         try {
@@ -428,7 +453,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
                 ListAdapter adapter = new ListaAdaptador(activity, _Listado,
                         R.layout.list_v,
-                        new String[]{Configuracion.getDescripcionCategoria(), TAG_CANTIDAD, Configuracion.getIdCategoria()}, new int[]{R.id.descripcionColumna, R.id.api, R.id.cat_id});
+                        new String[]{Configuracion.getDescripcionCategoria(), TAG_CANTIDAD, Configuracion.getIdCategoria()}, new int[]{R.id.descripcionColumna, R.id.api});
 
                 list.setAdapter(adapter);
 
@@ -461,6 +486,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             showToast(e.getMessage());
         }
     }
+
 
 
     private void ListViewArticulos(JSONObject file_url){
@@ -538,6 +564,46 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     }
 
     private void FormularioArticulo(JSONObject file_url){
+
+
+    }
+    private void RegistrarUsuario(JSONObject file_url){
+
+    }
+    public void cargarListadoSucursal(JSONObject file_url) {
+      //  List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
+        //apiParams.add(new BasicNameValuePair("call", "countrylist"));
+
+       // bgt = new BackGroundTask(Configuracion.getApiUrl(), "GET", null,getActivity(),0);
+
+        try {
+            JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
+            for (int i = 0; i < countries.length(); i++) {
+                JSONObject c = countries.getJSONObject(i);
+                String id = c.getString(Configuracion.getIdSucursal());
+                String name = c.getString(Configuracion.getDescripcionSucursal());
+
+                // add Country
+                countryList.add(new ListaSucursal(id, name.toUpperCase()));
+            }
+            listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
+            SucursalAdapter cAdapter = new SucursalAdapter(activity, android.R.layout.simple_spinner_item, countryList);
+            listaSucSpinner.setAdapter(cAdapter);
+
+            listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    //ListaSucursal selectedCountry = countryList.get(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -3,6 +3,7 @@ package mx.mercatto.mercastock;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,10 +33,23 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String esGranel="1";
     private static String clave="";
     private BackGroundTask bgt;
+    InputMethodManager imm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
+
+        try{
+            //String x="";
+            JSONObject jsobj2 = new JSONObject();
+            jsobj2.put("x","");
+            bgt = new BackGroundTask("", "",jsobj2,getActivity(),8 );
+            bgt.execute();
+
+        }catch(JSONException e){
+            showToast(e.getMessage());
+        }
         Bundle args = getArguments();
         idInventario = args.getString(Configuracion.getIdInventario());
         NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
@@ -44,7 +59,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         existencia = args.getString(Configuracion.getExistenciaArticulo());
         esGranel=args.getString(Configuracion.getGranelArticulo());
         clave = args.getString(Configuracion.getClaveArticulo());
-        getActivity().setTitle("Lista de " + NombreArticulo);
+        getActivity().setTitle("Artículo");
 
         EditText txt1 = (EditText) rootView.findViewById(R.id.editText3);
         TextView txtTituloInferior = (TextView) rootView.findViewById(R.id.FormularioArticulotxtTituloInferior);
@@ -113,9 +128,11 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
 
         return rootView;
     }
+
     @Override
     public void onClick(View v) {
         final EditText valor;
+
         valor = (EditText) getActivity().findViewById(R.id.editText3);
         if (Configuracion.getConfirmacion_Mensaje_Gurdado().toString().equals("TRUE")) {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getActivity());
@@ -125,6 +142,8 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     aceptar(valor.getText().toString());
+                    imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -142,11 +161,14 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         }
 
     }
+   /* public void hideKeybord(View view) {
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
+                InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }*/
 
     private static  String TAG_VALOR_INVENTARIO;
     public void aceptar(String valor) {
         try{
-            //showToast(TAG_VALOR_ID_INVENTARIO);
             JSONObject jsobj = new JSONObject();
             jsobj.put("idInventario",idInventario);
             jsobj.put("existenciaRespuesta",valor);
@@ -164,23 +186,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     }
 
     public void cancelar() {
-        //EditText text = (EditText)findViewById(R.id.editText3);
-        //String value = text.getText().toString();
-        //if(value==""){
-        //findViewById(R.id.button3).setEnabled(true);
-    }
-    public void validar(View rootView) {
-        EditText text = (EditText) rootView.findViewById(R.id.editText3);
-        String value = text.getText().toString();
-        //Toast t=Toast.makeText(this, "Se ha guardado correctamente."+value, Toast.LENGTH_SHORT);
-        //t.show();
-        String gg = "";
-        if(value.equals(gg)){
-            rootView.findViewById(R.id.button3).setEnabled(false);
-        }
-        else{
-            rootView.findViewById(R.id.button3).setEnabled(true);
-        }
+
     }
 
     public void showToast(String msg) {

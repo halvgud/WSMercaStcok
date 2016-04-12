@@ -1,14 +1,13 @@
 package mx.mercatto.mercastock;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,19 +29,19 @@ import java.util.concurrent.ExecutionException;
 
 
 public class RegistroUsuario extends Fragment {
-    private static final String TAG_ID = "idSucursal";
-    private static final String TAG_NAME = "nombre";
-    private static final String TAG_DATA = "datos";
-    private static final String MAP_API_URL = "http://192.168.1.56/wsMercaStock/sucursal";
-    private static final String MAP_API_LOGIN = "http://192.168.1.56/wsMercaStock/usuario/registro";
+
     private String sexo="M";
     private BackGroundTask bgt;
-
-
-    //private OnFragmentInteractionListener mListener;
-
+    EditText txtusuario ;
+    EditText txtpassword;
+    EditText txtpassword2;
+    EditText txtnombre ;
+    EditText txtapellido ;
+    Spinner txtsexo;
+    Spinner listaSucSpinner;
+    String id_sucursal="";
     public RegistroUsuario() {
-        // Required empty public constructor
+
     }
 
     /**
@@ -57,6 +56,7 @@ public class RegistroUsuario extends Fragment {
     private String[] arraySpinner;
     protected View rootView;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class RegistroUsuario extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         this.rootView = inflater.inflate(R.layout.fragment_registro_usuario, container, false);
         // setContentView(R.whatever);
-
+        getActivity().setTitle("Registrar Usuario");
         arraySpinner=new String[]{
                 "Masculino","Femenino"
         };
@@ -87,13 +87,185 @@ public class RegistroUsuario extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        txtusuario = (EditText) mActivity.findViewById(R.id.editText5);
-        txtpassword = (EditText) mActivity.findViewById(R.id.editText6);
-        txtpassword2= (EditText) mActivity.findViewById(R.id.editText7);
-        txtnombre = (EditText) mActivity.findViewById(R.id.editText8);
-        txtapellido = (EditText) mActivity.findViewById(R.id.editText9);
-        cargarListadoSucursal(rootView);
+        txtusuario = (EditText) rootView.findViewById(R.id.editText5);
+        txtpassword = (EditText) rootView.findViewById(R.id.editText6);
+        txtpassword2= (EditText) rootView.findViewById(R.id.editText7);
+        txtnombre = (EditText) rootView.findViewById(R.id.editText8);
+        txtapellido = (EditText) rootView.findViewById(R.id.editText9);
+        cargarListadoSucursal();
         // txtsexo = (Spinner) rootView.findViewById(R.id.spinnerSexo);
+
+        //Evaluaciones
+        txtusuario.addTextChangedListener(new TextWatcher() {
+            String value1 = "";
+            String value2 = "";
+            String value3 = "";
+            String value4 = "";
+            String value5 = "";
+            String gg = "";
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                value1 = txtusuario.getText().toString();
+                value2=txtpassword.getText().toString();
+                value3=txtpassword2.getText().toString();
+                value4=txtnombre.getText().toString();
+                value5=txtapellido.getText().toString();
+
+                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
+                    getView().findViewById(R.id.button7).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button7).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+        txtpassword.addTextChangedListener(new TextWatcher() {
+            String value1 = "";
+            String value2 = "";
+            String value3 = "";
+            String value4 = "";
+            String value5 = "";
+            String gg = "";
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                value1 = txtusuario.getText().toString();
+                value2=txtpassword.getText().toString();
+                value3=txtpassword2.getText().toString();
+                value4=txtnombre.getText().toString();
+                value5=txtapellido.getText().toString();
+
+                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
+                    getView().findViewById(R.id.button7).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button7).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+        txtpassword.addTextChangedListener(new TextWatcher() {
+            String value1 = "";
+            String value2 = "";
+            String value3 = "";
+            String value4 = "";
+            String value5 = "";
+            String gg = "";
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                value1 = txtusuario.getText().toString();
+                value2=txtpassword.getText().toString();
+                value3=txtpassword2.getText().toString();
+                value4=txtnombre.getText().toString();
+                value5=txtapellido.getText().toString();
+
+                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
+                    getView().findViewById(R.id.button7).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button7).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+        txtnombre.addTextChangedListener(new TextWatcher() {
+            String value1 = "";
+            String value2 = "";
+            String value3 = "";
+            String value4 = "";
+            String value5 = "";
+            String gg = "";
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                value1 = txtusuario.getText().toString();
+                value2=txtpassword.getText().toString();
+                value3=txtpassword2.getText().toString();
+                value4=txtnombre.getText().toString();
+                value5=txtapellido.getText().toString();
+
+                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
+                    getView().findViewById(R.id.button7).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button7).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+        txtapellido.addTextChangedListener(new TextWatcher() {
+            String value1 = "";
+            String value2 = "";
+            String value3 = "";
+            String value4 = "";
+            String value5 = "";
+            String gg = "";
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                value1 = txtusuario.getText().toString();
+                value2=txtpassword.getText().toString();
+                value3=txtpassword2.getText().toString();
+                value4=txtnombre.getText().toString();
+                value5=txtapellido.getText().toString();
+
+                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
+                    getView().findViewById(R.id.button7).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button7).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
         return rootView;
     }
 
@@ -120,31 +292,25 @@ public class RegistroUsuario extends Fragment {
 
 
 
-    EditText txtusuario ;
-    EditText txtpassword;
-    EditText txtpassword2;
-    EditText txtnombre ;
-    EditText txtapellido ;
-    Spinner txtsexo;
-    Spinner listaSucSpinner;
-    ArrayList<ListaSucursal> countryList = new ArrayList<ListaSucursal>();
+
+    /*ArrayList<ListaSucursal> countryList = new ArrayList<ListaSucursal>();
     public void cargarListadoSucursal(View rootView) {
         List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
         apiParams.add(new BasicNameValuePair("call", "countrylist"));
 
-        bgt = new BackGroundTask(MAP_API_URL, "GET", null,getActivity(),0);
+        bgt = new BackGroundTask(Configuracion.getApiUrl(), "GET", null,getActivity(),0);
 
         try {
             JSONObject countryJSON = bgt.execute().get();
             if(countryJSON!= null){
-                JSONArray countries = countryJSON.getJSONArray(TAG_DATA);
+                JSONArray countries = countryJSON.getJSONArray(Configuracion.getDatos());
 
                 for (int i = 0; i < countries.length(); i++) {
 
                     JSONObject c = countries.getJSONObject(i);
 
-                    String id = c.getString(TAG_ID);
-                    String name = c.getString(TAG_NAME);
+                    String id = c.getString(Configuracion.getIdRegistro());
+                    String name = c.getString(Configuracion.getDescripcionRegistro());
 
                     countryList.add(new ListaSucursal(id, name.toUpperCase()));
                 }
@@ -175,8 +341,18 @@ public class RegistroUsuario extends Fragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-    }
 
+    }*/
+    public void cargarListadoSucursal() {
+        try {
+            JSONObject jsonObj1 = new JSONObject();
+            jsonObj1.put(Configuracion.getApiUrlSucursal(), id_sucursal);
+            bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null,getActivity(),9);
+            bgt.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     public void Registro(View view){
 
         String usuario = txtusuario.getText().toString().toUpperCase();
@@ -206,7 +382,7 @@ public class RegistroUsuario extends Fragment {
                         jsonObj1.put("idSucursal", idsucursal);
                         jsonObj1.put("claveApi", claveapi);
                         // Create the POST object and add the parameters
-                        bgt = new BackGroundTask(MAP_API_LOGIN, "POST", jsonObj1,getActivity(),0);
+                        bgt = new BackGroundTask(Configuracion.getApiUrlLogIn(), "POST", jsonObj1,getActivity(),0);
                         JSONObject countryJSON = bgt.execute().get();
 
                         switch (BackGroundTask.CodeResponse) {
