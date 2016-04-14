@@ -18,7 +18,7 @@ public class Configuracion {
         try {
             JSONObject config = new JSONObject();
             config.put("", "");
-            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "POST", config, activity, 5);
+            bgt = new BackGroundTask("http://192.168.1.80/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "POST", config, activity, 5);
             bgt.execute();
 
         }catch (JSONException e){
@@ -27,7 +27,7 @@ public class Configuracion {
 
     }
     public static Boolean Finalizado=false;
-    private static String _ApiUrl="http://192.168.1.17/";
+    private static String _ApiUrl="http://192.168.1.80/";
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
 
@@ -46,7 +46,7 @@ public class Configuracion {
     public static String getIdSucursal(){return  _idSucursal;}
     public static void setidSucursal(String idSucursal){_idSucursal=idSucursal;}
 
-    private static String _DescripcionSucursal="1";
+    private static String _DescripcionSucursal="nombre";
     public static String getDescripcionSucursal(){return  _DescripcionSucursal;}
     public static void setDescripcionSucursal(String DescripcionSucursal){_DescripcionSucursal=DescripcionSucursal;}
 

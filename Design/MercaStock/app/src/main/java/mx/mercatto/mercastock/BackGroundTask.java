@@ -357,7 +357,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     Configuracion.setDescripcionRegistro(c.getString("parametro").equals("TAG_DESCRIPCION_REGISTRO") ? c.getString("valor") : Configuracion.getDescripcionRegistro());
                     Configuracion.setApiUrlRegistro(c.getString("parametro").equals("API_URL_REGISTRO") ? c.getString("valor") : Configuracion.getApiUrlRegistro());
                     //if(getApiUrl().length() == 0) {
-                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : Configuracion.getApiUrl());
+                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL2") ? c.getString("valor") : Configuracion.getApiUrl());
                     //}
                     Configuracion.setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : Configuracion.getConfirmacion_Mensaje_Gurdado());
                     Configuracion.setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : Configuracion.getConfirmacion_Habilitar_Decimales());

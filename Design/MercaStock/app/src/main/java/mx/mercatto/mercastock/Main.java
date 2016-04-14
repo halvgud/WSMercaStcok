@@ -25,6 +25,7 @@ import android.view.MenuItem;
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    String PROJECT_NUMBER="917548048883";
 
 
     @Override
@@ -42,6 +43,21 @@ public class Main extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });*/
+
+        GCMClientManager pushClientManager = new GCMClientManager(this, PROJECT_NUMBER);
+        pushClientManager.registerIfNeeded(new GCMClientManager.RegistrationCompletedHandler() {
+            @Override
+            public void onSuccess(String registrationId, boolean isNewRegistration) {
+
+                Log.d("Registration id", registrationId);
+                //send this registrationId to your server
+            }
+
+            @Override
+            public void onFailure(String ex) {
+                super.onFailure(ex);
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -103,7 +119,7 @@ public class Main extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         super.onPrepareOptionsMenu(menu);
-        menu.setGroupVisible(0,false);
+        menu.setGroupVisible(0, false);
 
 
       //  invalidateOptionsMenu();
