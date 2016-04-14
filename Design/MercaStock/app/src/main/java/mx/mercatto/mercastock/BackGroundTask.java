@@ -5,6 +5,7 @@ package mx.mercatto.mercastock;
  */
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -55,6 +57,9 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     static JSONObject jObj = null;
     static String json = "";
     static Integer CodeResponse;
+    int contador2=0;
+    public static String sucursalSeleccionada="";
+    TextView prueba;
     /**
      * 1.- Login
      * 2.- ListaSucursal
@@ -64,6 +69,9 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     Integer Codigo;
     Activity activity;
     ProgressDialog asyncDialog;
+    int caso9;
+
+    TextView txtLogin;
     public BackGroundTask(String url, String method, JSONObject params, Activity activity, Integer codigo) {
         this.URL = url;
         this.postparams = params;
@@ -109,22 +117,43 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 if(activity!=null) {
                     asyncDialog.show();
                 }
-            }
+            }break;
             case 5:{
                // asyncDialog.setMessage("Cargando Configuraciones...");
 
-            }
+            }break;
             case 6:{
                /* asyncDialog.setMessage("Guardando Inventario");
                 if(activity!=null) {
                     asyncDialog.show();
                 }*/
-            }
+            }break;
             case 8:{
                 /* asyncDialog.setMessage("Cargando Artículo");
                 if(activity!=null) {
                     asyncDialog.show();
                 }*/
+            }break;
+            case 9:{
+                 asyncDialog.setMessage("Estableciendo conexión");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }
+            }break;
+            case 10:{
+
+                asyncDialog.setMessage("Enviando Petición: Por favor espere");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }
+            }
+            break;
+            case 11:{
+
+                asyncDialog.setMessage("Validando Sesión");
+                if(activity!=null) {
+                    asyncDialog.show();
+                }
             }
             break;
         }
@@ -195,8 +224,10 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         return jObj;
 
     }
-    public static String ClaveApi = "";
+    public static String ClaveApi = "Default";
+    public static String User = "Default";
     Spinner listaSucSpinner;
+    Button guardar;
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
@@ -204,39 +235,88 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             switch (Codigo){
                 case 1:{
                     Login(file_url);
+                    jObj=null;
                     //spinnerSucursal2(file_url);
                 }break;
                 case 2:{
                     spinnerSucursal(file_url);
+                    jObj=null;
                 }break;
                 case 3:{
                     ListViewCategorias(file_url);
+                    jObj=null;
                 }break;
                 case 4:{
                     ListViewArticulos(file_url);
+                    jObj=null;
                 }break;
                 case 5:{
                     CargarConfiguraciones(file_url);
+                    jObj=null;
                     BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null,activity,2);
                     bgt.execute();
                 }break;
                 case 6:{
                     FormularioArticulo(file_url);
-                }
+                    jObj=null;
+                }break;
                 case 7:{
                     RegistrarUsuario(file_url);
-                }
+                    jObj=null;
+                }break;
                 case 8:{
                     FormularioArticulo(file_url);
-                }
-                case 9:{
-                    cargarListadoSucursal(file_url);
+                    jObj=null;
                 }break;
+                case 9:{
+                    caso9=1;
+                    cargarListadoSucursal(file_url);
+
+                    jObj=null;
+
+                }break;
+                case 10:{
+                    cambiarPIN();
+                    jObj=null;
+                }break;
+                case 11:{
+                    //api(file_url);
+                    try {
+                        Integer ss=file_url.getInt("estado");
+                        if (ss.equals(9)) {
+                        }
+                        else {
+                            showToast("Este usuario no tiene clave api");
+                            FragmentSesion fragment = new FragmentSesion();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    jObj=null;
+                }break;
+                case 12:{
+                    Login2(file_url);
+                    jObj=null;
+                }break;
+
             }
+
+            //caso9=0;
 
 
         } catch (Exception e) {
-            showToast(e.toString());
+            //showToast(e.toString());
+            if(caso9==1) {
+                showToast("No se encontraron sucursales en la Dirección IP");
+                // listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
+                listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
+                listaSucSpinner.setAdapter(null);
+                guardar = (Button) activity.findViewById(R.id.button9);
+                guardar.setEnabled(false);
+                caso9=0;
+            }
         }
         if(activity!=null) {
             asyncDialog.dismiss();
@@ -290,7 +370,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
                     Configuracion.setidSucursal(c.getString("parametro").equals("TAG_ID_SUCURSAL") ? c.getString("valor") : Configuracion.getIdSucursal());
                     Configuracion.setDescripcionSucursal(c.getString("parametro").equals("TAG_DESCRIPCION_SUCURSAL") ? c.getString("valor") : Configuracion.getDescripcionSucursal());
-
+                    Configuracion.setApiUrlPin(c.getString("parametro").equals("TAG_API_URL_PIN") ? c.getString("valor") : Configuracion.getApiUrlPin());
                 }
             }
             Configuracion.Finalizado=true;
@@ -311,13 +391,16 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         try{
             //TextView txtusuario = (TextView) activity.findViewById(R.id.editText);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        //String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+        String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
         SharedPreferences.Editor editor = settings.edit();
             switch (CodeResponse) {
                 case 200: {
+
                     JSONObject datos = file_url.getJSONObject("datos");
                     ClaveApi = datos.getString("claveApi");
+                    User = datos.getString("usuario");
                     editor.putString("ClaveApi", ClaveApi);
+                    editor.putString("usuario", datos.getString("usuario"));
                     editor.apply();
                     FragmentCategoria fragment = new FragmentCategoria();
                     FragmentManager fragmentManager = activity.getFragmentManager();
@@ -340,53 +423,124 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     //JSONObject datos = countryJSON.getJSONObject("mensaje");
                     //showToast(datos.getString("mensaje"));
                 }break;
-                case 401:
-                {/*
-                            contador=0;
-                        }else{
-                            contador++;
-                        }*/
+
+                case 401:{
                     if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
                         if(FragmentLogin.contador==0) {
                             FragmentLogin.variable_Usuario_Inicial = txtusuario.getText().toString();
                             FragmentLogin.variable_Usuario_Final="";
                         }
-
+                        int bloqueo=Integer.parseInt(Configuracion.getFlagBloqueoCantidad());
                         if(FragmentLogin.variable_Usuario_Inicial.equals(FragmentLogin.variable_Usuario_Final)){
-                            if(FragmentLogin.contador>=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                            if((FragmentLogin.contador>=bloqueo)&&FragmentLogin.contador<10) {
                                 try {
                                     JSONObject jsonObj2 = new JSONObject();
                                     jsonObj2.put("usuario", usuario);
-                                    BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2,activity,0);
+                                    BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2, activity, 0);
                                     bgt.execute();
-                                    //JSONObject datos = countryJSON.getJSONObject("datos");
+                                    FragmentLogin.contador = 10;
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                if(txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)) {
-                                    showToast(file_url.getString("mensaje"));
-                                }
-
-                                if(!txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)){
-                                    FragmentLogin.variable_Usuario_Inicial=txtusuario.getText().toString();
-                                    FragmentLogin.contador=0;
-                                }
-                                //contador=0;
+                            }
+                            if(FragmentLogin.contador==10){
+                                showToast(file_url.getString("mensaje"));
+                            }
+                            if(!txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)&&FragmentLogin.contador==10){
+                                FragmentLogin.variable_Usuario_Final=txtusuario.getText().toString();
+                            }
+                            if(txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)&&FragmentLogin.contador>9){
+                                FragmentLogin.variable_Usuario_Inicial=txtusuario.getText().toString();
+                                FragmentLogin.contador=0;
                             }
                         }else{
-                            FragmentLogin.variable_Usuario_Final = FragmentLogin.variable_Usuario_Inicial;
-                            //contador++;
-                            //showToast(("Usuario y/o password incorrectas"));
+                            if(FragmentLogin.contador<Integer.parseInt(Configuracion.getFlagBloqueoCantidad())){
+                                FragmentLogin.variable_Usuario_Final = FragmentLogin.variable_Usuario_Inicial;
+                            }
                         }
                     }
-                    if(FragmentLogin.contador<Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                    if(FragmentLogin.contador<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                        if(FragmentLogin.contador==0){
+                            FragmentLogin.contador++;
+                        }
                         FragmentLogin.contador++;
                         showToast((file_url.getString("mensaje")));
-
-                    }}
+                    }
+                }
             break;
-
             default:
+                    showToast(Integer.toString(BackGroundTask.CodeResponse));
+            }
+        }catch(JSONException e){
+            showToast(e.getMessage());
+        }
+    }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void Login2(JSONObject file_url){
+        String txtUsuario;
+        EditText txtPassword;
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+
+        String usuario = settings.getString("usuario", "");
+        txtPassword   = (EditText)activity.findViewById(R.id.editText4);
+
+
+        try{
+            String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+            SharedPreferences.Editor editor = settings.edit();
+            switch (CodeResponse) {
+                case 200: {
+                    JSONObject datos = file_url.getJSONObject("datos");
+                    ClaveApi = datos.getString("claveApi");
+                    User = datos.getString("usuario");
+                    editor.putString("ClaveApi", ClaveApi);
+                    editor.putString("usuario", datos.getString("usuario"));
+                    editor.apply();
+                    FragmentCategoria fragment = new FragmentCategoria();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
+                    Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(300);
+                    // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                }
+                break;
+                case 400:{
+
+                    String subEstado=file_url.getString("estado");
+                    switch (subEstado){
+                        case "11":
+                            showToast(file_url.getString("mensaje"));
+                            break;
+                        default:
+                            showToast("Usuario o contraseña incorrectas");
+                    }
+                    //JSONObject datos = countryJSON.getJSONObject("mensaje");
+                    //showToast(datos.getString("mensaje"));
+                }break;
+
+                case 401:{
+                    if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
+                    if(contador2==0) {
+                        contador2 = 1;
+                    }
+                    }
+                    if(contador2<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                        contador2++;
+                        showToast((file_url.getString("mensaje")));
+                    }
+                    else {
+                        contador2=0;
+                        FragmentLogin fragment = new FragmentLogin();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
+                        showToast("Se ha excedido el número de intentos permitidos");
+                        editor.putString("usuario", "");
+                        editor.putString("ClaveApi", "");
+                        //editor.putString("sucursal", "");
+                        editor.apply();
+                    }
+                }
+                break;
+                default:
                     showToast(Integer.toString(BackGroundTask.CodeResponse));
             }
         }catch(JSONException e){
@@ -396,7 +550,6 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
     ArrayList<ListaSucursal> countryList = new ArrayList<>();
     private void spinnerSucursal(JSONObject file_url){
-        Log.d("a","paso 4");
         try {
             JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
             for (int i = 0; i < countries.length(); i++) {
@@ -409,6 +562,15 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             }
             TextView txtSucursal = (TextView) activity.findViewById(R.id.textView13);
            txtSucursal.setText(countryList.get(0).toString());
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+            SharedPreferences.Editor editor = settings.edit();
+          TextView  txSucursal=(TextView) activity.findViewById(R.id.textView13);
+            if(!settings.getString("sucursal","").equals("")){
+                txSucursal.setText(settings.getString("sucursal",""));
+            }
+            else {
+
+            }
         }catch(JSONException e)
         {
             showToast(e.getMessage());
@@ -571,40 +733,79 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
     }
     public void cargarListadoSucursal(JSONObject file_url) {
-      //  List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
+        //  List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
         //apiParams.add(new BasicNameValuePair("call", "countrylist"));
 
-       // bgt = new BackGroundTask(Configuracion.getApiUrl(), "GET", null,getActivity(),0);
+        // bgt = new BackGroundTask(Configuracion.getApiUrl(), "GET", null,getActivity(),0);
+       // if(file_url.equals(null)){
+        if (!file_url.equals(null)) {
+            try {
+                JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
 
-        try {
-            JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
-            for (int i = 0; i < countries.length(); i++) {
-                JSONObject c = countries.getJSONObject(i);
-                String id = c.getString(Configuracion.getIdSucursal());
-                String name = c.getString(Configuracion.getDescripcionSucursal());
+                if (countries.length() > 0) {
+                    for (int i = 0; i < countries.length(); i++) {
+                        JSONObject c = countries.getJSONObject(i);
+                        String id = c.getString(Configuracion.getIdSucursal());
+                        String name = c.getString(Configuracion.getDescripcionSucursal());
 
-                // add Country
-                countryList.add(new ListaSucursal(id, name.toUpperCase()));
+                            // add Country
+                        countryList.add(new ListaSucursal(id, name.toUpperCase()));
+                    }
+                } else {
+                    showToast(":(");
+                    countryList.add(new ListaSucursal("", "".toUpperCase()));
+                }
+                listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
+                SucursalAdapter cAdapter = new SucursalAdapter(activity, android.R.layout.simple_spinner_item, countryList);
+                listaSucSpinner.setAdapter(cAdapter);
+                showToast("Se han cargado las sucursales");
+                listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        ListaSucursal selectedCountry = countryList.get(position);
+                        sucursalSeleccionada=selectedCountry.toString();
+                        //prueba = (TextView) activity.findViewById(R.id.textView17);
+                        //prueba.setText(selectedCountry.toString());
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+                guardar = (Button) activity.findViewById(R.id.button9);
+                guardar.setEnabled(true);
+
+            }catch(JSONException e){
+                e.printStackTrace();
             }
-            listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
-            SucursalAdapter cAdapter = new SucursalAdapter(activity, android.R.layout.simple_spinner_item, countryList);
-            listaSucSpinner.setAdapter(cAdapter);
 
-            listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //ListaSucursal selectedCountry = countryList.get(position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+        else {
+            showToast("No se ha podido establecer la conexión");
+        }
+    }
+    private void cambiarPIN(){
+        switch (CodeResponse) {
+            case 200: {
+                Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+                showToast("Se ha guardado correctamente");
+                FragmentCategoria fragment = new FragmentCategoria();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                v.vibrate(300);
+            }break;
+            case 401: {
+                Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+                showToast("La contraseña es incorrecta");
+                v.vibrate(500);
+            }break;
+            //showToast("Se ha guardado correctamente");
+        }
+    }
+    private void api(JSONObject file_url) {
 
     }
+
 }
 

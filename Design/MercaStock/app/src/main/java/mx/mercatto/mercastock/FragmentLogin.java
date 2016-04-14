@@ -1,35 +1,23 @@
 package mx.mercatto.mercastock;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
-import android.support.design.internal.NavigationMenu;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -38,16 +26,15 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class FragmentLogin extends Fragment implements View.OnClickListener {
     public static final String ARG_ARTICLES_NUMBER = "articles_number";
-
+    //public static String User="";
     Activity activity;
     public static String ClaveApi = "";
     private BackGroundTask bgt;
+    TextView txSucursal;
 
     private BackGroundTask bgt2;
     EditText txtusuario;
@@ -55,6 +42,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     TextView listaSucSpinner;
     ArrayList<ListaSucursal> countryList = new ArrayList<ListaSucursal>();
     String id_sucursal;
+    EditText txtSucursal;
     public FragmentLogin() {
         // Constructor vacío
     }
@@ -93,10 +81,15 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         upButton.setOnClickListener(this);
         upButton2.setOnClickListener(this);
 
+        txSucursal=(TextView) rootView.findViewById(R.id.textView13);
+
+      //  txtSucursal.setText(BackGroundTask.sucursalSeleccionada.toString());
         //mDrawerLayout = (DrawerLayout) getView().findViewById(R.id.nav_view);
 //mDrawerLayout.removeViewAt(0);
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+       SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+      SharedPreferences.Editor editor = settings.edit();
         String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+        txtusuario = (EditText) rootView.findViewById(R.id.editText);
         if (auth_token_string != "") {
             txtusuario = (EditText) rootView.findViewById(R.id.editText);
             txtpassword = (EditText) rootView.findViewById(R.id.editText2);
@@ -104,10 +97,65 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             txtusuario = (EditText) rootView.findViewById(R.id.editText);
             txtpassword = (EditText) rootView.findViewById(R.id.editText2);
         }
-       //spinnerSucursal2();
-       // cargarListadoSucursal(rootView);
         cargarListadoSucursal(rootView);
 
+        txtusuario.addTextChangedListener(new TextWatcher() {
+            String value1 = "";
+            String value2 = "";
+            String gg = "";
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                value1 = txtusuario.getText().toString();
+                value2 = txtpassword.getText().toString();
+
+                if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 4 && value2.length() == 4)) {
+                    getView().findViewById(R.id.button2).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button2).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+        txtpassword.addTextChangedListener(new TextWatcher() {
+            String value1 = "";
+            String value2 = "";
+            String value3 = "";
+            String gg = "";
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                value1 = txtusuario.getText().toString();
+                value2 = txtpassword.getText().toString();
+
+                if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 4 && value2.length() == 4 )) {
+                    getView().findViewById(R.id.button2).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button2).setEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
         return rootView;
     }
 
@@ -174,10 +222,11 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             }
 
             public void onFinish() {
-                //getActivity().finish();
-                //FragmentCategoria fragment = new FragmentCategoria();
-                //FragmentManager fragmentManager = activity.getFragmentManager();
-                //fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
+               /* FragmentSesion fragment2 = new FragmentSesion();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, fragment2);
+                fragmentTransaction.commit();*/
             }
         }.start();
         //NavigationView navigationView = (NavigationView) getView().findViewById(R.id.nav_view);
@@ -202,43 +251,11 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             jsonObj1.put(Configuracion.getApiUrlSucursal(), id_sucursal);
             bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null,getActivity(),2);
             bgt.execute();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    public void cargarListadoSucursal2() {
-        List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
-        apiParams.add(new BasicNameValuePair("call", "countrylist"));
 
-        bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null,getActivity(),2);
-
-        try {
-            JSONObject countryJSON = bgt.execute().get();
-            if(countryJSON!= null){
-                JSONArray countries = countryJSON.getJSONArray(Configuracion.getDatos());
-
-                for (int i = 0; i < countries.length(); i++) {
-
-                    JSONObject c = countries.getJSONObject(i);
-
-                    String id = c.getString(Configuracion.getIdSucursal());
-                    String name = c.getString(Configuracion.getDescripcionSucursal());
-
-                    countryList.add(new ListaSucursal(id, name.toUpperCase()));
-                }
-                TextView txtSucursal = (TextView) getView().findViewById(R.id.textView13);
-                txtSucursal.setText(countryList.get(0).toString());
-
-            }else{
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

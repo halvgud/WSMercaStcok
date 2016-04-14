@@ -1,7 +1,12 @@
 package mx.mercatto.mercastock;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.app.FragmentManager;
@@ -54,19 +59,32 @@ public class Main extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-       /* DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
+
+        Fragment currentFragment = this.getFragmentManager().findFragmentById(R.id.content_main);
+
+        if (currentFragment instanceof FragmentLogin) {
             super.onBackPressed();
         }
-        */
-        if(getFragmentManager().getBackStackEntryCount() > 2)
-            getFragmentManager().popBackStack();
-        else
+        if (currentFragment instanceof FragmentCategoria) {
             super.onBackPressed();
-    }
-    @Override
+        }
+        if (currentFragment instanceof FragmentArticulo) {
+            getFragmentManager().popBackStack();
+        }
+        if (currentFragment instanceof FragmentFormularioArticulo) {
+            getFragmentManager().popBackStack();
+        }
+        if (currentFragment instanceof FragmentPassword) {
+            getFragmentManager().popBackStack();
+        }
+        if (currentFragment instanceof FragmentSucursal) {
+            getFragmentManager().popBackStack();
+        }
+        if (currentFragment instanceof RegistroUsuario) {
+            getFragmentManager().popBackStack();
+        }
+}
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_drawer, menu);
@@ -138,5 +156,28 @@ public class Main extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override
+    public void onDestroy() {
+        //super.onPause();
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("usuario", "");
+        editor.putString("ClaveApi", "");
+        //editor.putString("usuario", "");
+        editor.apply();
+        super.onDestroy();
+    }
+    public void onStop() {
+        //super.onPause();
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("usuario", "");
+        editor.putString("ClaveApi", "");
+        editor.putString("sucursal", "");
+        editor.apply();
+        super.onStop();
     }
 }

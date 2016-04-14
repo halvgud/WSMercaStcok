@@ -40,6 +40,10 @@
                 return self::bloqueo();
             }else if ($peticion[0] == 'buscar_bloqueo') {
                 return self::buscar_bloqueo();
+            }else if ($peticion[0] == 'cambiar_pin') {
+                return self::cambiar_pin();
+            }else if ($peticion[0] == 'api') {
+                return self::api();
             }else {
                 throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
             }
@@ -181,7 +185,27 @@
                     utf8_encode("usuario o contraseña inválidos"),401);
             }
         }
-        
+        public static function dumy ($usuario){
+            // $correo = $usuario['usuario'];
+            $comando2 = "UPDATE ms_usuario SET fechaSesion=NOW() WHERE usuario='".$usuario."'";
+    
+            try {
+    
+                $sentencia2 = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando2);
+    
+               if ($sentencia2->execute()) {
+                    http_response_code(200);
+                    return
+                        [
+                            "estado" => self::ESTADO_EXITO,
+                            "datos" => $sentencia2->rowCount()
+                        ];
+                } else
+                    throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+            } catch (PDOException $e) {
+                throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(),401);
+            }
+        }
         public static function autenticar($correo, $contrasena)
         {
             $comando = "SELECT idUsuario,contrasena,IDESTADO,idNivelAutorizacion FROM " . self::NOMBRE_TABLA .
@@ -199,8 +223,8 @@
                     $resultado = $sentencia->fetch();
                     //return var_dump(self::validarEstado($resultado['IDESTADO']));
                     if (self::validarEstado($resultado['IDESTADO'],$resultado['idUsuario'])) {
-                    if(self::validarContrasena($contrasena, $resultado['contrasena'])){
-                        
+                    if(self::validarContrasena($contrasena, $resultado['contrasena'])&&self::dumy($correo)){
+                   
                         
                             return true;
                         }else {
@@ -221,6 +245,7 @@
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(),401);
             }
+           
         }
     
         public static function validarContrasena($contrasenaPlana, $contrasenaHash)
@@ -361,13 +386,14 @@
                         return true;
                     }else{
                         
-                        throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'usuario bloqueado '.$resultado['fechaEstado'],401);
+                        throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'El Usuario ha sido bloqueado desde '.$resultado['fechaEstado'].'                                          Favor de esperar 5 minutos a partir de dicha hora',401);
                     }
                     
                 }else {return false;}
             }catch (PDOException $e){
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
+        }
             /*
             try {
                 $post = json_decode(file_get_contents('php://input'),true);
@@ -388,6 +414,67 @@
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }*/
+            public static function cambiar_pin()
+        {
+                  $post = json_decode(file_get_contents('php://input'),true);
+                   $usuario = $post['usuario'];
+                   $pin_viejo=$post['pin_viejo'];
+            //$contrasena = $usuario['contrasena'];
+       
+            if (self::autenticar($usuario, $pin_viejo)==TRUE) {
+                //$usuarioBD = self::obtenerUsuarioPorUsuario($correo);self::encriptarContrasena($pin_nuevo);
+                 $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::CONTRASENA." ='".self::encriptarContrasena($post['pin_nuevo'])."' WHERE usuario='".$post['usuario']."'";
+                    // Preparar sentencia
+                    $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                // Ejecutar sentencia preparada
+                if ($sentencia->execute()) {
+                    http_response_code(200);
+                    return
+                        [
+                            "estado" => self::ESTADO_EXITO,
+                            "datos" => $sentencia->rowCount()
+                        ];
+                } else
+                    throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+    
+                if ($usuarioBD != NULL) {
+                    http_response_code(200);
+                } else {
+                    throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
+                        "Ha ocurrido un error",401);
+                }
+            } else {
+                throw new ExcepcionApi(self::ESTADO_PARAMETROS_INCORRECTOS,
+                    utf8_encode("usuario o contraseña inválidos"),401);
+            }
         }
+        public static function api()
+        {
+            $post = json_decode(file_get_contents('php://input'),true);
+                   $usuario = $post['claveApi'];
+            try{
+                $comando ="select claveApi from ms_usuario where claveApI='".$usuario."' AND claveApi!=''";
+               // $comando = "SELECT VALOR FROM ms_parametro mp
+               // inner join ms_usuario mu (mp.idUsuario = ? ) WHERE accion='CONFIGURACION_GENERAL' AND parametro='ESTADO_VALIDO_LOGIN' and valor = ?";
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                $sentencia->bindParam(1,$Usuario);
+                
+                if($sentencia->execute()){
+                    $resultado = $sentencia->fetch();
+                   
+                    if(isset($resultado['claveApi'])){
+                        //return true;
+                        return ["estado" => self::ESTADO_EXITO];
+                    }else{
+                        
+                        throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'No hay clave api',401);
+                    }
+                    
+                }else {return false;}
+            }catch (PDOException $e){
+                throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+            }
+        }
+            
     }
 

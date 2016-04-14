@@ -2,23 +2,32 @@ package mx.mercatto.mercastock;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Juan Carlos De León on 10/04/2016.
  */
-public class FragmentPassword extends Fragment {
+public class FragmentPassword extends Fragment implements View.OnClickListener  {
 
     public EditText txtPinActual;
     public EditText txtPinNuevo;
     public EditText txtPinNuevoR;
+    private BackGroundTask bgt;
 
     public FragmentPassword() {
 
@@ -29,6 +38,10 @@ public class FragmentPassword extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_password, container, false);
         getActivity().setTitle("Cambiar PIN");
+
+        Button upButton = (Button) rootView.findViewById(R.id.button8);
+        upButton.setOnClickListener(this);
+
 
         txtPinActual= (EditText)rootView.findViewById(R.id.editText10);
         txtPinNuevo= (EditText)rootView.findViewById(R.id.editText11);
@@ -136,6 +149,28 @@ public class FragmentPassword extends Fragment {
         super.onAttach(activity);
         mActivity = (FragmentActivity)activity;
     }
+
+    //@Override
+    public void onClick(View v) {
+
+        cambiarPin();
+    }
+
+
+    public void cambiarPin() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        String auth_token_string = settings.getString("usuario", ""/*default value*/);
+        try {
+            JSONObject jsobj = new JSONObject();
+            jsobj.put("usuario",auth_token_string);
+            jsobj.put("pin_viejo", txtPinActual.getText().toString());
+            jsobj.put("pin_nuevo",txtPinNuevo.getText().toString());
+            bgt = new BackGroundTask(Configuracion.getApiUrlPin(), "POST", jsobj,getActivity(),10);
+            bgt.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        }
 
 }
 

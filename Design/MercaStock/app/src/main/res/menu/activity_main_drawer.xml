@@ -5,7 +5,7 @@
         <item
             android:id="@+id/seleccionarsucursal"
             android:icon="@drawable/ic_storage_black_48dp"
-            android:title="Seleccionar Sucursal"
+            android:title="Configurar Servidor Sucursal"
             />
         <item
             android:id="@+id/cambiarcontrasena"

@@ -168,4 +168,7 @@ public class Configuracion {
     public static String getClaveArticulo (){return  _ClaveArticulo;}
     public  static  void  setClaveArticulo(String ClaveArticulo){_ClaveArticulo=ClaveArticulo;}
 
+    private static String _ApiUrlPin="wsMercaStock/usuario/cambiar_pin";
+    public static String getApiUrlPin(){return ((_ApiUrlPin.contains("http://")?_ApiUrlPin:getApiUrl()+_ApiUrlPin));}
+    public static void setApiUrlPin(String ApiUrlPin) {_ApiUrlPin=ApiUrlPin;}
 }
