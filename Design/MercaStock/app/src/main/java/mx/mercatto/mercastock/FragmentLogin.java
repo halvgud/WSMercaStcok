@@ -69,7 +69,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_article, container, false);
-        Configuracion.Inicializar(getActivity());
+
         getActivity().setTitle("MercaStock");
         Button upButton = (Button) rootView.findViewById(R.id.button2);
         Button upButton2 = (Button) rootView.findViewById(R.id.button);

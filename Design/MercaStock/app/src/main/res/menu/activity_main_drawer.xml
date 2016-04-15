@@ -4,12 +4,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/seleccionarsucursal"
-            android:icon="@drawable/ic_storage_black_48dp"
+            android:icon="@drawable/ic_wrench"
             android:title="Configurar Servidor Sucursal"
             />
         <item
             android:id="@+id/cambiarcontrasena"
-            android:icon="@drawable/ic_settings_black_48dp"
+            android:icon="@drawable/ic_key"
             android:title="Cambiar PIN"
             />
     </group>
@@ -17,19 +17,19 @@
     <item android:title="Administrador">
         <!--android:visible="false"-->
         <menu>
-            <item
-                android:id="@+id/configurarservidor"
-                android:icon="@drawable/ic_network_wifi_black_48dp"
-                android:title="Configurar Servidor"
-                />
 
                 />
             <item
                 android:id="@+id/crearusuario"
-                android:icon="@drawable/ic_menu_slideshow"
+                android:icon="@drawable/ic_account_plus"
                 android:title="Registrar Usuario"
 
                 />
+            <item
+                android:id="@+id/cerrarsesion"
+                android:icon="@drawable/ic_logout"
+                android:title="Cerrar Sesión"
+            />
 
         </menu>
     </item>

@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,11 @@ public class FragmentCategoria extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_departamento, container, false);
         getActivity().setTitle("Lista de Categorias");
+<<<<<<< HEAD
        // revisarApi();
+=======
+        //revisarApi();
+>>>>>>> origin/master
         cargarListadoCategoria();
 
         return rootView;
@@ -37,6 +42,7 @@ public class FragmentCategoria extends Fragment {
 
     public void cargarListadoCategoria() {
         bgt = new BackGroundTask(Configuracion.getApiUrlCategoria(), "GET", null,getActivity(),3);
+        Log.d("fef", Configuracion.getApiUrlCategoria());
         try {
            bgt.execute();
         } catch (Exception e) {
@@ -45,6 +51,28 @@ public class FragmentCategoria extends Fragment {
     }
 
 
+<<<<<<< HEAD
+=======
+        try {
+            JSONObject jsonObj1 = new JSONObject();
+            jsonObj1.put("claveApi", Configuracion.settings.getString("ClaveApi",""));
+           // bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/api", "POST", jsonObj1 ,getActivity(),11);
+           // bgt.execute();
+
+            /*FragmentSesion fragment2 = new FragmentSesion();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fragment2);
+            fragmentTransaction.commit();*/
+        } catch (Exception e){
+                showToast(e.toString());
+        }
+        //if(BackGroundTask.ClaveApi.equals("")){
+
+       // }
+
+    }
+>>>>>>> origin/master
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }

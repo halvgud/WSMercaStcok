@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -27,8 +28,10 @@ import org.json.JSONObject;
  */
 public class FragmentSesion extends Fragment implements View.OnClickListener {
 
+    TextView txtNombre;
     EditText txtPin;
     BackGroundTask bgt;
+    public static  int contador2=0;
     public FragmentSesion() {
 
     }
@@ -43,6 +46,9 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
         Button upButton2 = (Button) rootView.findViewById(R.id.button4);
         upButton2.setOnClickListener(this);
 
+        String nombre= Configuracion.settings.getString("nombre","");
+        txtNombre=(TextView)rootView.findViewById(R.id.textView18);
+        txtNombre.setText("Usuario: "+nombre);
         txtPin= (EditText)rootView.findViewById(R.id.editText4);
 
         txtPin.addTextChangedListener(new TextWatcher() {
@@ -105,6 +111,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("usuario", "");
                 editor.putString("ClaveApi", "");
+                editor.putString("nombre","");
                 editor.apply();
                 //editor.putString("sucursal", "");
 
