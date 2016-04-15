@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class RegistroUsuario extends Fragment {
+public class RegistroUsuario extends Fragment implements View.OnClickListener{
 
     private String sexo="M";
     private BackGroundTask bgt;
@@ -39,19 +40,12 @@ public class RegistroUsuario extends Fragment {
     EditText txtapellido ;
     Spinner txtsexo;
     Spinner listaSucSpinner;
+    Button guardar;
     String id_sucursal="";
     public RegistroUsuario() {
 
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegistroUsuario.
-     */
     // TODO: Rename and change types and number of parameters
     private String[] arraySpinner;
     protected View rootView;
@@ -60,10 +54,8 @@ public class RegistroUsuario extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //super.onCreateView(savedInstanceState);
         super.onCreateView(inflater, container, savedInstanceState);
         this.rootView = inflater.inflate(R.layout.fragment_registro_usuario, container, false);
-        // setContentView(R.whatever);
         getActivity().setTitle("Registrar Usuario");
         arraySpinner=new String[]{
                 "Masculino","Femenino"
@@ -73,7 +65,6 @@ public class RegistroUsuario extends Fragment {
                 android.R.layout.simple_spinner_dropdown_item, arraySpinner);
         txtsexo.setAdapter(adapter);
         txtsexo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
@@ -92,9 +83,9 @@ public class RegistroUsuario extends Fragment {
         txtpassword2= (EditText) rootView.findViewById(R.id.editText7);
         txtnombre = (EditText) rootView.findViewById(R.id.editText8);
         txtapellido = (EditText) rootView.findViewById(R.id.editText9);
+        guardar = (Button) rootView.findViewById(R.id.button7);
+        guardar.setOnClickListener(this);
         cargarListadoSucursal();
-        // txtsexo = (Spinner) rootView.findViewById(R.id.spinnerSexo);
-
         //Evaluaciones
         txtusuario.addTextChangedListener(new TextWatcher() {
             String value1 = "";
@@ -113,9 +104,9 @@ public class RegistroUsuario extends Fragment {
                 value5=txtapellido.getText().toString();
 
                 if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
-                    getView().findViewById(R.id.button7).setEnabled(true);
+                    guardar.setEnabled(true);
                 } else {
-                    getView().findViewById(R.id.button7).setEnabled(false);
+                    guardar.setEnabled(false);
                 }
             }
 
@@ -147,9 +138,9 @@ public class RegistroUsuario extends Fragment {
                 value5=txtapellido.getText().toString();
 
                 if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
-                    getView().findViewById(R.id.button7).setEnabled(true);
+                    guardar.setEnabled(true);
                 } else {
-                    getView().findViewById(R.id.button7).setEnabled(false);
+                    guardar.setEnabled(false);
                 }
             }
 
@@ -181,9 +172,9 @@ public class RegistroUsuario extends Fragment {
                 value5=txtapellido.getText().toString();
 
                 if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
-                    getView().findViewById(R.id.button7).setEnabled(true);
+                    guardar.setEnabled(true);
                 } else {
-                    getView().findViewById(R.id.button7).setEnabled(false);
+                    guardar.setEnabled(false);
                 }
             }
 
@@ -215,9 +206,9 @@ public class RegistroUsuario extends Fragment {
                 value5=txtapellido.getText().toString();
 
                 if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
-                    getView().findViewById(R.id.button7).setEnabled(true);
+                    guardar.setEnabled(true);
                 } else {
-                    getView().findViewById(R.id.button7).setEnabled(false);
+                    guardar.setEnabled(false);
                 }
             }
 
@@ -249,9 +240,9 @@ public class RegistroUsuario extends Fragment {
                 value5=txtapellido.getText().toString();
 
                 if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg) && !value4.equals(gg) && !value5.equals(gg)) && (value2.equals(value3))&&(value2.length()==4 && value3.length()==4)) {
-                    getView().findViewById(R.id.button7).setEnabled(true);
+                    guardar.setEnabled(true);
                 } else {
-                    getView().findViewById(R.id.button7).setEnabled(false);
+                    guardar.setEnabled(false);
                 }
             }
 
@@ -290,59 +281,6 @@ public class RegistroUsuario extends Fragment {
         mActivity = (FragmentActivity)activity;
     }
 
-
-
-
-    /*ArrayList<ListaSucursal> countryList = new ArrayList<ListaSucursal>();
-    public void cargarListadoSucursal(View rootView) {
-        List<NameValuePair> apiParams = new ArrayList<NameValuePair>(1);
-        apiParams.add(new BasicNameValuePair("call", "countrylist"));
-
-        bgt = new BackGroundTask(Configuracion.getApiUrl(), "GET", null,getActivity(),0);
-
-        try {
-            JSONObject countryJSON = bgt.execute().get();
-            if(countryJSON!= null){
-                JSONArray countries = countryJSON.getJSONArray(Configuracion.getDatos());
-
-                for (int i = 0; i < countries.length(); i++) {
-
-                    JSONObject c = countries.getJSONObject(i);
-
-                    String id = c.getString(Configuracion.getIdRegistro());
-                    String name = c.getString(Configuracion.getDescripcionRegistro());
-
-                    countryList.add(new ListaSucursal(id, name.toUpperCase()));
-                }
-            }else{
-                rootView.findViewById(R.id.button2).setEnabled(false);
-                return;
-            }
-
-            listaSucSpinner = (Spinner) rootView.findViewById(R.id.spinnerRegistroUsuario);
-            SucursalAdapter cAdapter = new SucursalAdapter(mActivity, android.R.layout.simple_spinner_item, countryList);
-            listaSucSpinner.setAdapter(cAdapter);
-
-            listaSucSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    ListaSucursal selectedCountry = countryList.get(position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-    }*/
     public void cargarListadoSucursal() {
         try {
             JSONObject jsonObj1 = new JSONObject();
@@ -353,7 +291,8 @@ public class RegistroUsuario extends Fragment {
             e.printStackTrace();
         }
     }
-    public void Registro(View view){
+    @Override
+    public void onClick(View view){
 
         String usuario = txtusuario.getText().toString().toUpperCase();
         String password = txtpassword.getText().toString();
@@ -361,11 +300,11 @@ public class RegistroUsuario extends Fragment {
         String nombre = txtnombre.getText().toString();
         String apellido = txtapellido.getText().toString();
         String contacto = "";
-        String idsucursal = "";
+
         String claveapi = "";
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-
+        String idsucursal = settings.getString("idSucursal","");
         SharedPreferences.Editor editor = settings.edit();
         if(usuario.length()>0&&password.length()>0&&password2.length()>0&&nombre.length()>0&&apellido.length()>0) {
             if(password.length()==4&&password2.length()==4){
@@ -379,23 +318,18 @@ public class RegistroUsuario extends Fragment {
                         jsonObj1.put("apellido", apellido);
                         jsonObj1.put("sexo", sexo);
                         jsonObj1.put("contacto", contacto);
-                        jsonObj1.put("idSucursal", idsucursal);
+                        jsonObj1.put("idSucursal", "1");
                         jsonObj1.put("claveApi", claveapi);
-                        // Create the POST object and add the parameters
-                        bgt = new BackGroundTask(Configuracion.getApiUrlLogIn(), "POST", jsonObj1,getActivity(),0);
-                        JSONObject countryJSON = bgt.execute().get();
 
+                        bgt = new BackGroundTask("http://192.168.1.80/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),0);
+                        bgt.execute();
                         switch (BackGroundTask.CodeResponse) {
                             case 200: {
                                 showToast("Su registró correctamente");
-                                // Intent refresh = new Intent(this, Registro.class);
-                                //  this.finish();
-                                //  startActivity(refresh);
                             }
-                            ;
                             break;
                             case 401:
-                                // showToast(("Usuario y/o password incorrectas"));
+                                 showToast(("Usuario y/o password incorrectas"));
                                 break;
                             default:
                                 showToast(Integer.toString(BackGroundTask.CodeResponse));
@@ -403,7 +337,7 @@ public class RegistroUsuario extends Fragment {
                     } catch (JSONException e) {
                         showToast(e.toString());
                     } catch (Exception e) {
-                        // showToast(e.toString());
+
                     }
                 } else {
                     showToast("Las contraseñas no coinciden");
@@ -420,8 +354,5 @@ public class RegistroUsuario extends Fragment {
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
-    public void Regresar(View view){
-        //   Intent intent = new Intent(this, Login.class);
-        //    this.startActivity(intent);
-    }
+
 }

@@ -31,6 +31,10 @@ public class Configuracion {
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
 
+    private static String _ProcesadoCategoria="procesado";
+    public static String getProcesadoCategoria(){return _ProcesadoCategoria;}
+    public static void setProcesadoCategoria(String ProcesadoCategoria){_ProcesadoCategoria=ProcesadoCategoria;}
+
     private static String _FlagBloqueoPorIntentos="TRUE";
     public static String getFlagBloqueoPorIntentos(){return _FlagBloqueoPorIntentos;}
     public static void setFlagBloqueoPorIntentos(String FlagBloqueoPorIntentos){_FlagBloqueoPorIntentos=FlagBloqueoPorIntentos;}

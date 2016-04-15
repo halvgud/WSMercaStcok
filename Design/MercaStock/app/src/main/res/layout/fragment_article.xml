@@ -50,7 +50,7 @@
         android:layout_alignParentStart="true"
         android:inputType="numberPassword"
         android:textAlignment="center"
-        android:maxLength="4" />
+        android:maxLength="5" />
 
     <Button
         android:layout_width="wrap_content"

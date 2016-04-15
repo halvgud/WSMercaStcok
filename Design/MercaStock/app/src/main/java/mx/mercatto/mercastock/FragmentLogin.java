@@ -29,18 +29,13 @@ import java.util.ArrayList;
 
 
 public class FragmentLogin extends Fragment implements View.OnClickListener {
-    public static final String ARG_ARTICLES_NUMBER = "articles_number";
-    //public static String User="";
     Activity activity;
-    public static String ClaveApi = "";
     private BackGroundTask bgt;
     TextView txSucursal;
 
     private BackGroundTask bgt2;
     EditText txtusuario;
     EditText txtpassword;
-    TextView listaSucSpinner;
-    ArrayList<ListaSucursal> countryList = new ArrayList<ListaSucursal>();
     String id_sucursal;
     EditText txtSucursal;
     public FragmentLogin() {
@@ -109,7 +104,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
                 value1 = txtusuario.getText().toString();
                 value2 = txtpassword.getText().toString();
 
-                if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 4 && value2.length() == 4)) {
+                if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 1 && value2.length() == 4)) {
                     getView().findViewById(R.id.button2).setEnabled(true);
                 } else {
                     getView().findViewById(R.id.button2).setEnabled(false);
@@ -138,7 +133,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
                 value1 = txtusuario.getText().toString();
                 value2 = txtpassword.getText().toString();
 
-                if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 4 && value2.length() == 4 )) {
+                if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 1 && value2.length() == 4 )) {
                     getView().findViewById(R.id.button2).setEnabled(true);
                 } else {
                     getView().findViewById(R.id.button2).setEnabled(false);
@@ -187,6 +182,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         //String auth_token_string = settings.getString("ClaveApi", ""*//*default value*//*);
 
         SharedPreferences.Editor editor = settings.edit();
+        editor.putString("idSucursal",id_sucursal);
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);

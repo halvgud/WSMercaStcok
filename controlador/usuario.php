@@ -28,7 +28,8 @@
         const ESTADO_FALLA_DESCONOCIDA = 7;
         const ESTADO_PARAMETROS_INCORRECTOS = 8;
         const ESTADO_EXITO=9;
-    
+        const ID_NIVEL_AUTORIZACION="idNivelAutorizacion";
+        const FECHA_SESION = "fechaSesion";
         public static function post($peticion)
         {
             if ($peticion[0] == 'registro') {
@@ -94,7 +95,10 @@
             $contacto=$datosUsuario->contacto;
             $idsucursal=$datosUsuario->idSucursal;
             $claveApi = self::generarClaveApi();
-    
+            $idNivelAutorizacion=$datosUsuario->idNivelAutorizacion;
+            $idEstado = $datosUsuario->idEstado;
+            $fechaEstado = $datosUsuario->fechaEstado;
+            $fechaSesion = $datosUsuario->fechaSesion;
             try {
     
                 $pdo = ConexionBD::obtenerInstancia()->obtenerBD();
@@ -109,8 +113,13 @@
                     self::SEXO . "," .
                     self::CONTACTO . "," .
                     self::ID_SUCURSAL . "," .
-                    self::CLAVE_API . ")" .
-                    " VALUES(?,?,?,?,?,?,?,?,?)";
+                    self::CLAVE_API . ",".
+                    self::ID_NIVEL_AUTORIZACION.",".
+                    self::ID_ESTADO.",".
+                    self::FECHA_ESTADO .",".
+                    self::FECHA_SESION
+                    .")" .
+                    " VALUES(?,?,?,?,?,?,?,?,?,?,?,now(),now())";
     
                 $sentencia = $pdo->prepare($comando);
     
@@ -123,6 +132,10 @@
                 $sentencia->bindParam(7, $contacto);
                 $sentencia->bindParam(8, $idsucursal);
                 $sentencia->bindParam(9, $claveApi);
+                $sentencia->bindParam(10,$idNivelAutorizacion);
+                $sentencia->bindParam(11,$idEstado);
+               // $sentencia->bindParam(12,$fechaEstado);
+              //  $sentencia->bindParam(13,$fechaSesion);
                 
                 $resultado = $sentencia->execute();
     

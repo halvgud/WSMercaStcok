@@ -29,7 +29,7 @@ public class FragmentCategoria extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_departamento, container, false);
         getActivity().setTitle("Lista de Categorias");
-        revisarApi();
+       // revisarApi();
         cargarListadoCategoria();
 
         return rootView;
@@ -44,27 +44,7 @@ public class FragmentCategoria extends Fragment {
         }
     }
 
-    public void revisarApi() {
 
-        try {
-            JSONObject jsonObj1 = new JSONObject();
-            jsonObj1.put("claveApi", BackGroundTask.ClaveApi.toString());
-            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/api", "POST", jsonObj1 ,getActivity(),11);
-            bgt.execute();
-
-            /*FragmentSesion fragment2 = new FragmentSesion();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.content_main, fragment2);
-            fragmentTransaction.commit();*/
-        } catch (Exception e){
-                showToast(e.toString());
-        }
-        //if(BackGroundTask.ClaveApi.equals("")){
-
-       // }
-
-    }
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
@@ -81,7 +61,7 @@ public class FragmentCategoria extends Fragment {
     }
     public void onResume() {
         super.onResume();  // Always call the superclass method first
-        revisarApi();
+       // revisarApi();
         // Get the Camera instance as the activity achieves full user focus
         //FragmentLogin.ClaveApi=0;
     }

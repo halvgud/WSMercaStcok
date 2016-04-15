@@ -5,7 +5,6 @@ package mx.mercatto.mercastock;
  */
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +44,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
+
 
 
 public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
@@ -59,7 +57,6 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     static Integer CodeResponse;
     int contador2=0;
     public static String sucursalSeleccionada="";
-    TextView prueba;
     /**
      * 1.- Login
      * 2.- ListaSucursal
@@ -71,7 +68,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     ProgressDialog asyncDialog;
     int caso9;
 
-    TextView txtLogin;
+
     public BackGroundTask(String url, String method, JSONObject params, Activity activity, Integer codigo) {
         this.URL = url;
         this.postparams = params;
@@ -195,13 +192,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             switch(Codigo){
                 case 1:{}break;
                 case 2:{
-               /*     _JsonGenerico = jObj.getJSONArray(TAG_DATOS);
-                    for (int i = 0; i < _JsonGenerico.length(); i++) {
-                        JSONObject c = _JsonGenerico.getJSONObject(i);
-                        String idSucursal = c.getString(TAG_ID_SUCURSAL);
-                        String nombreSucursal = c.getString(TAG_NOMBRE_SUCURSAL);
-                        listaSuc.add(new ListaSucursal(idSucursal, nombreSucursal.toUpperCase()));
-                    }*/
+
                 }break;
                 case 3:{
 
@@ -313,7 +304,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 // listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
                 listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
                 listaSucSpinner.setAdapter(null);
-                guardar = (Button) activity.findViewById(R.id.button9);
+                guardar = (Button) activity.findViewById(R.id.button7);
                 guardar.setEnabled(false);
                 caso9=0;
             }
@@ -371,6 +362,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     Configuracion.setidSucursal(c.getString("parametro").equals("TAG_ID_SUCURSAL") ? c.getString("valor") : Configuracion.getIdSucursal());
                     Configuracion.setDescripcionSucursal(c.getString("parametro").equals("TAG_DESCRIPCION_SUCURSAL") ? c.getString("valor") : Configuracion.getDescripcionSucursal());
                     Configuracion.setApiUrlPin(c.getString("parametro").equals("TAG_API_URL_PIN") ? c.getString("valor") : Configuracion.getApiUrlPin());
+                    Configuracion.setProcesadoCategoria(c.getString("parametro").equals("TAG_PROCESADO_CATEGORIA") ? c.getString("valor") : Configuracion.getProcesadoCategoria());
                 }
             }
             Configuracion.Finalizado=true;
@@ -401,6 +393,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     User = datos.getString("usuario");
                     editor.putString("ClaveApi", ClaveApi);
                     editor.putString("usuario", datos.getString("usuario"));
+                    //editor.putString("idSucursal","1");
                     editor.apply();
                     FragmentCategoria fragment = new FragmentCategoria();
                     FragmentManager fragmentManager = activity.getFragmentManager();
@@ -592,22 +585,21 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         });*/
     }
 
-    private final static String TAG_CANTIDAD = "CANTIDAD";
     private void ListViewCategorias(JSONObject file_url){
         try {
             _JsonGenerico = file_url.getJSONArray(Configuracion.getDatos());
 
             for (int i = 0; i < _JsonGenerico.length(); i++) {
                 JSONObject c = _JsonGenerico.getJSONObject(i);
-
                 String cat_id = c.getString(Configuracion.getIdCategoria());
-                //String art_id = c.getString(TAG_ID_ARTICULO);
                 String nombreCategoria = c.getString(Configuracion.getDescripcionCategoria());
                 String cantidad = c.getString(Configuracion.getCantidadCategoria());
+                String procesado = c.getString(Configuracion.getProcesadoCategoria());
                 HashMap<String, String> map = new HashMap<>();
                 map.put(Configuracion.getDescripcionCategoria(),nombreCategoria);
                 map.put(Configuracion.getCantidadCategoria(), cantidad);
                 map.put(Configuracion.getIdCategoria(), cat_id);
+                map.put(Configuracion.getProcesadoCategoria(),procesado);
                 //map.put(TAG_ID_ARTICULO, art_id);
 
                 _Listado.add(map);
@@ -615,7 +607,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
                 ListAdapter adapter = new ListaAdaptador(activity, _Listado,
                         R.layout.list_v,
-                        new String[]{Configuracion.getDescripcionCategoria(), TAG_CANTIDAD, Configuracion.getIdCategoria()}, new int[]{R.id.descripcionColumna, R.id.api});
+                        new String[]{Configuracion.getDescripcionCategoria(), Configuracion.getProcesadoCategoria()+"/"+Configuracion.getCantidadCategoria()}, new int[]{R.id.descripcionColumna, R.id.api});
 
                 list.setAdapter(adapter);
 
