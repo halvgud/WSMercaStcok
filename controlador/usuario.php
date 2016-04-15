@@ -234,8 +234,8 @@
     
                 if ($sentencia) {
                     $resultado = $sentencia->fetch();
-                    //return var_dump(self::validarEstado($resultado['IDESTADO']));
-                    if (self::validarEstado($resultado['IDESTADO'],$resultado['idUsuario'])) {
+                   // return var_dump(self::validarEstado($resultado['IDESTADO']));
+                  //  if (self::validarEstado($resultado['IDESTADO'],$resultado['idUsuario'])) {
                     if(self::validarContrasena($contrasena, $resultado['contrasena'])&&self::dumy($correo)){
                    //self::generarClaveApi();
                         $claveApi = self::generarClaveApi();
@@ -268,13 +268,7 @@
                         //return ["estado" => 11, "datos" => "Usuario Bloqueado"];
                         return false;
                         }
-                        
-                    }else {
-                        //http_response_code(401);
-                        //return ["estado" => 11, "datos" => "Usuario Bloqueado"];
-                        
-                        return false;
-                        }
+                   
                 } else {
                     return false;
                 }
@@ -403,33 +397,33 @@
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
         }
-        public static function validarEstado($idEstado,$idUsuario)
-        {
-            try{
-                $comando ="select valor, fechaEstado from ms_usuario mu left join
-                ms_parametro mp on (mp.accion='CONFIGURACION_GENERAL' and mp.parametro='ESTADO_VALIDO_LOGIN'
-                and valor = ?) where mu.idUsuario = ?";
-               // $comando = "SELECT VALOR FROM ms_parametro mp
-               // inner join ms_usuario mu (mp.idUsuario = ? ) WHERE accion='CONFIGURACION_GENERAL' AND parametro='ESTADO_VALIDO_LOGIN' and valor = ?";
-                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                $sentencia->bindParam(1,$idEstado);
-                $sentencia->bindParam(2,$idUsuario);
-                
-                if($sentencia->execute()){
-                    $resultado = $sentencia->fetch();
-                   
-                    if(isset($resultado['valor'])){
-                        return true;
-                    }else{
-                        
-                        throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'El Usuario ha sido bloqueado desde '.$resultado['fechaEstado'].'                                          Favor de esperar 5 minutos a partir de dicha hora',401);
-                    }
-                    
-                }else {return false;}
-            }catch (PDOException $e){
-                throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
-            }
-        }
+        //public static function validarEstado($idEstado,$idUsuario)
+        //{
+        //    try{
+        //        $comando ="select valor, fechaEstado from ms_usuario mu left join
+        //        ms_parametro mp on (mp.accion='CONFIGURACION_GENERAL' and mp.parametro='ESTADO_VALIDO_LOGIN'
+        //        and valor = ?) where mu.idUsuario = ?";
+        //       // $comando = "SELECT VALOR FROM ms_parametro mp
+        //       // inner join ms_usuario mu (mp.idUsuario = ? ) WHERE accion='CONFIGURACION_GENERAL' AND parametro='ESTADO_VALIDO_LOGIN' and valor = ?";
+        //        $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+        //        $sentencia->bindParam(1,$idEstado);
+        //        $sentencia->bindParam(2,$idUsuario);
+        //        
+        //        if($sentencia->execute()){
+        //            $resultado = $sentencia->fetch();
+        //           
+        //            if(isset($resultado['valor'])){
+        //                return true;
+        //            }else{
+        //                
+        //                throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'El Usuario ha sido bloqueado desde '.$resultado['fechaEstado'].'                                          Favor de esperar 5 minutos a partir de dicha hora',401);
+        //            }
+        //            
+        //        }else {return false;}
+        //    }catch (PDOException $e){
+        //        throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+        //    }
+        //}
             /*
             try {
                 $post = json_decode(file_get_contents('php://input'),true);

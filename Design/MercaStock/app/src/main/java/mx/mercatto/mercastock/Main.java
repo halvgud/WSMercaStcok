@@ -84,18 +84,9 @@ BackGroundTask bgt;
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
             bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/api", "POST", jsonObj1 ,this,13);
             bgt.execute();
-
-            /*FragmentSesion fragment2 = new FragmentSesion();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.content_main, fragment2);
-            fragmentTransaction.commit();*/
         } catch (Exception e){
            // showToast(e.toString());
         }
-        //if(BackGroundTask.ClaveApi.equals("")){
-
-        // }
 
     }
 
@@ -136,6 +127,7 @@ BackGroundTask bgt;
         CrearUsuario = menu.findItem(R.id.crearusuario);
       //  return true;
         SeleccionarSucursal.setEnabled(b);
+           // SeleccionarSucursal.isEnabled();
         CambiarContrasena.setEnabled(b);
         CerrarSesion.setEnabled(b);
         CrearUsuario.setEnabled(b);

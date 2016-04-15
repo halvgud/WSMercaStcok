@@ -375,7 +375,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     Configuracion.setDescripcionRegistro(c.getString("parametro").equals("TAG_DESCRIPCION_REGISTRO") ? c.getString("valor") : Configuracion.getDescripcionRegistro());
                     Configuracion.setApiUrlRegistro(c.getString("parametro").equals("API_URL_REGISTRO") ? c.getString("valor") : Configuracion.getApiUrlRegistro());
                     //if(getApiUrl().length() == 0) {
-                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL2") ? c.getString("valor") : Configuracion.getApiUrl());
+                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : Configuracion.getApiUrl());
                     //}
                     Configuracion.setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : Configuracion.getConfirmacion_Mensaje_Gurdado());
                     Configuracion.setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : Configuracion.getConfirmacion_Habilitar_Decimales());
@@ -446,47 +446,47 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 }break;
 
                 case 401:{
-                    if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
-                        if(FragmentLogin.contador==0) {
-                            FragmentLogin.variable_Usuario_Inicial = txtusuario.getText().toString();
-                            FragmentLogin.variable_Usuario_Final="";
-                        }
-                        int bloqueo=Integer.parseInt(Configuracion.getFlagBloqueoCantidad());
-                        if(FragmentLogin.variable_Usuario_Inicial.equals(FragmentLogin.variable_Usuario_Final)){
-                            if((FragmentLogin.contador>=bloqueo)&&FragmentLogin.contador<10) {
-                                try {
-                                    JSONObject jsonObj2 = new JSONObject();
-                                    jsonObj2.put("usuario", usuario);
-                                    BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2, activity, 0);
-                                    bgt.execute();
-                                    FragmentLogin.contador = 10;
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            if(FragmentLogin.contador==10){
-                                showToast(file_url.getString("mensaje"));
-                            }
-                            if(!txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)&&FragmentLogin.contador==10){
-                                FragmentLogin.variable_Usuario_Final=txtusuario.getText().toString();
-                            }
-                            if(txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)&&FragmentLogin.contador>9){
-                                FragmentLogin.variable_Usuario_Inicial=txtusuario.getText().toString();
-                                FragmentLogin.contador=0;
-                            }
-                        }else{
-                            if(FragmentLogin.contador<Integer.parseInt(Configuracion.getFlagBloqueoCantidad())){
-                                FragmentLogin.variable_Usuario_Final = FragmentLogin.variable_Usuario_Inicial;
-                            }
-                        }
-                    }
-                    if(FragmentLogin.contador<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
-                        if(FragmentLogin.contador==0){
-                            FragmentLogin.contador++;
-                        }
-                        FragmentLogin.contador++;
-                        showToast((file_url.getString("mensaje")));
-                    }
+                  //  if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
+                    //    if(FragmentLogin.contador==0) {
+                      //      FragmentLogin.variable_Usuario_Inicial = txtusuario.getText().toString();
+                          //  FragmentLogin.variable_Usuario_Final="";
+                        //}
+                       // int bloqueo=Integer.parseInt(Configuracion.getFlagBloqueoCantidad());
+                        //if(FragmentLogin.variable_Usuario_Inicial.equals(FragmentLogin.variable_Usuario_Final)){
+                          //  if((FragmentLogin.contador>=bloqueo)&&FragmentLogin.contador<10) {
+                            //    try {
+                              //      JSONObject jsonObj2 = new JSONObject();
+                                //    jsonObj2.put("usuario", usuario);
+                                  //  BackGroundTask bgt = new BackGroundTask(Configuracion.getApiUrlBloqueo(), "POST", jsonObj2, activity, 0);
+                                   // bgt.execute();
+                                   // FragmentLogin.contador = 10;
+                                //} catch (JSONException e) {
+                                  //  e.printStackTrace();
+                            //    }
+                            //}
+                            //if(FragmentLogin.contador==10){
+                                showToast("Usuario y/o contraseña incorrectos");
+                            //}
+                            //if(!txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)&&FragmentLogin.contador==10){
+                              //  FragmentLogin.variable_Usuario_Final=txtusuario.getText().toString();
+                            //}
+                            //if(txtusuario.getText().toString().equals(FragmentLogin.variable_Usuario_Final)&&FragmentLogin.contador>9){
+                              //  FragmentLogin.variable_Usuario_Inicial=txtusuario.getText().toString();
+                                //FragmentLogin.contador=0;
+                            //}
+                        //}else{
+                          //  if(FragmentLogin.contador<Integer.parseInt(Configuracion.getFlagBloqueoCantidad())){
+                            //    FragmentLogin.variable_Usuario_Final = FragmentLogin.variable_Usuario_Inicial;
+                            //}
+                    //    }
+                    //}
+                    //if(FragmentLogin.contador<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                      //  if(FragmentLogin.contador==0){
+                        //    FragmentLogin.contador++;
+                        //}
+                        //FragmentLogin.contador++;
+                        //showToast((file_url.getString("mensaje")));
+                    //}
                 }
             break;
             default:
