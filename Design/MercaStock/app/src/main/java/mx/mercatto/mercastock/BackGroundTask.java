@@ -420,11 +420,8 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     User = datos.getString("usuario");
                     editor.putString("ClaveApi", ClaveApi);
                     editor.putString("usuario", datos.getString("usuario"));
-<<<<<<< HEAD
                     //editor.putString("idSucursal","1");
-=======
                     editor.putString("nombre", datos.getString("nombre"));
->>>>>>> origin/master
                     editor.apply();
                     FragmentCategoria fragment = new FragmentCategoria();
                     FragmentManager fragmentManager = activity.getFragmentManager();
