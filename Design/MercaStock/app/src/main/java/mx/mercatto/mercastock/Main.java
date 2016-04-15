@@ -22,6 +22,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONObject;
+
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,6 +36,7 @@ public class Main extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+//revisarApi();
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,9 +70,32 @@ public class Main extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        FragmentLogin fragment = new FragmentLogin();
-        FragmentManager fragmentManager = this.getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+        Configuracion.Inicializar(this);
+        revisarApi();
+
+
+    }
+    public void revisarApi() {
+BackGroundTask bgt;
+        try {
+            Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
+            JSONObject jsonObj1 = new JSONObject();
+            jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
+            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/api", "POST", jsonObj1 ,this,13);
+            bgt.execute();
+
+            /*FragmentSesion fragment2 = new FragmentSesion();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, fragment2);
+            fragmentTransaction.commit();*/
+        } catch (Exception e){
+           // showToast(e.toString());
+        }
+        //if(BackGroundTask.ClaveApi.equals("")){
+
+        // }
 
     }
 
@@ -106,12 +132,12 @@ public class Main extends AppCompatActivity
         inflater.inflate(R.menu.activity_main_drawer, menu);
         SeleccionarSucursal = menu.findItem(R.id.seleccionarsucursal);
         CambiarContrasena =  menu.findItem(R.id.cambiarcontrasena);
-        ConfigurarServidor =  menu.findItem(R.id.configurarservidor);
+        CerrarSesion =  menu.findItem(R.id.cerrarsesion);
         CrearUsuario = menu.findItem(R.id.crearusuario);
       //  return true;
         SeleccionarSucursal.setEnabled(b);
         CambiarContrasena.setEnabled(b);
-        ConfigurarServidor.setEnabled(b);
+        CerrarSesion.setEnabled(b);
         CrearUsuario.setEnabled(b);
         return true;
     }
@@ -128,7 +154,7 @@ public class Main extends AppCompatActivity
 
      public static MenuItem SeleccionarSucursal;
     public static MenuItem CambiarContrasena;
-    public static MenuItem ConfigurarServidor;
+    public static MenuItem CerrarSesion;
     public static MenuItem CrearUsuario;
 
 
@@ -138,8 +164,8 @@ public class Main extends AppCompatActivity
     public static void CambiarEstadoContrasena(boolean bandera){
         CambiarContrasena.setEnabled(bandera);
     }
-    public static  void CambiarConfigurarServidor(boolean bandera){
-        ConfigurarServidor.setEnabled(bandera);
+    public static  void CerrarSesion(boolean bandera){
+        CerrarSesion.setEnabled(bandera);
     }
     public static  void CambiarCrearUsuario(boolean bandera){
         CrearUsuario.setEnabled(bandera);
@@ -155,7 +181,17 @@ public class Main extends AppCompatActivity
             RegistroUsuario fragment = new RegistroUsuario();
             FragmentManager fragmentManager = this.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-        }else if(id==R.id.configurarservidor){
+        }else if(id==R.id.cerrarsesion){
+
+            Configuracion.settings= PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+            Configuracion.editor = Configuracion.settings.edit();
+            Configuracion.editor.putString("usuario", "");
+            Configuracion.editor.putString("ClaveApi", "");
+            Configuracion.editor.putString("nombre", "");
+            Configuracion.editor.apply();
+            FragmentLogin fragment = new FragmentLogin();
+            FragmentManager fragmentManager = this.getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
         }else if(id==R.id.seleccionarsucursal){
             FragmentSucursal fragment = new FragmentSucursal();
@@ -166,34 +202,25 @@ public class Main extends AppCompatActivity
             FragmentManager fragmentManager = this.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         }
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void onDestroy() {
-        //super.onPause();
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("usuario", "");
         editor.putString("ClaveApi", "");
-        //editor.putString("usuario", "");
+        editor.putString("sucursal","");
         editor.apply();
         super.onDestroy();
     }
-    public void onStop() {
-        //super.onPause();
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("usuario", "");
-        editor.putString("ClaveApi", "");
-        editor.putString("sucursal", "");
-        editor.apply();
-        super.onStop();
+    @Override
+    public  void onResume(){
+        revisarApi();
+        super.onResume();
     }
 }

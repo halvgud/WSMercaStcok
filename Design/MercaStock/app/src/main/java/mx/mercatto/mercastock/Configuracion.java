@@ -1,6 +1,8 @@
 package mx.mercatto.mercastock;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -171,4 +173,7 @@ public class Configuracion {
     private static String _ApiUrlPin="wsMercaStock/usuario/cambiar_pin";
     public static String getApiUrlPin(){return ((_ApiUrlPin.contains("http://")?_ApiUrlPin:getApiUrl()+_ApiUrlPin));}
     public static void setApiUrlPin(String ApiUrlPin) {_ApiUrlPin=ApiUrlPin;}
+
+    public  static  SharedPreferences settings; //= PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+    public  static  SharedPreferences.Editor editor;// = settings.edit();
 }

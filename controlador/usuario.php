@@ -224,7 +224,30 @@
                     //return var_dump(self::validarEstado($resultado['IDESTADO']));
                     if (self::validarEstado($resultado['IDESTADO'],$resultado['idUsuario'])) {
                     if(self::validarContrasena($contrasena, $resultado['contrasena'])&&self::dumy($correo)){
-                   
+                   //self::generarClaveApi();
+                        $claveApi = self::generarClaveApi();
+                        
+                        try {
+                            $post = json_decode(file_get_contents('php://input'),true);
+                            //return var_dump($post);
+                                $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::CLAVE_API." ='".$claveApi."' WHERE idUsuario='".$resultado['idUsuario']."'";
+                                // Preparar sentencia
+                                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                            // Ejecutar sentencia preparada
+                            if ($sentencia->execute()) {
+                                http_response_code(200);
+                                return
+                                    [
+                                        "estado" => self::ESTADO_EXITO,
+                                        "datos" => $sentencia->rowCount()
+                                    ];
+                            } else
+                                throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+                
+                        } catch (PDOException $e) {
+                            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+                        }
+                        
                         
                             return true;
                         }else {

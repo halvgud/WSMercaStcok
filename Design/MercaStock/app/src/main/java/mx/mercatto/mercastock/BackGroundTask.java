@@ -57,7 +57,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     static JSONObject jObj = null;
     static String json = "";
     static Integer CodeResponse;
-    int contador2=0;
+
     public static String sucursalSeleccionada="";
     TextView prueba;
     /**
@@ -284,6 +284,9 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     try {
                         Integer ss=file_url.getInt("estado");
                         if (ss.equals(9)) {
+                            FragmentCategoria fragment = new FragmentCategoria();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                         }
                         else {
                             showToast("Este usuario no tiene clave api");
@@ -300,7 +303,31 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     Login2(file_url);
                     jObj=null;
                 }break;
+                case 13:{
+                    //api(file_url);
+                    try {
+                        Integer ss=file_url.getInt("estado");
+                        if (ss.equals(9)) {
+                            FragmentCategoria fragment = new FragmentCategoria();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }
+                        else if (Configuracion.settings.getString("usuario","").equals("")){
+                            FragmentLogin fragment = new FragmentLogin();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
+                            } else {
+                            FragmentSesion fragment = new FragmentSesion();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+
+                        }
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    jObj=null;
+                }break;
             }
 
             //caso9=0;
@@ -401,6 +428,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     User = datos.getString("usuario");
                     editor.putString("ClaveApi", ClaveApi);
                     editor.putString("usuario", datos.getString("usuario"));
+                    editor.putString("nombre", datos.getString("nombre"));
                     editor.apply();
                     FragmentCategoria fragment = new FragmentCategoria();
                     FragmentManager fragmentManager = activity.getFragmentManager();
@@ -519,16 +547,16 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
                 case 401:{
                     if(Configuracion.getFlagBloqueoPorIntentos().equals("TRUE")) {
-                    if(contador2==0) {
-                        contador2 = 1;
+                    if(FragmentSesion.contador2==0) {
+                        FragmentSesion.contador2 = 1;
                     }
                     }
-                    if(contador2<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
-                        contador2++;
+                    if(FragmentSesion.contador2<=Integer.parseInt(Configuracion.getFlagBloqueoCantidad())) {
+                        FragmentSesion.contador2++;
                         showToast((file_url.getString("mensaje")));
                     }
                     else {
-                        contador2=0;
+                        FragmentSesion.contador2=0;
                         FragmentLogin fragment = new FragmentLogin();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
