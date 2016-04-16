@@ -1,18 +1,12 @@
 package mx.mercatto.mercastock;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Fragment;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.json.JSONObject;
+
+import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

@@ -14,10 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
+import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 /**
  * Created by Juan Carlos De León on 10/04/2016.

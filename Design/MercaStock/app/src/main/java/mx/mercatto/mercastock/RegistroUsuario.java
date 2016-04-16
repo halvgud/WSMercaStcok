@@ -18,15 +18,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 
 public class RegistroUsuario extends Fragment implements View.OnClickListener{
@@ -260,20 +255,6 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
         return rootView;
     }
 
-   /* @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_registro_usuario, container, false);
-    }
-*/
-    // TODO: Rename method, update argument and hook method into UI event
-  /*  public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }*/
-
     protected FragmentActivity mActivity;
     @Override
     public void onAttach(Activity activity) {
@@ -288,7 +269,7 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
             bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null,getActivity(),9);
             bgt.execute();
         } catch (JSONException e) {
-            e.printStackTrace();
+           showToast(e.getMessage());
         }
     }
     @Override
@@ -311,29 +292,22 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
                 if (password.equals(password2)) {
                     try {
                         JSONObject jsonObj1 = new JSONObject();
-                        jsonObj1.put("idUsuario", "7");
                         jsonObj1.put("usuario", usuario);
                         jsonObj1.put("contrasena", password);
                         jsonObj1.put("nombre", nombre);
                         jsonObj1.put("apellido", apellido);
                         jsonObj1.put("sexo", sexo);
                         jsonObj1.put("contacto", contacto);
-                        jsonObj1.put("idSucursal", "1");
-                        jsonObj1.put("claveApi", claveapi);
+                        jsonObj1.put("idSucursal", Configuracion.settings.getString("idSucursal","0"));
+                        jsonObj1.put("claveApi", "");
+                        jsonObj1.put("idNivelAutorizacion",1);
+                        jsonObj1.put("idEstado","A");
+                        jsonObj1.put("fechaEstado","");
+                        jsonObj1.put("fechaSesion","");
 
-                        bgt = new BackGroundTask("http://192.168.1.80/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),0);
+                        bgt = new BackGroundTask("http://192.168.1.80/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),14);
                         bgt.execute();
-                        switch (BackGroundTask.CodeResponse) {
-                            case 200: {
-                                showToast("Su registró correctamente");
-                            }
-                            break;
-                            case 401:
-                                 showToast(("Usuario y/o password incorrectas"));
-                                break;
-                            default:
-                                showToast(Integer.toString(BackGroundTask.CodeResponse));
-                        }
+
                     } catch (JSONException e) {
                         showToast(e.toString());
                     } catch (Exception e) {

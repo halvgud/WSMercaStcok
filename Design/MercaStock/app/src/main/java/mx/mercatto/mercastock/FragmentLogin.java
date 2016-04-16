@@ -7,7 +7,6 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,12 +19,8 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
+import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 
 public class FragmentLogin extends Fragment implements View.OnClickListener {
@@ -33,38 +28,18 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     private BackGroundTask bgt;
     TextView txSucursal;
 
-    private BackGroundTask bgt2;
+
     EditText txtusuario;
     EditText txtpassword;
     String id_sucursal;
-    EditText txtSucursal;
+
     public FragmentLogin() {
         // Constructor vacío
     }
 
 
-    public void changeContent(Document doc, String newname, String newemail) {
-        Element root = doc.getDocumentElement();
-        NodeList rootlist = root.getChildNodes();
-        for (int i = 0; i < rootlist.getLength(); i++) {
-            Element person = (Element) rootlist.item(i);
-            NodeList personlist = person.getChildNodes();
-            Element name = (Element) personlist.item(0);
-            NodeList namelist = name.getChildNodes();
-            Text nametext = (Text) namelist.item(0);
-            String oldname = nametext.getData();
-            if (oldname.equals(newname)) {
-                Element email = (Element) personlist.item(1);
-                NodeList emaillist = email.getChildNodes();
-                Text emailtext = (Text) emaillist.item(0);
-                emailtext.setData(newemail);
-            }
-        }
-    }
 
-    int x = 1;
 
-    DrawerLayout mDrawerLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,9 +53,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
 
         txSucursal=(TextView) rootView.findViewById(R.id.textView13);
 
-      //  txtSucursal.setText(BackGroundTask.sucursalSeleccionada.toString());
-        //mDrawerLayout = (DrawerLayout) getView().findViewById(R.id.nav_view);
-//mDrawerLayout.removeViewAt(0);
        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
       SharedPreferences.Editor editor = settings.edit();
         String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
@@ -154,27 +126,11 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    public static int contador;
-    public static String variable_Usuario_Inicial;
-    public static String variable_Usuario_Final;
 
-
-    public void buttonClicked(View view) {
-        if (view.getId() == R.id.button) {
-            // button1 action
-        } else if (view.getId() == R.id.button2) {
-            //button2 action
-        } else if (view.getId() == R.id.button3) {
-            //button3 action
-        }
-    }
 
     @Override
     public void onClick(View v) {
-        //______________________________________________   Main.CambiarEstadoSucursal(false);
-        // ______________________________________________Main.b=false;
-        //--____________________________________________getActivity().invalidateOptionsMenu();
-        //______________________________________________Log.d("kkk",getActivity().getTitle().toString());
+
 
         String usuario = txtusuario.getText().toString();
         String password = txtpassword.getText().toString();
@@ -199,9 +155,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             showToast(e.toString());
         }
 
-    /*    FragmentCategoria fragment = new FragmentCategoria();
-        FragmentManager fragmentManager = this.getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();*/
     }
 
      public void onBackPressed()  {

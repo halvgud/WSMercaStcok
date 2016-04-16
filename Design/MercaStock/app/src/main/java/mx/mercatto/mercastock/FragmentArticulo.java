@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BackGroundTask;
+
 
 public class FragmentArticulo extends Fragment {
 
