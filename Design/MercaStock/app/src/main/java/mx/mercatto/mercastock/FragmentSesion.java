@@ -86,7 +86,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
         switch(v.getId())
         {
             case R.id.button5 :
-                String usuario = BackGroundTask.User;
+                String usuario = Configuracion.settings.getString("usuario","");
                 String password = txtPin.getText().toString();
                 try {
                     JSONObject jsonObj1 = new JSONObject();

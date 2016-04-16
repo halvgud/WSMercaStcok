@@ -17,7 +17,24 @@ public class Configuracion {
         try {
             JSONObject config = new JSONObject();
             config.put("", "");
+<<<<<<< HEAD
             bgt = new BackGroundTask("http://192.168.0.39/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "POST", config, activity, 5);
+=======
+            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "GET", config, activity, 5);
+            bgt.execute();
+
+        }catch (JSONException e){
+
+        }
+
+    }
+    public static void Inicializar(Activity activity,Boolean x){
+        BackGroundTask bgt;
+        try {
+            JSONObject config = new JSONObject();
+            config.put("", "");
+            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "GET", config, activity, 5);
+>>>>>>> origin/master
             bgt.execute();
 
         }catch (JSONException e){
@@ -85,7 +102,7 @@ public class Configuracion {
     public static void setApiUrlSucursal(String ApiUrlSucursal) {
         _ApiUrlSucursal =ApiUrlSucursal;}
 
-    private static String _ApiUrlLogIn ="wsMercaStock/usuario";
+    private static String _ApiUrlLogIn ="wsMercaStock/usuario/login";
     public static String getApiUrlLogIn(){return ((_ApiUrlLogIn.contains("http://")? _ApiUrlLogIn :getApiUrl()+ _ApiUrlLogIn));}
     public static void setApiUrlLogIn(String ApiUrlLogIn) {
         _ApiUrlLogIn =ApiUrlLogIn;}
@@ -98,7 +115,7 @@ public class Configuracion {
     public static String getDescripcionCategoria(){ return _DescripcionCategoria;}
     public static void setDescripcionCategoria(String DescripcionCategoria) {_DescripcionCategoria=DescripcionCategoria;}
 
-    private static String _CantidadCategoria="cantidad";
+    private static String _CantidadCategoria="CANTIDAD";
     public static String getCantidadCategoria(){ return _CantidadCategoria;}
     public static void setCantidadCategoria(String CantidadCategoria) {_CantidadCategoria=CantidadCategoria;}
 

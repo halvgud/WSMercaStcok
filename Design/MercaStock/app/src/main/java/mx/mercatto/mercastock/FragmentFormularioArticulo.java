@@ -34,7 +34,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String esGranel="1";
     private static String clave="";
     private BackGroundTask bgt;
-    InputMethodManager imm;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +88,8 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
                 } else {
                     rootView.findViewById(R.id.button3).setEnabled(true);
                 }
+
+
             }
 
             @Override
@@ -130,8 +132,8 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     aceptar(valor.getText().toString());
-                    imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                    //imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

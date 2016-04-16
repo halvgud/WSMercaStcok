@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -28,13 +29,14 @@ public class FragmentCategoria extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_departamento, container, false);
         getActivity().setTitle("Lista de Categorias");
         cargarListadoCategoria();
-
+        Main.x="0";
+        //Main.setContentView(R.layout.activity_main_logged);
         return rootView;
     }
 
     public void cargarListadoCategoria() {
         bgt = new BackGroundTask(Configuracion.getApiUrlCategoria(), "GET", null,getActivity(),3);
-        Log.d("fef", Configuracion.getApiUrlCategoria());
+       // Log.d("fef", Configuracion.getApiUrlCategoria());
         try {
            bgt.execute();
         } catch (Exception e) {
@@ -63,5 +65,6 @@ public class FragmentCategoria extends Fragment {
         // Get the Camera instance as the activity achieves full user focus
         //FragmentLogin.ClaveApi=0;
     }
+
 
    }
