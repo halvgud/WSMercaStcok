@@ -7,6 +7,7 @@ package mx.mercatto.mercastock;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -87,9 +88,12 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        asyncDialog.setIndeterminate(false);
-        asyncDialog.setCancelable(false);
-        asyncDialog.setProgress(0);
+        if(activity!=null) {
+            //asyncDialog.setIndeterminate(false);
+            //asyncDialog.setCancelable(false);
+            // asyncDialog.setProgress(0);
+        }
+
         switch (Codigo) {
             case 1: {
                 asyncDialog.setMessage("Cargando Usuario");
@@ -235,6 +239,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 }break;
                 case 3:{
                     ListViewCategorias(file_url);
+                    activity.invalidateOptionsMenu();
                     jObj=null;
                 }break;
                 case 4:{
@@ -272,10 +277,17 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 }break;
                 case 11:{
                     //api(file_url);
-                    try {
+                   /* try {
                         Integer ss=file_url.getInt("estado");
-                        if (ss.equals(9)) {
+                        if (ss.equals(9)&&!Configuracion.settings.getString("usuario","").equals("")) {
                             FragmentCategoria fragment = new FragmentCategoria();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+
+
+                        }
+                        else  if(ss.equals(9)&&Configuracion.settings.getString("usuario","").equals("")){
+                            FragmentLogin fragment = new FragmentLogin();
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                         }
@@ -287,7 +299,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                         }
                     }catch (JSONException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     jObj=null;
                 }break;
                 case 12:{
@@ -298,17 +310,23 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     //api(file_url);
                     try {
                         Integer ss=file_url.getInt("estado");
-                        if (ss.equals(9)) {
+                        if (ss.equals(9)&&!Configuracion.settings.getString("usuario","").equals("")) {
                             FragmentCategoria fragment = new FragmentCategoria();
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                         }
-                        else if (Configuracion.settings.getString("usuario","").equals("")){
+                        else  if(ss.equals(9)&&Configuracion.settings.getString("usuario","").equals("")){
                             FragmentLogin fragment = new FragmentLogin();
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
-                            } else {
+                            }
+                        else  if(ss.equals(11)&&Configuracion.settings.getString("usuario","").equals("")){
+                            FragmentLogin fragment = new FragmentLogin();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+
+                        }else {
                             FragmentSesion fragment = new FragmentSesion();
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
@@ -422,6 +440,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     editor.putString("usuario", datos.getString("usuario"));
                     //editor.putString("idSucursal","1");
                     editor.putString("nombre", datos.getString("nombre"));
+                    editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
                     editor.apply();
                     FragmentCategoria fragment = new FragmentCategoria();
                     FragmentManager fragmentManager = activity.getFragmentManager();

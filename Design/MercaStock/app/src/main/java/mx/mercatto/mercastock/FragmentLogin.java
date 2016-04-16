@@ -72,9 +72,9 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
 
         getActivity().setTitle("MercaStock");
         Button upButton = (Button) rootView.findViewById(R.id.button2);
-        Button upButton2 = (Button) rootView.findViewById(R.id.button);
+        //Button upButton2 = (Button) rootView.findViewById(R.id.button);
         upButton.setOnClickListener(this);
-        upButton2.setOnClickListener(this);
+        //upButton2.setOnClickListener(this);
 
         txSucursal=(TextView) rootView.findViewById(R.id.textView13);
 
@@ -160,13 +160,13 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
 
 
     public void buttonClicked(View view) {
-        if (view.getId() == R.id.button) {
+        //if (view.getId() == R.id.button) {
             // button1 action
-        } else if (view.getId() == R.id.button2) {
+       // } else if (view.getId() == R.id.button2) {
             //button2 action
-        } else if (view.getId() == R.id.button3) {
+       // } else if (view.getId() == R.id.button3) {
             //button3 action
-        }
+        //}
     }
 
     @Override

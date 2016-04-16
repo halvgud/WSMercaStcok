@@ -33,8 +33,8 @@
         
         public static function get($peticion){
 
-        if (empty($peticion[0])){}
-          //  return self::obtenerConfiguracion();
+        if (!empty($peticion[0]))
+            return self::obtenerConfiguracion($peticion[0]);
         else
             http_response_code(404);
 
