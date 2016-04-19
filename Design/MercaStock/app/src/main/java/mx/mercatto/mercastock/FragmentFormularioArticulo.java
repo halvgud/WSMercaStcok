@@ -21,7 +21,8 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
+
+import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
 
@@ -39,6 +40,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
+<<<<<<< HEAD
 
         try{
             String x2="";
@@ -50,6 +52,8 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         }catch(JSONException e){
             showToast(e.getMessage());
         }
+=======
+>>>>>>> origin/master
         Bundle args = getArguments();
         idInventario = args.getString(Configuracion.getIdInventario());
         NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
@@ -90,8 +94,6 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             @Override
             public void beforeTextChanged(CharSequence s, int start,
                                           int count, int after) {
-                //Toast.makeText(getApplicationContext(), "Your 2 message.",
-                //    Toast.LENGTH_SHORT).show();
                 EditText text = (EditText) rootView.findViewById(R.id.editText3);
                 String value = text.getText().toString();
                 String gg = "";
@@ -150,7 +152,8 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-                    cancelar();
+                    //doNothing();
+
                 }
             });
             AlertDialog dialogo=dialogo1.show();
@@ -163,10 +166,6 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         }
 
     }
-   /* public void hideKeybord(View view) {
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
-                InputMethodManager.RESULT_UNCHANGED_SHOWN);
-    }*/
 
     private static  String TAG_VALOR_INVENTARIO;
     public void aceptar(String valor) {
@@ -185,10 +184,6 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         finally {
             getActivity().getFragmentManager().popBackStack();
         }
-    }
-
-    public void cancelar() {
-
     }
 
     public void showToast(String msg) {

@@ -2,7 +2,10 @@ package mx.mercatto.mercastock;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+<<<<<<< HEAD
 import android.content.Intent;
+=======
+>>>>>>> origin/master
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -21,6 +24,8 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 /**
  * Created by Juan Carlos De León on 10/04/2016.

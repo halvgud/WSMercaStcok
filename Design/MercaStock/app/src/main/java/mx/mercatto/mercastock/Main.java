@@ -10,6 +10,14 @@ import android.preference.PreferenceManager;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuInflater;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+import android.view.MotionEvent;
+import android.view.View;
+>>>>>>> origin/master
+>>>>>>> origin/master
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +29,8 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import org.json.JSONObject;
+
+import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
