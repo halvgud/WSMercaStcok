@@ -56,8 +56,9 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     static JSONObject jObj = null;
     static String json = "";
     static Integer CodeResponse;
-
+    public static int ClAp;
     public static String sucursalSeleccionada="";
+    public static String idSucursalSeleccionada="";
     /**
      * 1.- Login
      * 2.- ListaSucursal
@@ -96,10 +97,10 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
         switch (Codigo) {
             case 1: {
-                asyncDialog.setMessage("Cargando Usuario");
-                if(activity!=null) {
-                    asyncDialog.show();
-                }
+               // asyncDialog.setMessage("Cargando Usuario");
+                //if(activity!=null) {
+                   // asyncDialog.show();
+                //}
             }
             break;
             case 2: {
@@ -230,6 +231,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             switch (Codigo){
                 case 1:{
                     Login(file_url);
+                    activity.invalidateOptionsMenu();
                     jObj=null;
                     //spinnerSucursal2(file_url);
                 }break;
@@ -307,34 +309,38 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     jObj=null;
                 }break;
                 case 13:{
-                    //api(file_url);
-                    try {
-                        Integer ss=file_url.getInt("estado");
-                        if (ss.equals(9)&&!Configuracion.settings.getString("usuario","").equals("")) {
-                            FragmentCategoria fragment = new FragmentCategoria();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                        }
-                        else  if(ss.equals(9)&&Configuracion.settings.getString("usuario","").equals("")){
-                            FragmentLogin fragment = new FragmentLogin();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    ClAp=file_url.getInt("estado");
 
+                    if(Main.inicio==1) {
+                        if (ClAp == 9) {
+                            String us=Configuracion.settings.getString("usuario", "");
+                            String lo=Configuracion.settings.getString("login", "");
+                            if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
+                                FragmentCategoria fragment = new FragmentCategoria();
+                                FragmentManager fragmentManager = activity.getFragmentManager();
+                                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                             }
-                        else  if(ss.equals(11)&&Configuracion.settings.getString("usuario","").equals("")){
-                            FragmentLogin fragment = new FragmentLogin();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-
-                        }else {
-                            FragmentSesion fragment = new FragmentSesion();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-
+                            if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
+                                FragmentSesion fragment = new FragmentSesion();
+                                FragmentManager fragmentManager = activity.getFragmentManager();
+                                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                            }
                         }
-                    }catch (JSONException e) {
-                        e.printStackTrace();
+                        if (ClAp == 11) {
+                            if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("")) {
+                                FragmentSesion fragment = new FragmentSesion();
+                                FragmentManager fragmentManager = activity.getFragmentManager();
+                                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                            }
+                        }
                     }
+                    if(Main.inicio==0){
+                        FragmentLogin fragment = new FragmentLogin();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        Main.inicio=1;
+                    }
+
                     jObj=null;
                 }break;
             }
@@ -428,8 +434,9 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
         try{
             //TextView txtusuario = (TextView) activity.findViewById(R.id.editText);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
-        SharedPreferences.Editor editor = settings.edit();
+            SharedPreferences.Editor editor = settings.edit();
+            String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+
             switch (CodeResponse) {
                 case 200: {
 
@@ -441,12 +448,22 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     //editor.putString("idSucursal","1");
                     editor.putString("nombre", datos.getString("nombre"));
                     editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
+                    editor.putString("controlusuario", datos.getString("idNivelAutorizacion"));
+                    editor.putString("login", "true");
                     editor.apply();
-                    FragmentCategoria fragment = new FragmentCategoria();
-                    FragmentManager fragmentManager = activity.getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
+                    Main.idSesion=1;
+                    Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
+                   // Main.ClAp=Integer.parseInt(ClaveApi);
+
                     Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
+                    activity.finish();
+                    Intent intent = activity.getIntent();
+                    activity.startActivity(intent);
+                    FragmentCategoria fragment = new FragmentCategoria();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 }
                 break;
@@ -511,6 +528,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             default:
                     showToast(Integer.toString(BackGroundTask.CodeResponse));
             }
+            BackGroundTask.CodeResponse=null;
         }catch(JSONException e){
             showToast(e.getMessage());
         }
@@ -534,12 +552,17 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     User = datos.getString("usuario");
                     editor.putString("ClaveApi", ClaveApi);
                     editor.putString("usuario", datos.getString("usuario"));
+                    editor.putString("login", "true");
                     editor.apply();
+                    Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(300);
+                    activity.finish();
+                    Intent intent = activity.getIntent();
+                    activity.startActivity(intent);
                     FragmentCategoria fragment = new FragmentCategoria();
                     FragmentManager fragmentManager = activity.getFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
-                    Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-                    v.vibrate(300);
+                    Main.idSesion=1;
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 }
                 break;
@@ -569,6 +592,21 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     }
                     else {
                         FragmentSesion.contador2=0;
+                        //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+                        //SharedPreferences.Editor editor = settings.edit();
+
+                        editor.putString("usuario", "");
+                        editor.putString("ClaveApi", "");
+                        editor.putString("sucursal", "");
+                        editor.putString("ip", "");
+                        editor.putString("idsucursal", "");
+                        editor.apply();
+                        Main.idSesion=0;
+                        Main.controlUsuario =-1;
+                        Main.inicio=0;
+                        activity.finish();
+                        Intent intent = activity.getIntent();
+                        activity.startActivity(intent);
                         FragmentLogin fragment = new FragmentLogin();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
@@ -583,6 +621,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                 default:
                     showToast(Integer.toString(BackGroundTask.CodeResponse));
             }
+            BackGroundTask.CodeResponse=null;
         }catch(JSONException e){
             showToast(e.getMessage());
         }
@@ -802,7 +841,9 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         ListaSucursal selectedCountry = countryList.get(position);
+                        idSucursalSeleccionada=selectedCountry.getId().toString();
                         sucursalSeleccionada=selectedCountry.toString();
+
                         //prueba = (TextView) activity.findViewById(R.id.textView17);
                         //prueba.setText(selectedCountry.toString());
 
@@ -841,6 +882,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             }break;
             //showToast("Se ha guardado correctamente");
         }
+        BackGroundTask.CodeResponse=null;
     }
     private void api(JSONObject file_url) {
 

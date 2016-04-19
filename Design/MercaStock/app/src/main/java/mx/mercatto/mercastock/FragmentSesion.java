@@ -2,7 +2,7 @@ package mx.mercatto.mercastock;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -14,7 +14,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,6 +29,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
 
     TextView txtNombre;
     EditText txtPin;
+    TextView txtSucursal;
     BackGroundTask bgt;
     public static  int contador2=0;
     public FragmentSesion() {
@@ -46,9 +46,17 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
         Button upButton2 = (Button) rootView.findViewById(R.id.button4);
         upButton2.setOnClickListener(this);
 
-        String nombre= Configuracion.settings.getString("nombre","");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("Login", "false");
+        editor.apply();
+
+        String nombre= Configuracion.settings.getString("nombre", "");
+        String sucursal =Configuracion.settings.getString("sucursal","");
         txtNombre=(TextView)rootView.findViewById(R.id.textView18);
-        txtNombre.setText("Usuario: "+nombre);
+        txtNombre.setText("Usuario: " + nombre);
+        txtSucursal=(TextView)rootView.findViewById(R.id.textView14);
+        txtSucursal.setText("Sucursal: "+sucursal);
         txtPin= (EditText)rootView.findViewById(R.id.editText4);
 
         txtPin.addTextChangedListener(new TextWatcher() {
@@ -102,18 +110,40 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.button4: {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                SharedPreferences.Editor editor = settings.edit();
+                if (Main.idSesion == 1) {
+                    editor.putString("usuario", "");
+                    editor.putString("ClaveApi", "");
+                    editor.putString("sucursal", "");
+                    editor.putString("ip", "");
+                    editor.putString("idsucursal", "");
+                    editor.apply();
+                    Main.idSesion=0;
+                    Main.inicio=0;
+
+                }
+                Main.controlUsuario =-1;
+                getActivity().finish();
+                Intent intent = getActivity().getIntent();
+                startActivity(intent);
                 FragmentLogin fragment2 = new FragmentLogin();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment2);
                 fragmentTransaction.commit();
+                /*
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("usuario", "");
                 editor.putString("ClaveApi", "");
                 editor.putString("nombre","");
+                editor.putString("controlusuario", "-1");
                 editor.apply();
+                Main.idSesion=0;*/
+
                 //editor.putString("sucursal", "");
+
 
             }
             break;

@@ -33,7 +33,7 @@
         public static function post($peticion)
         {
             if ($peticion[0] == 'registro') {
-                return self::registrar();
+                return self::crear();
             } else if ($peticion[0] == 'login') {
                 return self::loguear();
     
@@ -83,30 +83,52 @@
          * @param mixed $datosUsuario columnas del registro
          * @return int codigo para determinar si la inserci�n fue exitosa
          */
-        public static function crear($datosUsuario)
+        public static function crear()//$datosUsuario
         {
-            $idusuario=$datosUsuario->idUsuario;
-            $usuario=$datosUsuario->usuario;
-            $nombre = $datosUsuario->nombre;
-            $contrasena = $datosUsuario->contrasena;
+            $post = json_decode(file_get_contents('php://input'),true);
+            
+            //$idusuario=$post['idUsuario'];
+            $usuario=$post['usuario'];
+            $contrasena =$post['contrasena'];
             $contrasenaEncriptada = self::encriptarContrasena($contrasena);
-            $apellido = $datosUsuario->apellido;
-            $sexo=$datosUsuario->sexo;
-            $contacto=$datosUsuario->contacto;
-            $idsucursal=$datosUsuario->idSucursal;
-            $claveApi = self::generarClaveApi();
-            $idNivelAutorizacion=$datosUsuario->idNivelAutorizacion;
-            $idEstado = $datosUsuario->idEstado;
-            $fechaEstado = $datosUsuario->fechaEstado;
-            $fechaSesion = $datosUsuario->fechaSesion;
+            $nombre = $post['nombre'];
+            $apellido = $post['apellido'];
+            $sexo=$post['sexo'];
+            $contacto=$post['contacto'];
+            $idsucursal=$post['idSucursal'];
+            //$claveApi = self::generarClaveApi();
+            $claveApi=$post['claveApi'];
+            $idNivelAutorizacion=$post['idNivelAutorizacion'];
+            $idEstado = $post['idEstado'];
+            $fechaEstado = $post['fechaEstado'];
+            $fechaSesion = $post['fechaSesion'];
+            //
+            //$idusuario=$datosUsuario->idUsuario;
+            //$usuario=$datosUsuario->usuario;
+            //$contrasena = $datosUsuario->contrasena;
+            //$contrasenaEncriptada = self::encriptarContrasena($contrasena);
+            //$nombre = $datosUsuario->nombre;
+            //$apellido = $datosUsuario->apellido;
+            //$sexo=$datosUsuario->sexo;
+            //$contacto=$datosUsuario->contacto;
+            //$idsucursal=$datosUsuario->idSucursal;
+            ////$claveApi = self::generarClaveApi();
+            //$claveApi=$datosUsuario->claveApi;
+            //$idNivelAutorizacion=$datosUsuario->idNivelAutorizacion;
+            //$idEstado = $datosUsuario->idEstado;
+            //$fechaEstado = $datosUsuario->fechaEstado;
+            //$fechaSesion = $datosUsuario->fechaSesion;
+            
+            
+            //return var_dump($datosUsuario);
             try {
     
                 $pdo = ConexionBD::obtenerInstancia()->obtenerBD();
     
                 // Sentencia INSERT
                 $comando = "INSERT INTO " . self::NOMBRE_TABLA . " ( " .
-                    self::ID_USUARIO . ",".
-                    self::USUARIO . ",".
+                    //self::ID_USUARIO . ",
+                self::USUARIO . ",".
                     self::CONTRASENA . "," .
                     self::NOMBRE . "," .
                     self::APELLIDO . "," .
@@ -119,23 +141,23 @@
                     self::FECHA_ESTADO .",".
                     self::FECHA_SESION
                     .")" .
-                    " VALUES(?,?,?,?,?,?,?,?,?,?,?,now(),now())";
+                    " VALUES(?,?,?,?,?,?,?,?,?,?,now(),now())";
     
                 $sentencia = $pdo->prepare($comando);
     
-                $sentencia->bindParam(1, $idusuario);
-                $sentencia->bindParam(2, $usuario);
-                $sentencia->bindParam(3, $contrasenaEncriptada);
-                $sentencia->bindParam(4, $nombre);
-                $sentencia->bindParam(5, $apellido);
-                $sentencia->bindParam(6, $sexo);
-                $sentencia->bindParam(7, $contacto);
-                $sentencia->bindParam(8, $idsucursal);
-                $sentencia->bindParam(9, $claveApi);
-                $sentencia->bindParam(10,$idNivelAutorizacion);
-                $sentencia->bindParam(11,$idEstado);
-               // $sentencia->bindParam(12,$fechaEstado);
-              //  $sentencia->bindParam(13,$fechaSesion);
+                //$sentencia->bindParam(1, $idusuario);
+                $sentencia->bindParam(1, $usuario);
+                $sentencia->bindParam(2, $contrasenaEncriptada);
+                $sentencia->bindParam(3, $nombre);
+                $sentencia->bindParam(4, $apellido);
+                $sentencia->bindParam(5, $sexo);
+                $sentencia->bindParam(6, $contacto);
+                $sentencia->bindParam(7, $idsucursal);
+                $sentencia->bindParam(8, $claveApi);
+                $sentencia->bindParam(9,$idNivelAutorizacion);
+                $sentencia->bindParam(10,$idEstado);
+                //$sentencia->bindParam(12,$fechaEstado);
+              // $sentencia->bindParam(13,$fechaSesion);
                 
                 $resultado = $sentencia->execute();
     
@@ -483,15 +505,19 @@
             $post = json_decode(file_get_contents('php://input'),true);
                    $usuario = $post['claveApi'];
             try{
-                $comando ="select claveApi from ms_usuario where claveApI='".$usuario."' AND claveApi!=''";
-               // $comando = "SELECT VALOR FROM ms_parametro mp
-               // inner join ms_usuario mu (mp.idUsuario = ? ) WHERE accion='CONFIGURACION_GENERAL' AND parametro='ESTADO_VALIDO_LOGIN' and valor = ?";
-                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                $sentencia->bindParam(1,$Usuario);
                 
-                if($sentencia->execute()){
+                $pdo = ConexionBD::obtenerInstancia()->obtenerBD();
+                $comando ="select claveApi from ms_usuario where claveApi='".$usuario."' AND claveApi!=''
+                and fechaSesion>now()- interval 1 day";
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+    
+                $sentencia->bindParam(1, $usuario);
+                //return var_dump($comando);
+                $sentencia->execute();
+              
+                if($sentencia){
                     $resultado = $sentencia->fetch();
-                   
+                  // return var_dump($resultado);
                     if(isset($resultado['claveApi'])){
                         //return true;
                         return ["estado" => self::ESTADO_EXITO];

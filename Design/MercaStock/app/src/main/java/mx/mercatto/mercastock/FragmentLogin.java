@@ -43,24 +43,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     }
 
 
-    public void changeContent(Document doc, String newname, String newemail) {
-        Element root = doc.getDocumentElement();
-        NodeList rootlist = root.getChildNodes();
-        for (int i = 0; i < rootlist.getLength(); i++) {
-            Element person = (Element) rootlist.item(i);
-            NodeList personlist = person.getChildNodes();
-            Element name = (Element) personlist.item(0);
-            NodeList namelist = name.getChildNodes();
-            Text nametext = (Text) namelist.item(0);
-            String oldname = nametext.getData();
-            if (oldname.equals(newname)) {
-                Element email = (Element) personlist.item(1);
-                NodeList emaillist = email.getChildNodes();
-                Text emailtext = (Text) emaillist.item(0);
-                emailtext.setData(newemail);
-            }
-        }
-    }
 
     int x = 1;
 
@@ -75,7 +57,8 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         //Button upButton2 = (Button) rootView.findViewById(R.id.button);
         upButton.setOnClickListener(this);
         //upButton2.setOnClickListener(this);
-
+        Main.idSesion=0;
+        Main.controlUsuario=-1;
         txSucursal=(TextView) rootView.findViewById(R.id.textView13);
 
       //  txtSucursal.setText(BackGroundTask.sucursalSeleccionada.toString());
@@ -183,6 +166,8 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
 
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("idSucursal",id_sucursal);
+        editor.putString("sucursal",txSucursal.getText().toString());
+        editor.apply();
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);

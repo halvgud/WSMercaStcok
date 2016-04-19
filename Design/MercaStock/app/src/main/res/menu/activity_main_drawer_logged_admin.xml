@@ -12,7 +12,6 @@
                 android:id="@+id/crearusuario"
                 android:icon="@drawable/ic_account_plus"
                 android:title="Registrar Usuario"
-
                 />
             <item
                 android:id="@+id/cambiarcontrasena"
