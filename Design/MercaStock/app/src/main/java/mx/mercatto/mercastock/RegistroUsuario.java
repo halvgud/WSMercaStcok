@@ -1,6 +1,8 @@
 package mx.mercatto.mercastock;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -80,7 +82,6 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
         txtapellido = (EditText) rootView.findViewById(R.id.editText9);
         guardar = (Button) rootView.findViewById(R.id.button7);
         guardar.setOnClickListener(this);
-        cargarListadoSucursal();
         //Evaluaciones
         txtusuario.addTextChangedListener(new TextWatcher() {
             String value1 = "";
@@ -262,6 +263,9 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
         mActivity = (FragmentActivity)activity;
     }
 
+<<<<<<< HEAD
+
+=======
     public void cargarListadoSucursal() {
         try {
             JSONObject jsonObj1 = new JSONObject();
@@ -272,9 +276,9 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
            showToast(e.getMessage());
         }
     }
+>>>>>>> origin/master
     @Override
     public void onClick(View view){
-
         String usuario = txtusuario.getText().toString().toUpperCase();
         String password = txtpassword.getText().toString();
         String password2 = txtpassword2.getText().toString();
@@ -287,33 +291,78 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         String idsucursal = settings.getString("idSucursal","");
         SharedPreferences.Editor editor = settings.edit();
-        if(usuario.length()>0&&password.length()>0&&password2.length()>0&&nombre.length()>0&&apellido.length()>0) {
-            if(password.length()==4&&password2.length()==4){
-                if (password.equals(password2)) {
+        //if(usuario.length()>0&&password.length()>0&&password2.length()>0&&nombre.length()>0&&apellido.length()>0) {
+          //  if(password.length()==4&&password2.length()==4){
+            //    if (password.equals(password2)) {
                     try {
                         JSONObject jsonObj1 = new JSONObject();
+<<<<<<< HEAD
+                        //jsonObj1.put("idUsuario", "106");
+=======
+>>>>>>> origin/master
                         jsonObj1.put("usuario", usuario);
                         jsonObj1.put("contrasena", password);
                         jsonObj1.put("nombre", nombre);
                         jsonObj1.put("apellido", apellido);
                         jsonObj1.put("sexo", sexo);
+<<<<<<< HEAD
+                        jsonObj1.put("contacto", "");
+                        jsonObj1.put("idSucursal", idsucursal);
+                        jsonObj1.put("claveApi", "");
+                        jsonObj1.put("idNivelAutorizacion","1");
+=======
                         jsonObj1.put("contacto", contacto);
                         jsonObj1.put("idSucursal", Configuracion.settings.getString("idSucursal","0"));
                         jsonObj1.put("claveApi", "");
                         jsonObj1.put("idNivelAutorizacion",1);
+>>>>>>> origin/master
                         jsonObj1.put("idEstado","A");
                         jsonObj1.put("fechaEstado","");
                         jsonObj1.put("fechaSesion","");
 
+<<<<<<< HEAD
+                        bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),0);
+                        bgt.execute();
+                        switch (BackGroundTask.CodeResponse) {
+                            case 200: {
+                                showToast("Se registró correctamente el usuario");
+                                //FragmentCategoria fragment = new FragmentCategoria();
+                                //FragmentManager fragmentManager = getActivity().getFragmentManager();
+                                //fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
+                                txtusuario.requestFocus();
+                                usuario = "";
+                                txtusuario.setText("");
+                                password = "";
+                                txtpassword.setText("");
+                                password2 = "";
+                                txtpassword2.setText("");
+                                nombre = "";
+                                txtnombre.setText("");
+                                apellido = "";
+                                txtapellido.setText("");
+                                arraySpinner=new String[]{
+                                        "Masculino","Femenino"
+                                };
+                                txtsexo = (Spinner) rootView.findViewById(R.id.spinnerSexo);
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                                        android.R.layout.simple_spinner_dropdown_item, arraySpinner);
+                                txtsexo.setAdapter(adapter);
+                            }
+                            break;
+                            default:
+                                showToast(Integer.toString(BackGroundTask.CodeResponse));
+                        }
+=======
                         bgt = new BackGroundTask("http://192.168.1.80/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),14);
                         bgt.execute();
 
+>>>>>>> origin/master
                     } catch (JSONException e) {
                         showToast(e.toString());
                     } catch (Exception e) {
 
                     }
-                } else {
+                /*} else {
                     showToast("Las contraseñas no coinciden");
                 }
             }
@@ -323,7 +372,7 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
         }
         else {
             showToast("Faltan datos en algún campo");
-        }
+        }*/
     }
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();

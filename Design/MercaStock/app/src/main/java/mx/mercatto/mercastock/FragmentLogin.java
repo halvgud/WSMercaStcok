@@ -42,6 +42,12 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         getActivity().setTitle("MercaStock");
         Button upButton = (Button) rootView.findViewById(R.id.button2);
         upButton.setOnClickListener(this);
+<<<<<<< HEAD
+=======
+        //upButton2.setOnClickListener(this);
+        Main.idSesion=0;
+        Main.controlUsuario=-1;
+>>>>>>> origin/master
         txSucursal=(TextView) rootView.findViewById(R.id.textView13);
 
        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -129,6 +135,8 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
 
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("idSucursal",id_sucursal);
+        editor.putString("sucursal",txSucursal.getText().toString());
+        editor.apply();
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);

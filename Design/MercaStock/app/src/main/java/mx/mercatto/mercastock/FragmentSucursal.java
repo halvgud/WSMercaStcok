@@ -52,11 +52,17 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
             public void afterTextChanged(Editable s) {
                 String valorIp = txtIp.getText().toString();
                 if (!valorIp.equals(gg) && valorIp.length()>=7) {
+<<<<<<< HEAD
                     rootView.findViewById(R.id.button6).setEnabled(true);
                    //getView().findViewById(R.id.button9).setEnabled(true);
                 } else {
                     rootView.findViewById(R.id.button6).setEnabled(false);
                     //getView().findViewById(R.id.button9).setEnabled(false);
+=======
+                    getView().findViewById(R.id.button6).setEnabled(true);
+                } else {
+                    getView().findViewById(R.id.button6).setEnabled(false);
+>>>>>>> origin/master
                 }
             }
 
@@ -82,26 +88,27 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
 
         switch(v.getId())
         {
-            case R.id.button6 :
+            case R.id.button6: {
                 peticion();
+            }
                 break;
-            case R.id.button9: {
-                //ListaSucursal selectedCountry = countryList.get(position);
 
-               // prueba = (TextView) activity.findViewById(R.id.textView17);
-                //prueba.setText(selectedCountry.toString());
-                //BackGroundTask.sucursalSeleccionada=BackGroundTaskselectedCountry.toString();
+            case R.id.button9: {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
+<<<<<<< HEAD
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
+=======
+                editor.putString("sucursal", BackGroundTask.sucursalSeleccionada.toString());
+                editor.putString("idsucursal", BackGroundTask.idSucursalSeleccionada.toString());
+                editor.putString("ip", txtIp.getText().toString());
+>>>>>>> origin/master
                 editor.apply();
                 FragmentLogin fragment2 = new FragmentLogin();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment2);
                 fragmentTransaction.commit();
-                //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-                //SharedPreferences.Editor editor = settings.edit();
 
             }
                 break;

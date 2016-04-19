@@ -4,13 +4,25 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuInflater;
+<<<<<<< HEAD
 import android.view.MotionEvent;
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+import android.view.MotionEvent;
+import android.view.View;
+>>>>>>> origin/master
+>>>>>>> origin/master
+>>>>>>> origin/master
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,23 +44,37 @@ public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     String PROJECT_NUMBER="917548048883";
-
-public static String x;
-
+public static int controlUsuario =-1;
+public static int idSesion=0;
+    public static int inicio=0;
+    public  static  int ClAp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+=======
+        if(controlUsuario ==-1){
+        setContentView(R.layout.activity_main);
+        //idSesion=0;
+        }
+        else if(controlUsuario ==0)
+        setContentView(R.layout.activity_main_logged);
+        else
+        setContentView(R.layout.activity_main_logged_user);
 
+>>>>>>> origin/master
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         GCMClientManager pushClientManager = new GCMClientManager(this, PROJECT_NUMBER);
         pushClientManager.registerIfNeeded(new GCMClientManager.RegistrationCompletedHandler() {
+
             @Override
             public void onSuccess(String registrationId, boolean isNewRegistration) {
-
                 Log.d("Registration id", registrationId);
-                //send this registrationId to your server
             }
 
             @Override
@@ -57,23 +83,37 @@ public static String x;
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            public  void  onDrawerStateChanged(int newState){
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+            }
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+<<<<<<< HEAD
+=======
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+            Configuracion.Inicializar(this);
+>>>>>>> origin/master
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        Configuracion.Inicializar(this);
-        revisarApi();
+//        Log.d("pppppp", Configuracion.settings.getString("usuario", ""));
 
+            revisarApi();
 
     }
+<<<<<<< HEAD
     public  void showToast(String msg) {
         Context context = this.getApplicationContext();
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
+=======
+
+>>>>>>> origin/master
     public void revisarApi() {
         BGTAPI bgt;
         try {
@@ -83,9 +123,11 @@ public static String x;
             bgt = new BGTAPI("http://192.168.1.40/wsMercaStock/usuario/api", this,jsonObj1 );
             bgt.execute();
         } catch (Exception e){
+<<<<<<< HEAD
             this.showToast(e.getMessage());
+=======
+>>>>>>> origin/master
         }
-
     }
 
     @Override
@@ -100,7 +142,6 @@ public static String x;
             } else {
                 super.onBackPressed();
             }
-            //super.onBackPressed();
         }
         if (currentFragment instanceof FragmentCategoria) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -109,25 +150,20 @@ public static String x;
             } else {
                 super.onBackPressed();
             }
-            //super.onBackPressed();
         }
         if (currentFragment instanceof FragmentArticulo) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                //super.onBackPressed();
                 getFragmentManager().popBackStack();
             }
-
         }
         if (currentFragment instanceof FragmentFormularioArticulo) {
-            //getFragmentManager().popBackStack();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                //super.onBackPressed();
                 getFragmentManager().popBackStack();
             }
         }
@@ -136,15 +172,12 @@ public static String x;
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                //super.onBackPressed();
-                //getFragmentManager().popBackStack();
                 FragmentCategoria fragment2 = new FragmentCategoria();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment2);
                 fragmentTransaction.commit();
             }
-
         }
         if (currentFragment instanceof FragmentSucursal) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -174,57 +207,66 @@ public static String x;
                 super.onBackPressed();
             }
         }
-
-
 }
-        @Override
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuInflater inflater = getMenuInflater();
-          //  int x=1;
-        //    if(x==1)
         inflater.inflate(R.menu.activity_main_drawer, menu);
-            //else
-              //  inflater.inflate(R.menu.activity_main_drawer, menu);
-           // imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-            //imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), 0);
         return true;
     }
     public static boolean b = false;
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
-        super.onPrepareOptionsMenu(menu);
-        menu.setGroupVisible(0, false);
-
-
-      //  invalidateOptionsMenu();
         return true;
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Log.d("id", Integer.toString(id));
-        //item f = findViewById(R.id.Crear_Usuario);
+
         if (id == R.id.crearusuario) {
             RegistroUsuario fragment = new RegistroUsuario();
             FragmentManager fragmentManager = this.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-        }else if(id==R.id.cerrarsesion){
 
+        }else if(id==R.id.cerrarsesion){
+/*
             Configuracion.settings= PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             Configuracion.editor = Configuracion.settings.edit();
             Configuracion.editor.putString("usuario", "");
             Configuracion.editor.putString("ClaveApi", "");
             Configuracion.editor.putString("nombre", "");
+            Configuracion.editor.putString("controlusuario", "-1");
             Configuracion.editor.apply();
+            //idSesion=0;
+
+            controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));*/
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putString("usuario", "");
+            editor.putString("ClaveApi", "");
+            editor.putString("sucursal", "");
+            editor.putString("ip", "");
+            editor.putString("idsucursal", "");
+            editor.apply();
+            idSesion=0;
+            controlUsuario =-1;
+            inicio=0;
+            finish();
+            Intent intent = getIntent();
+            startActivity(intent);
             FragmentLogin fragment = new FragmentLogin();
             FragmentManager fragmentManager = this.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
         }else if(id==R.id.seleccionarsucursal){
-
             FragmentSucursal fragment = new FragmentSucursal();
             FragmentManager fragmentManager = this.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
@@ -242,16 +284,31 @@ public static String x;
     public void onDestroy() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("usuario", "");
-        editor.putString("ClaveApi", "");
-        editor.putString("sucursal","");
-        editor.apply();
+        if (idSesion == 1) {
+            //editor.putString("usuario", "");
+            //editor.putString("ClaveApi", "");
+            //editor.putString("sucursal", "");
+            //editor.putString("ip", "");
+            //editor.putString("idsucursal", "");
+            //editor.apply();
+            //idSesion=0;
+        }
         super.onDestroy();
     }
 
+
     @Override
     public  void onResume(){
+        int y=idSesion;
+        if(idSesion==1)
         revisarApi();
+
         super.onResume();
     }
+    @Override
+    public  void onStop(){
+        //BackGroundTask.ClAp=11;
+        super.onStop();
+    }
+
 }

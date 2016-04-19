@@ -18,6 +18,10 @@ public class FragmentCategoria extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_departamento, container, false);
         getActivity().setTitle("Lista de Categorias");
         cargarListadoCategoria();
+<<<<<<< HEAD
+=======
+        //Main.setContentView(R.layout.activity_main_logged);
+>>>>>>> origin/master
         return rootView;
     }
 
