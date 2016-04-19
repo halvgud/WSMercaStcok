@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BGTCargarListadoArticulo;
 import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 
 public class FragmentArticulo extends Fragment {
 
-    private BackGroundTask bgt;
+    private BGTCargarListadoArticulo bgt;
     String cat_id="";
 
     @Override
@@ -33,7 +34,7 @@ public class FragmentArticulo extends Fragment {
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put(Configuracion.getIdCategoria(), cat_id);
-            bgt = new BackGroundTask(Configuracion.getApiUrlArticulo(), "POST", jsonObj1,getActivity(),4);
+            bgt = new BGTCargarListadoArticulo(Configuracion.getApiUrlArticulo(), getActivity(),jsonObj1);
             bgt.execute();
         } catch (JSONException e) {
             e.printStackTrace();

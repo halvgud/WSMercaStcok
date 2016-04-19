@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BGTCambiarPIN;
 import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 /**
@@ -26,7 +27,7 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
     public EditText txtPinActual;
     public EditText txtPinNuevo;
     public EditText txtPinNuevoR;
-    private BackGroundTask bgt;
+    private BGTCambiarPIN bgt;
 
     public FragmentPassword() {
 
@@ -164,7 +165,7 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
             jsobj.put("usuario",auth_token_string);
             jsobj.put("pin_viejo", txtPinActual.getText().toString());
             jsobj.put("pin_nuevo",txtPinNuevo.getText().toString());
-            bgt = new BackGroundTask(Configuracion.getApiUrlPin(), "POST", jsobj,getActivity(),10);
+            bgt = new BGTCambiarPIN(Configuracion.getApiUrlPin(),getActivity(),jsobj);
             bgt.execute();
         } catch (Exception e) {
             e.printStackTrace();

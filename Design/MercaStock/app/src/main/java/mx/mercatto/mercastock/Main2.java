@@ -19,6 +19,8 @@ import android.view.MenuItem;
 
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BackGroundTask;
+
 public class Main2 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 

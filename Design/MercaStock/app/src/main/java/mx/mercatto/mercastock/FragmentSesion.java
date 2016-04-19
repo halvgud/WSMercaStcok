@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BGTSesion;
 import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 /**
@@ -30,7 +31,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
 
     TextView txtNombre;
     EditText txtPin;
-    BackGroundTask bgt;
+    BGTSesion bgt;
     public static  int contador2=0;
     public FragmentSesion() {
 
@@ -92,7 +93,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                     JSONObject jsonObj1 = new JSONObject();
                     jsonObj1.put("usuario", usuario);
                     jsonObj1.put("contrasena", password);
-                    bgt = new BackGroundTask(Configuracion.getApiUrlLogIn(), "POST", jsonObj1,getActivity(),12);
+                    bgt = new BGTSesion(Configuracion.getApiUrlLogIn(),getActivity(),jsonObj1);
                     bgt.execute();
 
                 } catch(JSONException e){

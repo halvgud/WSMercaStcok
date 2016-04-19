@@ -3,7 +3,6 @@ package mx.mercatto.mercastock;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,7 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +20,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BGTPostFormularioArticulo;
 import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
@@ -33,7 +32,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String existencia="";
     private static String esGranel="1";
     private static String clave="";
-    private BackGroundTask bgt;
+    private BGTPostFormularioArticulo bgt;
 
 
     @Override
@@ -160,7 +159,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             jsobj.put("idInventario",idInventario);
             jsobj.put("existenciaRespuesta",valor);
             jsobj.put("art_id",art_id);
-            bgt = new BackGroundTask(Configuracion.getApiUrlInventario(), "POST",jsobj,getActivity(),6 );
+            bgt = new BGTPostFormularioArticulo(Configuracion.getApiUrlInventario(),getActivity(),jsobj);
             bgt.execute();
             Toast t=Toast.makeText(getActivity(),"Se ha guardado correctamente.", Toast.LENGTH_SHORT);
             t.show();

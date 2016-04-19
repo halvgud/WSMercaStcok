@@ -1,5 +1,6 @@
 package mx.mercatto.mercastock;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -9,11 +10,7 @@ import android.preference.PreferenceManager;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuInflater;
-<<<<<<< HEAD
-=======
 import android.view.MotionEvent;
-import android.view.View;
->>>>>>> origin/master
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,10 +20,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BGTAPI;
 import mx.mercatto.mercastock.BGT.BackGroundTask;
+
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,23 +38,9 @@ public static String x;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // x="1";
-      //  if(x=="1")
-        setContentView(R.layout.activity_main_logged);
-        //else
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//revisarApi();
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         GCMClientManager pushClientManager = new GCMClientManager(this, PROJECT_NUMBER);
         pushClientManager.registerIfNeeded(new GCMClientManager.RegistrationCompletedHandler() {
@@ -76,14 +62,6 @@ public static String x;
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        //InputMethodManager inputMethodManager = (InputMethodManager)  this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-       // inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-        //imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-        //imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),0);
-
-
-  //      InputMethodManager inputMethodManager = (InputMethodManager)  this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-//        inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -92,23 +70,20 @@ public static String x;
 
 
     }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.
-                INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        return true;
+    public  void showToast(String msg) {
+        Context context = this.getApplicationContext();
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
     public void revisarApi() {
-        BackGroundTask bgt;
+        BGTAPI bgt;
         try {
             Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
-            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/api", "POST", jsonObj1 ,this,13);
+            bgt = new BGTAPI("http://192.168.1.40/wsMercaStock/usuario/api", this,jsonObj1 );
             bgt.execute();
         } catch (Exception e){
-           // showToast(e.toString());
+            this.showToast(e.getMessage());
         }
 
     }
@@ -225,24 +200,6 @@ public static String x;
         return true;
     }
 
-     public static MenuItem SeleccionarSucursal;
-    public static MenuItem CambiarContrasena;
-    public static MenuItem CerrarSesion;
-    public static MenuItem CrearUsuario;
-//public  static x;
-
-    public static void CambiarEstadoSucursal(boolean bandera){
-        SeleccionarSucursal.setEnabled(bandera);
-    }
-    public static void CambiarEstadoContrasena(boolean bandera){
-        CambiarContrasena.setEnabled(bandera);
-    }
-    public static  void CerrarSesion(boolean bandera){
-        CerrarSesion.setEnabled(bandera);
-    }
-    public static  void CambiarCrearUsuario(boolean bandera){
-        CrearUsuario.setEnabled(bandera);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

@@ -2,14 +2,25 @@
   <dictionary name="Ryu">
     <words>
       <w>cantidad</w>
+      <w>cargado</w>
       <w>caso</w>
+      <w>categorias</w>
       <w>codigo</w>
+      <w>conexión</w>
+      <w>configurar</w>
       <w>contador</w>
+      <w>establecer</w>
       <w>generico</w>
+      <w>guardar</w>
+      <w>podido</w>
       <w>postparams</w>
       <w>procesado</w>
       <w>seleccionada</w>
+      <w>servidor</w>
       <w>sesion</w>
+      <w>sucursales</w>
+      <w>txtusuario</w>
+      <w>usuario</w>
     </words>
   </dictionary>
 </component>
