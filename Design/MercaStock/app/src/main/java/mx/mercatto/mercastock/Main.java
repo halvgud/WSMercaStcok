@@ -1,5 +1,6 @@
 package mx.mercatto.mercastock;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -10,7 +11,13 @@ import android.preference.PreferenceManager;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuInflater;
+<<<<<<< HEAD
 
+=======
+import android.view.MotionEvent;
+import android.view.MotionEvent;
+import android.view.View;
+>>>>>>> origin/master
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,8 +27,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import org.json.JSONObject;
+
+<<<<<<< HEAD
+=======
+import mx.mercatto.mercastock.BGT.BGTAPI;
+import mx.mercatto.mercastock.BGT.BackGroundTask;
+>>>>>>> origin/master
 
 
 public class Main extends AppCompatActivity
@@ -35,6 +49,9 @@ public class Main extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // setContentView(R.layout.activity_main);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         if(controlUsuario ==-1){
         setContentView(R.layout.activity_main);
         }
@@ -76,16 +93,20 @@ public class Main extends AppCompatActivity
 
         revisarApi();
     }
-
+    public  void showToast(String msg) {
+        Context context = this.getApplicationContext();
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
     public void revisarApi() {
-        BackGroundTask bgt;
+        BGTAPI bgt;
         try {
             Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
-            bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/api", "POST", jsonObj1 ,this,13);
+            bgt = new BGTAPI("http://192.168.1.57/wsMercaStock/usuario/api", this,jsonObj1 );
             bgt.execute();
         } catch (Exception e){
+            this.showToast(e.getMessage());
         }
     }
 

@@ -24,6 +24,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+<<<<<<< HEAD
+=======
+import mx.mercatto.mercastock.BGT.BGTPostFormularioArticulo;
+import mx.mercatto.mercastock.BGT.BackGroundTask;
+>>>>>>> origin/master
 
 public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
 
@@ -34,16 +39,21 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String existencia="";
     private static String esGranel="1";
     private static String clave="";
-    private BackGroundTask bgt;
-    InputMethodManager imm;
+    private BGTPostFormularioArticulo bgt;
 
+    //private BackGroundTask bgt;
+    InputMethodManager imm;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
+<<<<<<< HEAD
 
+=======
+/*
+>>>>>>> origin/master
         try{
-            String x2="";
+ /*           String x2="";
             JSONObject jsobj2 = new JSONObject();
             jsobj2.put("x2","");
             bgt = new BackGroundTask("", "",jsobj2,getActivity(),8 );
@@ -51,7 +61,12 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
 
         }catch(JSONException e){
             showToast(e.getMessage());
+<<<<<<< HEAD
         }
+=======
+        }*/
+
+>>>>>>> origin/master
         Bundle args = getArguments();
         idInventario = args.getString(Configuracion.getIdInventario());
         NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
@@ -172,7 +187,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             jsobj.put("idInventario",idInventario);
             jsobj.put("existenciaRespuesta",valor);
             jsobj.put("art_id",art_id);
-            bgt = new BackGroundTask(Configuracion.getApiUrlInventario(), "POST",jsobj,getActivity(),6 );
+            bgt = new BGTPostFormularioArticulo(Configuracion.getApiUrlInventario(),getActivity(),jsobj);
             bgt.execute();
             Toast t=Toast.makeText(getActivity(),"Se ha guardado correctamente.", Toast.LENGTH_SHORT);
             t.show();

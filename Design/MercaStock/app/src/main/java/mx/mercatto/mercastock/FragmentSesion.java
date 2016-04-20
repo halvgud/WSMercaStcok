@@ -2,7 +2,10 @@ package mx.mercatto.mercastock;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +27,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+<<<<<<< HEAD
+=======
+import mx.mercatto.mercastock.BGT.BGTSesion;
+import mx.mercatto.mercastock.BGT.BackGroundTask;
+>>>>>>> origin/master
 
 /**
  * Created by Juan Carlos De León on 10/04/2016.
@@ -32,8 +40,10 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
 
     TextView txtNombre;
     EditText txtPin;
+
+    BGTSesion bgt;
     TextView txtSucursal;
-    BackGroundTask bgt;
+//    BackGroundTask bgt;
     public static  int contador2=0;
     public FragmentSesion() {
 
@@ -107,7 +117,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                     JSONObject jsonObj1 = new JSONObject();
                     jsonObj1.put("usuario", usuario);
                     jsonObj1.put("contrasena", password);
-                    bgt = new BackGroundTask(Configuracion.getApiUrlLogIn(), "POST", jsonObj1,getActivity(),12);
+                    bgt = new BGTSesion(Configuracion.getApiUrlLogIn(),getActivity(),jsonObj1);
                     bgt.execute();
 
                 } catch(JSONException e){

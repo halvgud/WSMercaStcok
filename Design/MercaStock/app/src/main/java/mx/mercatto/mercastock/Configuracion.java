@@ -2,9 +2,16 @@ package mx.mercatto.mercastock;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+<<<<<<< HEAD
+=======
+import mx.mercatto.mercastock.BGT.BGTCargarConfiguracion;
+import mx.mercatto.mercastock.BGT.BackGroundTask;
+>>>>>>> origin/master
 
 
 /**
@@ -12,18 +19,22 @@ import org.json.JSONObject;
  */
 public class Configuracion {
     public static void Inicializar(Activity activity){
-        BackGroundTask bgt;
+        BGTCargarConfiguracion bgt;
         try {
+<<<<<<< HEAD
             JSONObject config = new JSONObject();
             config.put("", "");
             bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "GET", config, activity, 5);
+=======
+            bgt = new BGTCargarConfiguracion("http://192.168.1.57/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL",activity);
+>>>>>>> origin/master
             bgt.execute();
-
-        }catch (JSONException e){
-
+        }catch (Exception e){
+           throw e;
         }
 
     }
+<<<<<<< HEAD
     public static void Inicializar(Activity activity,Boolean x){
         BackGroundTask bgt;
         try {
@@ -31,14 +42,15 @@ public class Configuracion {
             config.put("", "");
             bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "GET", config, activity, 5);
             bgt.execute();
+=======
+>>>>>>> origin/master
 
-        }catch (JSONException e){
-
-        }
-
-    }
     public static Boolean Finalizado=false;
+<<<<<<< HEAD
     private static String _ApiUrl="http://192.168.1.17/";
+=======
+    private static String _ApiUrl="http://192.168.1.57/";
+>>>>>>> origin/master
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
 
