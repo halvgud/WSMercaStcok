@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import mx.mercatto.mercastock.BGT.BackGroundTask;
-
 
 public class FragmentCategoria extends Fragment {
     Activity activity;

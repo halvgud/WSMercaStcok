@@ -2,16 +2,15 @@ package mx.mercatto.mercastock;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-<<<<<<< HEAD
+
 import android.content.Intent;
-=======
->>>>>>> origin/master
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 /**
  * Created by Juan Carlos De León on 10/04/2016.
@@ -45,6 +43,10 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sesion, container, false);
         getActivity().setTitle("Sesión");
+
+        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        //drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         Button upButton = (Button) rootView.findViewById(R.id.button5);
         upButton.setOnClickListener(this);

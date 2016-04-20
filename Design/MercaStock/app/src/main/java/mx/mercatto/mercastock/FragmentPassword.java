@@ -16,7 +16,6 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 /**
  * Created by Juan Carlos De León on 10/04/2016.

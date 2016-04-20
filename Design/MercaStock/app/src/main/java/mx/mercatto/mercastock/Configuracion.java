@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 /**
  * Created by Juan Carlos De León on 05/04/2016.
@@ -17,9 +16,6 @@ public class Configuracion {
         try {
             JSONObject config = new JSONObject();
             config.put("", "");
-<<<<<<< HEAD
-            bgt = new BackGroundTask("http://192.168.0.39/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "POST", config, activity, 5);
-=======
             bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "GET", config, activity, 5);
             bgt.execute();
 
@@ -34,7 +30,6 @@ public class Configuracion {
             JSONObject config = new JSONObject();
             config.put("", "");
             bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL", "GET", config, activity, 5);
->>>>>>> origin/master
             bgt.execute();
 
         }catch (JSONException e){
@@ -43,7 +38,7 @@ public class Configuracion {
 
     }
     public static Boolean Finalizado=false;
-    private static String _ApiUrl="http://192.168.0.39/";
+    private static String _ApiUrl="http://192.168.1.17/";
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
 

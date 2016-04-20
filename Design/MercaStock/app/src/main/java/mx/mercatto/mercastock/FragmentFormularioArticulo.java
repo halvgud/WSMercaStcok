@@ -3,6 +3,8 @@ package mx.mercatto.mercastock;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -22,7 +24,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
 
@@ -40,7 +41,6 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
-<<<<<<< HEAD
 
         try{
             String x2="";
@@ -52,8 +52,6 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         }catch(JSONException e){
             showToast(e.getMessage());
         }
-=======
->>>>>>> origin/master
         Bundle args = getArguments();
         idInventario = args.getString(Configuracion.getIdInventario());
         NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
@@ -182,7 +180,17 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             showToast(e.getMessage());
         }
         finally {
-            getActivity().getFragmentManager().popBackStack();
+            int restantes =0;
+            if(restantes!=0){
+                getActivity().getFragmentManager().popBackStack();
+            }
+            else{
+                FragmentCategoria fragment2 = new FragmentCategoria();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, fragment2);
+                fragmentTransaction.commit();
+            }
         }
     }
 

@@ -10,14 +10,7 @@ import android.preference.PreferenceManager;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuInflater;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-import android.view.MotionEvent;
-import android.view.View;
->>>>>>> origin/master
->>>>>>> origin/master
+
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,28 +23,25 @@ import android.view.inputmethod.InputMethodManager;
 
 import org.json.JSONObject;
 
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     String PROJECT_NUMBER="917548048883";
-public static int controlUsuario =-1;
-public static int idSesion=0;
+    public static int controlUsuario =-1;
+    public static int idSesion=0;
     public static int inicio=0;
-    public  static  int ClAp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(controlUsuario ==-1){
         setContentView(R.layout.activity_main);
-        //idSesion=0;
         }
         else if(controlUsuario ==0)
         setContentView(R.layout.activity_main_logged);
         else
         setContentView(R.layout.activity_main_logged_user);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,10 +74,7 @@ public static int idSesion=0;
             navigationView.setNavigationItemSelectedListener(this);
             Configuracion.Inicializar(this);
 
-//        Log.d("pppppp", Configuracion.settings.getString("usuario", ""));
-
-            revisarApi();
-
+        revisarApi();
     }
 
     public void revisarApi() {
@@ -183,17 +170,18 @@ public static int idSesion=0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        final MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_main_drawer, menu);
-        return true;
+        //final MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.activity_main_drawer, menu);
+        return false;
     }
-    public static boolean b = false;
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         return true;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -204,17 +192,6 @@ public static int idSesion=0;
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
         }else if(id==R.id.cerrarsesion){
-/*
-            Configuracion.settings= PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-            Configuracion.editor = Configuracion.settings.edit();
-            Configuracion.editor.putString("usuario", "");
-            Configuracion.editor.putString("ClaveApi", "");
-            Configuracion.editor.putString("nombre", "");
-            Configuracion.editor.putString("controlusuario", "-1");
-            Configuracion.editor.apply();
-            //idSesion=0;
-
-            controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));*/
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             SharedPreferences.Editor editor = settings.edit();
 
@@ -250,16 +227,8 @@ public static int idSesion=0;
 
     @Override
     public void onDestroy() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        SharedPreferences.Editor editor = settings.edit();
+
         if (idSesion == 1) {
-            //editor.putString("usuario", "");
-            //editor.putString("ClaveApi", "");
-            //editor.putString("sucursal", "");
-            //editor.putString("ip", "");
-            //editor.putString("idsucursal", "");
-            //editor.apply();
-            //idSesion=0;
         }
         super.onDestroy();
     }

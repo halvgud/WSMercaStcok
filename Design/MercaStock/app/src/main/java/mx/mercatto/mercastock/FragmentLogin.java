@@ -20,7 +20,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 
 public class FragmentLogin extends Fragment implements View.OnClickListener {
@@ -128,9 +127,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     }
 
 
-
-<<<<<<< HEAD
-=======
     public void buttonClicked(View view) {
         //if (view.getId() == R.id.button) {
             // button1 action
@@ -141,7 +137,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         //}
     }
 
->>>>>>> origin/master
     @Override
     public void onClick(View v) {
 
