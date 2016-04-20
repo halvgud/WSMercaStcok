@@ -5,13 +5,9 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-<<<<<<< HEAD
-=======
 import mx.mercatto.mercastock.BGT.BGTCargarListadoCategoria;
 
->>>>>>> origin/master
 
 
 public class FragmentCategoria extends Fragment {

@@ -20,13 +20,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-<<<<<<< HEAD
 
-
-=======
 import mx.mercatto.mercastock.BGT.BGTCargarSucursal;
 import mx.mercatto.mercastock.BGT.BGTLogIn;
->>>>>>> origin/master
+
 public class FragmentLogin extends Fragment implements View.OnClickListener {
     private BGTLogIn bgt;
     private BGTCargarSucursal bgtSucursal;
@@ -64,7 +61,12 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             txtUsuario = (EditText) rootView.findViewById(R.id.editText);
             txtPassword = (EditText) rootView.findViewById(R.id.editText2);
         }
-        cargarListadoSucursal();
+        if(Configuracion.settings.getString("sucursal","").equals("")) {
+            cargarListadoSucursal();
+        }
+        else{
+            txSucursal.setText(Configuracion.settings.getString("sucursal",""));
+        }
 
         txtUsuario.addTextChangedListener(new TextWatcher() {
             String value1 = "";
@@ -127,19 +129,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     }
 
 
-<<<<<<< HEAD
-    public void buttonClicked(View view) {
-        //if (view.getId() == R.id.button) {
-            // button1 action
-       // } else if (view.getId() == R.id.button2) {
-            //button2 action
-       // } else if (view.getId() == R.id.button3) {
-            //button3 action
-        //}
-    }
 
-=======
->>>>>>> origin/master
     @Override
     public void onClick(View v) {
 

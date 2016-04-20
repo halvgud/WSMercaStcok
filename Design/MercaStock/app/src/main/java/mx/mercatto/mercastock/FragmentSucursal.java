@@ -18,11 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-<<<<<<< HEAD
-=======
 import mx.mercatto.mercastock.BGT.BGTConfigurarServidorSucursal;
->>>>>>> origin/master
+
 
 public class FragmentSucursal extends Fragment implements View.OnClickListener  {
 
@@ -41,6 +38,13 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
         getActivity().setTitle("Configurar Servidor Sucursal");
 
         txtIp= (EditText)rootView.findViewById(R.id.editText13);
+        if(!Configuracion.settings.getString("ip","").equals("")){
+            txtIp.setText(Configuracion.settings.getString("ip",""));
+        }
+
+        if(!Configuracion.settings.getString("sucursal","").equals("")){
+            rootView.findViewById(R.id.button6).setEnabled(true);
+        }
         Button upButton = (Button) rootView.findViewById(R.id.button6);
         upButton.setOnClickListener(this);
         Button upButton2 = (Button) rootView.findViewById(R.id.button9);
@@ -95,8 +99,8 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
-                editor.putString("sucursal", BackGroundTask.sucursalSeleccionada.toString());
-                editor.putString("idsucursal", BackGroundTask.idSucursalSeleccionada.toString());
+                editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada.toString());
+                //editor.putString("idsucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada.toString());
                 editor.putString("ip", txtIp.getText().toString());
                 editor.apply();
                 FragmentLogin fragment2 = new FragmentLogin();

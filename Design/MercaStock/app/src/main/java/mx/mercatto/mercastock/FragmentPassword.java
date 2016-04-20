@@ -16,11 +16,9 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
-<<<<<<< HEAD
-=======
 import mx.mercatto.mercastock.BGT.BGTCambiarPIN;
 import mx.mercatto.mercastock.BGT.BackGroundTask;
->>>>>>> origin/master
+
 
 /**
  * Created by Juan Carlos De León on 10/04/2016.

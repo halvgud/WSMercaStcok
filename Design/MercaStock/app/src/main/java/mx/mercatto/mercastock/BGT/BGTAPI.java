@@ -26,6 +26,7 @@ import mx.mercatto.mercastock.FragmentCategoria;
 import mx.mercatto.mercastock.FragmentLogin;
 import mx.mercatto.mercastock.FragmentSesion;
 
+import mx.mercatto.mercastock.FragmentSucursal;
 import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
@@ -110,34 +111,41 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
         try {
             ClAp=file_url.getInt("estado");
 
-            if(Main.inicio==1) {
-                if (ClAp == 9) {
-                    String us=Configuracion.settings.getString("usuario", "");
-                    String lo=Configuracion.settings.getString("login", "");
-                    if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
-                        FragmentCategoria fragment = new FragmentCategoria();
-                        FragmentManager fragmentManager = activity.getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                if (Main.inicio == 1) {
+                    if (ClAp == 9) {
+                        String us = Configuracion.settings.getString("usuario", "");
+                        String lo = Configuracion.settings.getString("login", "");
+                        if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
+                            FragmentCategoria fragment = new FragmentCategoria();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }
+                        if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
+                            FragmentSesion fragment = new FragmentSesion();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }
                     }
-                    if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
-                        FragmentSesion fragment = new FragmentSesion();
-                        FragmentManager fragmentManager = activity.getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    if (ClAp == 11) {
+                        if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("")) {
+                            FragmentSesion fragment = new FragmentSesion();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }
                     }
                 }
-                if (ClAp == 11) {
-                    if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("")) {
-                        FragmentSesion fragment = new FragmentSesion();
+                else {
+                    if(Configuracion.settings.getString("ip","").equals("")){
+                        FragmentSucursal fragment = new FragmentSucursal();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                     }
+                    else {
+                    FragmentLogin fragment = new FragmentLogin();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    Main.inicio = 1;
                 }
-            }
-            if(Main.inicio==0){
-                FragmentLogin fragment = new FragmentLogin();
-                FragmentManager fragmentManager = activity.getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                Main.inicio=1;
             }
 
             jObj=null;

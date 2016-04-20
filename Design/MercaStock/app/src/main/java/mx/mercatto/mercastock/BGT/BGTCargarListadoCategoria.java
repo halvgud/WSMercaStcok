@@ -53,8 +53,7 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
     public BGTCargarListadoCategoria(String url, Activity activity) {
         this.URL = url;
         this.activity = activity;
-        _Listado = new ArrayList<>();
-        _JsonGenerico = null;
+
         if (activity!= null)
             asyncDialog = new ProgressDialog(activity);
     }
@@ -71,6 +70,8 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
 
     @Override
     protected JSONObject doInBackground(String... params) {
+        _Listado = new ArrayList<>();
+        _JsonGenerico = null;
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(URL);
@@ -127,19 +128,20 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
                 JSONObject c = _JsonGenerico.getJSONObject(i);
                 String cat_id = c.getString(Configuracion.getIdCategoria());
                 String nombreCategoria = c.getString(Configuracion.getDescripcionCategoria());
-                String cantidad = c.getString(Configuracion.getCantidadCategoria());
-                String procesado = c.getString(Configuracion.getProcesadoCategoria());
+                 int cantidad = c.getInt(Configuracion.getCantidadCategoria());
+                 int procesado = c.getInt(Configuracion.getProcesadoCategoria());
                 HashMap<String, String> map = new HashMap<>();
                 map.put(Configuracion.getDescripcionCategoria(),nombreCategoria);
-                map.put(Configuracion.getCantidadCategoria(), cantidad);
+                map.put(Configuracion.getCantidadCategoria(), Integer.toString(cantidad));
                 map.put(Configuracion.getIdCategoria(), cat_id);
-                map.put(Configuracion.getProcesadoCategoria(),procesado);
+                map.put(Configuracion.getProcesadoCategoria(), Integer.toString(procesado));
+             map.put("proceso",Integer.toString(procesado)+"/"+Integer.toString(cantidad));
                 _Listado.add(map);
                 list = (ListView) activity.findViewById(R.id.ListView);
 
                 ListAdapter adapter = new ListaAdaptador(activity, _Listado,
                         R.layout.list_v,
-                        new String[]{Configuracion.getDescripcionCategoria(), Configuracion.getProcesadoCategoria()+"/"+Configuracion.getCantidadCategoria()}, new int[]{R.id.descripcionColumna, R.id.api});
+                        new String[]{Configuracion.getDescripcionCategoria(), "proceso"}, new int[]{R.id.descripcionColumna, R.id.api});
 
                 list.setAdapter(adapter);
 

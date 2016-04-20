@@ -47,6 +47,7 @@ class ARTICULO
                 AND MI.".self::ID_ESTADO." IN (SELECT ".self::VALOR_FILTRO." FROM ".self::TABLA_PARAMETRO." WHERE ACCION='".self::ACCION_FILTRO."' AND
                 PARAMETRO='".self::PARAMETRO_FILTRO."')";
                 // Preparar sentencia
+                //return ($comando);
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 // Ligar idContacto e idUsuario<
                 //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
@@ -80,7 +81,6 @@ class ARTICULO
                 fechaRespuesta=NOW(), existenciaRespuesta='".$post['existenciaRespuesta']."' ,
                 existenciaEjecucion=(SELECT EXISTENCIA FROM ARTICULO WHERE art_id='".$post['art_id']."')
                 WHERE idInventario='".$post['idInventario']."'";
-
                 // Preparar sentencia
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 // Ligar idContacto e idUsuario<

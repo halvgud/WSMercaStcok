@@ -154,9 +154,9 @@ public class BGTLogIn extends AsyncTask<String, String, JSONObject> {
                     activity.finish();
                     Intent intent = activity.getIntent();
                     activity.startActivity(intent);
-                    FragmentCategoria fragment = new FragmentCategoria();
-                    FragmentManager fragmentManager = activity.getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                 //   FragmentCategoria fragment = new FragmentCategoria();
+                   // FragmentManager fragmentManager = activity.getFragmentManager();
+                    //fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 }

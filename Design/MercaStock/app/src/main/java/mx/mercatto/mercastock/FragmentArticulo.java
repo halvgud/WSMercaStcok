@@ -9,16 +9,10 @@ import android.view.ViewGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-<<<<<<< HEAD
-=======
 import mx.mercatto.mercastock.BGT.BGTCargarListadoArticulo;
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
-
->>>>>>> origin/master
 public class FragmentArticulo extends Fragment {
 
-    private BGTCargarListadoArticulo bgt;
     String cat_id="";
 
     @Override
@@ -30,14 +24,14 @@ public class FragmentArticulo extends Fragment {
         cat_id = args.getString(Configuracion.getIdCategoria());
         getActivity().setTitle("Lista de " + articulo);
 
-        cargarListadoCategoria(rootView);
+        cargarListadoArticulo();
         return rootView;
     }
-    public void cargarListadoCategoria(View rootView) {
+    public void cargarListadoArticulo() {
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put(Configuracion.getIdCategoria(), cat_id);
-            bgt = new BGTCargarListadoArticulo(Configuracion.getApiUrlArticulo(), getActivity(),jsonObj1);
+            BGTCargarListadoArticulo bgt = new BGTCargarListadoArticulo(Configuracion.getApiUrlArticulo(), getActivity(), jsonObj1);
             bgt.execute();
         } catch (JSONException e) {
             e.printStackTrace();

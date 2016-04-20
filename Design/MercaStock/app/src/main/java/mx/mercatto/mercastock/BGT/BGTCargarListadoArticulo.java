@@ -37,6 +37,7 @@ import java.util.HashMap;
 
 import mx.mercatto.mercastock.Configuracion;
 
+import mx.mercatto.mercastock.FragmentArticulo;
 import mx.mercatto.mercastock.FragmentFormularioArticulo;
 
 import mx.mercatto.mercastock.ListaAdaptador;
@@ -72,7 +73,7 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
             asyncDialog.setIndeterminate(false);
             asyncDialog.setCancelable(false);
             asyncDialog.setProgress(0);
-            asyncDialog.setMessage("Cargando Usuario");
+            asyncDialog.setMessage("Cargando Lista Artículo");
             asyncDialog.show();
         }
 
@@ -111,6 +112,10 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
     }
+
+    public static int devolverConteo(){
+        return list.getCount();
+    }
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
@@ -130,7 +135,7 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
     }
     public static JSONArray _JsonGenerico = null;
     public static ArrayList<HashMap<String, String>> _Listado = new ArrayList<>();
-    public ListView list;
+    public static ListView list;
     ListAdapter adapter;
     private void ListViewArticulos(JSONObject file_url){
         try {
@@ -154,7 +159,6 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
                 mappeo.put(Configuracion.getExistenciaArticulo(), exitencia);
                 mappeo.put(Configuracion.getGranelArticulo(),granel);
                 mappeo.put(Configuracion.getClaveArticulo(),clave);
-
                _Listado.add(mappeo);
 
             }
@@ -179,7 +183,7 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
                     String existencia = _Listado.get(+position).get(Configuracion.getExistenciaArticulo());
                     String granel=_Listado.get(+position).get(Configuracion.getGranelArticulo());
                     String clave=_Listado.get(+position).get(Configuracion.getClaveArticulo());
-
+                    //int restante=_Listado.get(+position).get("restante");
                     FragmentManager fragmentManager = activity.getFragmentManager();
                     Bundle args = Bundle.EMPTY;
                     if (args == null) {

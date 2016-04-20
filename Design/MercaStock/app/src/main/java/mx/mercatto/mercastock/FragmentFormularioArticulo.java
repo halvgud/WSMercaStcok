@@ -24,11 +24,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-<<<<<<< HEAD
-=======
+import mx.mercatto.mercastock.BGT.BGTCargarListadoArticulo;
 import mx.mercatto.mercastock.BGT.BGTPostFormularioArticulo;
-import mx.mercatto.mercastock.BGT.BackGroundTask;
->>>>>>> origin/master
+
 
 public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
 
@@ -40,33 +38,12 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String esGranel="1";
     private static String clave="";
     private BGTPostFormularioArticulo bgt;
-
     //private BackGroundTask bgt;
     InputMethodManager imm;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
-<<<<<<< HEAD
-
-=======
-/*
->>>>>>> origin/master
-        try{
- /*           String x2="";
-            JSONObject jsobj2 = new JSONObject();
-            jsobj2.put("x2","");
-            bgt = new BackGroundTask("", "",jsobj2,getActivity(),8 );
-            bgt.execute();
-
-        }catch(JSONException e){
-            showToast(e.getMessage());
-<<<<<<< HEAD
-        }
-=======
-        }*/
-
->>>>>>> origin/master
         Bundle args = getArguments();
         idInventario = args.getString(Configuracion.getIdInventario());
         NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
@@ -76,7 +53,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         existencia = args.getString(Configuracion.getExistenciaArticulo());
         esGranel=args.getString(Configuracion.getGranelArticulo());
         clave = args.getString(Configuracion.getClaveArticulo());
-        getActivity().setTitle("Artículo");
+        getActivity().setTitle("Artículo :");
 
         EditText txt1 = (EditText) rootView.findViewById(R.id.editText3);
         TextView txtTituloInferior = (TextView) rootView.findViewById(R.id.FormularioArticulotxtTituloInferior);
@@ -195,8 +172,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             showToast(e.getMessage());
         }
         finally {
-            int restantes =0;
-            if(restantes!=0){
+            if(BGTCargarListadoArticulo.devolverConteo()>1){
                 getActivity().getFragmentManager().popBackStack();
             }
             else{

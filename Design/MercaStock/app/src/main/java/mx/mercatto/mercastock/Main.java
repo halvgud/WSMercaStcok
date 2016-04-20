@@ -10,14 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.FragmentManager;
 import android.util.Log;
-import android.view.MenuInflater;
-<<<<<<< HEAD
 
-=======
-import android.view.MotionEvent;
-import android.view.MotionEvent;
-import android.view.View;
->>>>>>> origin/master
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,12 +24,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-<<<<<<< HEAD
-=======
-import mx.mercatto.mercastock.BGT.BGTAPI;
-import mx.mercatto.mercastock.BGT.BackGroundTask;
->>>>>>> origin/master
 
+import mx.mercatto.mercastock.BGT.BGTAPI;
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -45,7 +34,7 @@ public class Main extends AppCompatActivity
     public static int controlUsuario =-1;
     public static int idSesion=0;
     public static int inicio=0;
-
+    public static int bandera=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +92,7 @@ public class Main extends AppCompatActivity
             Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
-            bgt = new BGTAPI("http://192.168.1.57/wsMercaStock/usuario/api", this,jsonObj1 );
+            bgt = new BGTAPI("http://192.168.1.17/wsMercaStock/usuario/api", this,jsonObj1 );
             bgt.execute();
         } catch (Exception e){
             this.showToast(e.getMessage());
@@ -218,20 +207,21 @@ public class Main extends AppCompatActivity
 
             editor.putString("usuario", "");
             editor.putString("ClaveApi", "");
-            editor.putString("sucursal", "");
-            editor.putString("ip", "");
-            editor.putString("idsucursal", "");
+            //editor.putString("sucursal", "");
+            //editor.putString("ip", "");
+            //editor.putString("idsucursal", "");
             editor.apply();
             idSesion=0;
             controlUsuario =-1;
             inicio=0;
+
             finish();
             Intent intent = getIntent();
             startActivity(intent);
             FragmentLogin fragment = new FragmentLogin();
             FragmentManager fragmentManager = this.getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-
+            bandera=0;
         }else if(id==R.id.seleccionarsucursal){
             FragmentSucursal fragment = new FragmentSucursal();
             FragmentManager fragmentManager = this.getFragmentManager();
@@ -257,16 +247,20 @@ public class Main extends AppCompatActivity
 
     @Override
     public  void onResume(){
-        int y=idSesion;
-        if(idSesion==1)
-        revisarApi();
+        if(idSesion==1 && bandera==1) {
+            revisarApi();
+            //bandera = 0;
+        }
 
         super.onResume();
     }
     @Override
-    public  void onStop(){
+    public  void onRestart(){
         //BackGroundTask.ClAp=11;
-        super.onStop();
+        if(bandera==0&&idSesion==1){
+        bandera=1;}
+
+        super.onRestart();
     }
 
 }
