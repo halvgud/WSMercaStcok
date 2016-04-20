@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Vibrator;
@@ -27,8 +28,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 
+import mx.mercatto.mercastock.Configuracion;
 import mx.mercatto.mercastock.FragmentCategoria;
 
+import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
 /**
@@ -139,12 +142,22 @@ public class BGTLogIn extends AsyncTask<String, String, JSONObject> {
                     //editor.putString("idSucursal","1");
                     editor.putString("nombre", datos.getString("nombre"));
                     editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
+                    editor.putString("controlusuario", datos.getString("idNivelAutorizacion"));
+                    editor.putString("login", "true");
                     editor.apply();
-                    FragmentCategoria fragment = new FragmentCategoria();
-                    FragmentManager fragmentManager = activity.getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
+                    Main.idSesion=1;
+                    Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
+                    // Main.ClAp=Integer.parseInt(ClaveApi);
+
                     Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
+                    activity.finish();
+                    Intent intent = activity.getIntent();
+                    activity.startActivity(intent);
+                    FragmentCategoria fragment = new FragmentCategoria();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 }
                 break;
