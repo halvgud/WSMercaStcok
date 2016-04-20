@@ -26,6 +26,7 @@ import mx.mercatto.mercastock.FragmentCategoria;
 import mx.mercatto.mercastock.FragmentLogin;
 import mx.mercatto.mercastock.FragmentSesion;
 
+import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
 /**
@@ -104,31 +105,42 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
             }
         }
     }
+    public static int ClAp;
     private void Login(JSONObject file_url){
         try {
-            Integer ss=file_url.getInt("estado");
-            if (ss.equals(9)&&!Configuracion.settings.getString("usuario","").equals("")) {
-                FragmentCategoria fragment = new FragmentCategoria();
-                FragmentManager fragmentManager = activity.getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            ClAp=file_url.getInt("estado");
+
+            if(Main.inicio==1) {
+                if (ClAp == 9) {
+                    String us=Configuracion.settings.getString("usuario", "");
+                    String lo=Configuracion.settings.getString("login", "");
+                    if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
+                        FragmentCategoria fragment = new FragmentCategoria();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
+                    if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
+                        FragmentSesion fragment = new FragmentSesion();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
+                }
+                if (ClAp == 11) {
+                    if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("")) {
+                        FragmentSesion fragment = new FragmentSesion();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
+                }
             }
-            else  if(ss.equals(9)&&Configuracion.settings.getString("usuario","").equals("")){
+            if(Main.inicio==0){
                 FragmentLogin fragment = new FragmentLogin();
                 FragmentManager fragmentManager = activity.getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-
+                Main.inicio=1;
             }
-            else  if(ss.equals(11)&&Configuracion.settings.getString("usuario","").equals("")){
-                FragmentLogin fragment = new FragmentLogin();
-                FragmentManager fragmentManager = activity.getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
-            }else {
-                FragmentSesion fragment = new FragmentSesion();
-                FragmentManager fragmentManager = activity.getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-
-            }
+            jObj=null;
         }catch (JSONException e) {
             e.printStackTrace();
         }

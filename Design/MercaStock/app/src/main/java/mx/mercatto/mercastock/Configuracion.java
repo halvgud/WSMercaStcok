@@ -18,7 +18,7 @@ public class Configuracion {
     public static void Inicializar(Activity activity){
         BGTCargarConfiguracion bgt;
         try {
-            bgt = new BGTCargarConfiguracion("http://192.168.1.40/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL",activity);
+            bgt = new BGTCargarConfiguracion("http://192.168.1.57/wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL",activity);
             bgt.execute();
         }catch (Exception e){
            throw e;
@@ -27,7 +27,7 @@ public class Configuracion {
     }
 
     public static Boolean Finalizado=false;
-    private static String _ApiUrl="http://192.168.1.40/";
+    private static String _ApiUrl="http://192.168.1.57/";
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
 

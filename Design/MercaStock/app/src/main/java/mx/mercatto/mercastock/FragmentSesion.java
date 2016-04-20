@@ -2,10 +2,7 @@ package mx.mercatto.mercastock;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-<<<<<<< HEAD
 import android.content.Intent;
-=======
->>>>>>> origin/master
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -35,12 +32,10 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
 
     TextView txtNombre;
     EditText txtPin;
-<<<<<<< HEAD
+
     BGTSesion bgt;
-=======
     TextView txtSucursal;
-    BackGroundTask bgt;
->>>>>>> origin/master
+//    BackGroundTask bgt;
     public static  int contador2=0;
     public FragmentSesion() {
 

@@ -64,7 +64,7 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
-    static Integer CodeResponse;
+    public static Integer CodeResponse;
 
 
     /**

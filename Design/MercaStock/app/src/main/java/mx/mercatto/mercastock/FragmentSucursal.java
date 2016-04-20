@@ -52,17 +52,12 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
             public void afterTextChanged(Editable s) {
                 String valorIp = txtIp.getText().toString();
                 if (!valorIp.equals(gg) && valorIp.length()>=7) {
-<<<<<<< HEAD
                     rootView.findViewById(R.id.button6).setEnabled(true);
                    //getView().findViewById(R.id.button9).setEnabled(true);
                 } else {
                     rootView.findViewById(R.id.button6).setEnabled(false);
                     //getView().findViewById(R.id.button9).setEnabled(false);
-=======
                     getView().findViewById(R.id.button6).setEnabled(true);
-                } else {
-                    getView().findViewById(R.id.button6).setEnabled(false);
->>>>>>> origin/master
                 }
             }
 
@@ -96,13 +91,10 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
             case R.id.button9: {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
-<<<<<<< HEAD
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
-=======
                 editor.putString("sucursal", BackGroundTask.sucursalSeleccionada.toString());
                 editor.putString("idsucursal", BackGroundTask.idSucursalSeleccionada.toString());
                 editor.putString("ip", txtIp.getText().toString());
->>>>>>> origin/master
                 editor.apply();
                 FragmentLogin fragment2 = new FragmentLogin();
                 FragmentManager fragmentManager = getFragmentManager();

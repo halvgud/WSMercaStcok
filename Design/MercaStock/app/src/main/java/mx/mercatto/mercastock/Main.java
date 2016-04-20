@@ -11,18 +11,9 @@ import android.preference.PreferenceManager;
 import android.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuInflater;
-<<<<<<< HEAD
 import android.view.MotionEvent;
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 import android.view.MotionEvent;
 import android.view.View;
->>>>>>> origin/master
->>>>>>> origin/master
->>>>>>> origin/master
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -51,11 +42,9 @@ public static int idSesion=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-=======
+       // setContentView(R.layout.activity_main);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         if(controlUsuario ==-1){
         setContentView(R.layout.activity_main);
         //idSesion=0;
@@ -64,8 +53,6 @@ public static int idSesion=0;
         setContentView(R.layout.activity_main_logged);
         else
         setContentView(R.layout.activity_main_logged_user);
-
->>>>>>> origin/master
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,39 +81,29 @@ public static int idSesion=0;
         };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-<<<<<<< HEAD
-=======
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
             Configuracion.Inicializar(this);
->>>>>>> origin/master
 
 //        Log.d("pppppp", Configuracion.settings.getString("usuario", ""));
 
             revisarApi();
 
     }
-<<<<<<< HEAD
     public  void showToast(String msg) {
         Context context = this.getApplicationContext();
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
-=======
-
->>>>>>> origin/master
     public void revisarApi() {
         BGTAPI bgt;
         try {
             Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
-            bgt = new BGTAPI("http://192.168.1.40/wsMercaStock/usuario/api", this,jsonObj1 );
+            bgt = new BGTAPI("http://192.168.1.57/wsMercaStock/usuario/api", this,jsonObj1 );
             bgt.execute();
         } catch (Exception e){
-<<<<<<< HEAD
             this.showToast(e.getMessage());
-=======
->>>>>>> origin/master
         }
     }
 
@@ -221,10 +198,6 @@ public static int idSesion=0;
         return true;
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

@@ -3,6 +3,7 @@ package mx.mercatto.mercastock;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,22 +34,17 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String existencia="";
     private static String esGranel="1";
     private static String clave="";
-<<<<<<< HEAD
     private BGTPostFormularioArticulo bgt;
 
-=======
-    private BackGroundTask bgt;
+    //private BackGroundTask bgt;
     InputMethodManager imm;
->>>>>>> origin/master
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
-<<<<<<< HEAD
-
+/*
         try{
-            String x2="";
+ /*           String x2="";
             JSONObject jsobj2 = new JSONObject();
             jsobj2.put("x2","");
             bgt = new BackGroundTask("", "",jsobj2,getActivity(),8 );
@@ -55,9 +52,8 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
 
         }catch(JSONException e){
             showToast(e.getMessage());
-        }
-=======
->>>>>>> origin/master
+        }*/
+
         Bundle args = getArguments();
         idInventario = args.getString(Configuracion.getIdInventario());
         NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());

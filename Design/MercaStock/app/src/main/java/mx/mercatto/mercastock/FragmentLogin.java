@@ -42,12 +42,10 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         getActivity().setTitle("MercaStock");
         Button upButton = (Button) rootView.findViewById(R.id.button2);
         upButton.setOnClickListener(this);
-<<<<<<< HEAD
-=======
-        //upButton2.setOnClickListener(this);
+
         Main.idSesion=0;
         Main.controlUsuario=-1;
->>>>>>> origin/master
+
         txSucursal=(TextView) rootView.findViewById(R.id.textView13);
 
        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
