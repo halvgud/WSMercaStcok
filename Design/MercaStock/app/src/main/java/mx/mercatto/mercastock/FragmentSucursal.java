@@ -27,6 +27,8 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
     EditText txtIp;
     InputMethodManager imm;
     View rootView;
+    Button guardar;
+    Button probar;
     public FragmentSucursal() {
 
     }
@@ -92,6 +94,10 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
         {
             case R.id.button6: {
                 peticion();
+                guardar = (Button) getActivity().findViewById(R.id.button9);
+                guardar.setEnabled(false);
+                probar = (Button) getActivity().findViewById(R.id.button6);
+                probar.setEnabled(false);
             }
                 break;
 

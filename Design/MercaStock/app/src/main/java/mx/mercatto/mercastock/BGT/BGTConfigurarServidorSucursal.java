@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.apache.http.HttpException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,8 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import mx.mercatto.mercastock.Configuracion;
@@ -34,7 +39,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
-
+    public boolean transaccionCompleta=false;
     Activity activity;
     ProgressDialog asyncDialog;
 
@@ -55,7 +60,11 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
             java.net.URL url = new URL(URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            is = new BufferedInputStream(conn.getInputStream());
+            conn.getResponseCode();
+             is = conn.getErrorStream();
+            if (is == null) {
+               is  = conn.getInputStream();
+            }
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
             StringBuilder sb = new StringBuilder();
             String line;
@@ -65,13 +74,19 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
+            transaccionCompleta=true;
+        } catch (UnknownHostException |JSONException|MalformedURLException|UnsupportedEncodingException|ProtocolException e) {
+            e.printStackTrace();
+            transaccionCompleta=false;
+        }catch(IOException e){
+            //e.printStackTrace();
+            transaccionCompleta=false;
 
-        } catch (IOException|JSONException e) {
-            showToast(e.getMessage());
         }
         return jObj;
+        }
 
-    }
+
 
     @Override
     protected void onPostExecute(JSONObject file_url) {
@@ -82,7 +97,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
                     jObj=null;
                }
         catch (Exception e) {
-            showToast(e.getMessage());
+            showToast(":C"+e.getMessage());
         }
     }
     public void showToast(String msg) {
@@ -91,9 +106,10 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
     ArrayList<ListaSucursal> _listaSucursal = new ArrayList<>();
     Spinner listaSucSpinner;
     Button guardar;
+    Button probar;
     public static String sucursalSeleccionada="";
     public void cargarListadoSucursal(JSONObject file_url) {
-        if (file_url!=null) {
+        if (transaccionCompleta) {
             try {
                 JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
 
@@ -132,7 +148,13 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
 
         }
         else {
+            guardar = (Button) activity.findViewById(R.id.button9);
+            guardar.setEnabled(false);
             showToast("No se ha podido establecer la conexión");
+            probar = (Button) activity.findViewById(R.id.button6);
+            probar.setEnabled(false);
+            listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
+            listaSucSpinner.setAdapter(null);
         }
     }
 
