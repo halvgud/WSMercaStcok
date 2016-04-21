@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 
 import mx.mercatto.mercastock.Configuracion;
 import mx.mercatto.mercastock.FragmentCategoria;
+import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.FragmentLogin;
 import mx.mercatto.mercastock.FragmentSesion;
 
@@ -97,13 +98,19 @@ public class BGTSesion extends AsyncTask<String, String, JSONObject> {
         return jObj;
 
     }
-
+boolean bandera = true;
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
+            if(bandera) {
+                Login2(file_url);
+            }else{
+                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            }
 
-                    Login2(file_url);
                     jObj=null;
                }
         catch (Exception e) {

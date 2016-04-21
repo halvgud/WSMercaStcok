@@ -1,22 +1,15 @@
 package mx.mercatto.mercastock.BGT;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-
 import java.io.BufferedInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +20,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import mx.mercatto.mercastock.Configuracion;
+import mx.mercatto.mercastock.FragmentConexionPerdida;
+import mx.mercatto.mercastock.R;
 
 public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject> {
     String URL = null;
@@ -71,20 +66,30 @@ public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
         } catch (UnsupportedEncodingException e) {
-            if (activity!= null)
-            showToast(e.getMessage());
+            if (activity!= null){
+        //    showToast(e.getMessage());
+                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+         }
         } catch (JSONException e) {
-            if (activity!= null)
-            showToast(e.getMessage());
+            if (activity!= null){}
+        //    showToast(e.getMessage());
+            FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+            FragmentManager fragmentManager = activity.getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         } catch (Exception e) {
-            if (activity!= null)
-            showToast(e.getMessage());
+            if (activity!= null){}
+         //   showToast(e.getMessage());
+            FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+            FragmentManager fragmentManager = activity.getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         }
         return jObj;
 
     }
     public void showToast(String msg) {
-        Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(this.activity, msg, Toast.LENGTH_LONG).show();
     }
     @Override
     protected void onPostExecute(JSONObject file_url) {

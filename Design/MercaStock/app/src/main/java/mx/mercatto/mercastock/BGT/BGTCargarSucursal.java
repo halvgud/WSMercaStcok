@@ -1,6 +1,7 @@
 package mx.mercatto.mercastock.BGT;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 import mx.mercatto.mercastock.Configuracion;
 
+import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.ListaSucursal;
 import mx.mercatto.mercastock.R;
 
@@ -74,12 +76,19 @@ public class BGTCargarSucursal extends AsyncTask<String, String, JSONObject> {
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
     }
+    boolean bandera=true;
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
+            if(bandera) {
+                spinnerSucursal(file_url);
+            }else{
+                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            }
 
-                    spinnerSucursal(file_url);
                }
         catch (Exception e) {
             showToast(e.getMessage());

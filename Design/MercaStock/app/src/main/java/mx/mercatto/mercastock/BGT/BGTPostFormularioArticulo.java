@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Vibrator;
@@ -27,6 +28,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 
+import mx.mercatto.mercastock.FragmentConexionPerdida;
+import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
 /**
@@ -89,19 +92,27 @@ public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObj
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
         } catch (UnsupportedEncodingException e) {
-            showToast(e.getMessage());
+          //  showToast(e.getMessage());
+            bandera=false;
         } catch (Exception e) {
-            showToast(e.getMessage());
+            bandera=false;
+          //  showToast(e.getMessage());
         }
         return jObj;
 
     }
-
+Boolean bandera=true;
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
-
+            if(bandera) {
+               // ListViewArticulos(file_url);
+            }else{
+                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            }
                     jObj=null;
                }
         catch (Exception e) {

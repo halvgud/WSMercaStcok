@@ -305,9 +305,10 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
                         jsonObj1.put("fechaEstado","");
                         jsonObj1.put("fechaSesion","");
 
-                        bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),0);
+                        bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),7);
                         bgt.execute();
                         switch (BackGroundTask.CodeResponse) {
+
                             case 200: {
                                 showToast("Se registró correctamente el usuario");
                                 //FragmentCategoria fragment = new FragmentCategoria();
@@ -337,8 +338,6 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
                                 showToast(Integer.toString(BackGroundTask.CodeResponse));
                         }
 
-                        bgt = new BackGroundTask("http://192.168.1.80/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),14);
-                        bgt.execute();
 
                     } catch (JSONException e) {
                         showToast(e.toString());

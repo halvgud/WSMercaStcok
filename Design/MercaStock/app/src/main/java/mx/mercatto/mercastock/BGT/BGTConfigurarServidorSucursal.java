@@ -97,7 +97,9 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
                     jObj=null;
                }
         catch (Exception e) {
-            showToast(":C"+e.getMessage());
+            //showToast(":C"+e.getMessage());
+            showToast("El WiFi se encuentra apagado");
+
         }
     }
     public void showToast(String msg) {
@@ -150,12 +152,15 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
         else {
             guardar = (Button) activity.findViewById(R.id.button9);
             guardar.setEnabled(false);
-            showToast("No se ha podido establecer la conexión");
             probar = (Button) activity.findViewById(R.id.button6);
             probar.setEnabled(false);
+            showToast("No se ha podido establecer la conexión");
+            probar = (Button) activity.findViewById(R.id.button6);
+            probar.setEnabled(true);
             listaSucSpinner = (Spinner) activity.findViewById(R.id.spinnerRegistroUsuario);
             listaSucSpinner.setAdapter(null);
         }
     }
+
 
 }

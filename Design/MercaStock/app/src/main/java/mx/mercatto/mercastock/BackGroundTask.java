@@ -211,15 +211,19 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
             }
 
         } catch (UnsupportedEncodingException e) {
-            showToast(e.getMessage());
+            //showToast(e.getMessage());
+            bandera=false;
          } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
+            bandera=false;
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
+            bandera=false;
         }
         return jObj;
 
     }
+    boolean bandera=true;
     public static String ClaveApi = "Default";
     public static String User = "Default";
     Spinner listaSucSpinner;
@@ -255,15 +259,36 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
                     bgt.execute();
                 }break;
                 case 6:{
-                    FormularioArticulo(file_url);
+
+                    if(bandera) {
+                        FormularioArticulo(file_url);
+                    }else{
+                        FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
                     jObj=null;
                 }break;
                 case 7:{
-                    RegistrarUsuario(file_url);
+                    if(bandera) {
+                        RegistrarUsuario(file_url);
+                    }else{
+                        FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
+
                     jObj=null;
                 }break;
                 case 8:{
-                    FormularioArticulo(file_url);
+                    if(bandera) {
+                        FormularioArticulo(file_url);
+                    }else{
+                        FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
+
                     jObj=null;
                 }break;
                 case 9:{
@@ -274,7 +299,14 @@ public class BackGroundTask extends AsyncTask<String, String, JSONObject> {
 
                 }break;
                 case 10:{
-                    cambiarPIN();
+
+                    if(bandera) {
+                        cambiarPIN();
+                    }else{
+                        FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
                     jObj=null;
                 }break;
                 case 11:{

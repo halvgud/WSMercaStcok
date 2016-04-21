@@ -3,6 +3,7 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -17,12 +18,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 import mx.mercatto.mercastock.Configuracion;
 import mx.mercatto.mercastock.FragmentCategoria;
+import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.FragmentLogin;
 import mx.mercatto.mercastock.FragmentSesion;
 
@@ -43,7 +51,7 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     ProgressDialog asyncDialog;
     public static String ClaveApi = "Default";
     public static String User = "Default";
-
+public boolean transaccionCompleta=false;
     static Integer CodeResponse;
     public BGTAPI(String url, Activity activity, JSONObject postparams) {
         this.URL = url;
@@ -60,6 +68,7 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     @Override
     protected JSONObject doInBackground(String... params) {
         try {
+            String x="1";
             HttpPost httpPost = new HttpPost(URL);
             StringEntity entity = new StringEntity(postparams.toString(), HTTP.UTF_8);
             entity.setContentType("application/json");
@@ -78,14 +87,47 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
-
-        } catch (UnsupportedEncodingException e) {
+transaccionCompleta=true;
+        }
+         /*catch (UnsupportedEncodingException e) {
             showToast(e.getMessage());
         } catch (Exception e) {
+showToast(":(");
             showToast(e.getMessage());
         }
         return jObj;
 
+    }*/
+            /*java.net.URL url = new URL(URL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.getResponseCode();
+            is = conn.getErrorStream();
+            if (is == null) {
+                is  = conn.getInputStream();
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line ).append("\n");
+            }
+            is.close();
+            json = sb.toString();
+            jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
+            transaccionCompleta=true;
+        } */catch (UnknownHostException |JSONException|MalformedURLException |UnsupportedEncodingException|ProtocolException e) {
+            e.printStackTrace();
+            transaccionCompleta=false;
+        }catch(IOException e){
+            //e.printStackTrace();
+            transaccionCompleta=false;
+        }
+        if(transaccionCompleta){
+        return jObj;}
+        else {
+            return jObj;
+        }
     }
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
@@ -94,7 +136,18 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
-                    Login(file_url);
+            if(transaccionCompleta) {
+                //if(!Configuracion.settings.getString("controlusuario","").equals(""))
+                  //  Main.controlUsuario = Integer.parseInt(Configuracion.settings.getString("controlusuario", ""));
+                Login(file_url);
+
+            }
+            else{
+
+                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            }
                     jObj=null;
                }
         catch (Exception e) {
@@ -107,23 +160,34 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
         }
     }
     public static int ClAp;
-    private void Login(JSONObject file_url){
-        try {
-            ClAp=file_url.getInt("estado");
+    private void Login(JSONObject file_url) {
+        if (transaccionCompleta) {
+            try {
+                ClAp = file_url.getInt("estado");
 
                 if (Main.inicio == 1) {
                     if (ClAp == 9) {
                         String us = Configuracion.settings.getString("usuario", "");
                         String lo = Configuracion.settings.getString("login", "");
                         if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
+                            /*Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
+                            activity.finish();
+                            Intent intent = activity.getIntent();
+                            activity.startActivity(intent);*/
                             FragmentCategoria fragment = new FragmentCategoria();
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                         }
-                        if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
+                        else if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
                             FragmentSesion fragment = new FragmentSesion();
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }
+                        else{
+                            FragmentLogin fragment = new FragmentLogin();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                            Main.inicio = 1;
                         }
                     }
                     if (ClAp == 11) {
@@ -131,28 +195,36 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
                             FragmentSesion fragment = new FragmentSesion();
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }else{
+                            FragmentLogin fragment = new FragmentLogin();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                            Main.inicio = 1;
                         }
                     }
-                }
-                else {
-                    if(Configuracion.settings.getString("ip","").equals("")){
+                } else {
+                    if (Configuracion.settings.getString("ip", "").equals("")) {
                         FragmentSucursal fragment = new FragmentSucursal();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    } else {
+                        FragmentLogin fragment = new FragmentLogin();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        Main.inicio = 1;
                     }
-                    else {
-                    FragmentLogin fragment = new FragmentLogin();
-                    FragmentManager fragmentManager = activity.getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                    Main.inicio = 1;
                 }
+
+                jObj = null;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            jObj=null;
-        }catch (JSONException e) {
-            e.printStackTrace();
+        } else {
+//showToast(":(");
         }
     }
+
 }
 
 

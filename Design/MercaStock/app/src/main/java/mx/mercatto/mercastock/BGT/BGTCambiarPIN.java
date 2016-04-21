@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 
 import mx.mercatto.mercastock.FragmentCategoria;
 
+import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.R;
 
 public class BGTCambiarPIN extends AsyncTask<String, String, JSONObject> {
@@ -86,13 +87,19 @@ public class BGTCambiarPIN extends AsyncTask<String, String, JSONObject> {
         return jObj;
 
     }
-
+boolean bandera=true;
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
 
+            if(bandera) {
                 cambiarPIN();
+            }else{
+                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            }
                }
         catch (Exception e) {
             throw e;

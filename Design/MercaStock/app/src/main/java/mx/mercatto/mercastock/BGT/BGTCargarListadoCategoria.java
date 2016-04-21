@@ -3,6 +3,7 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,8 +33,10 @@ import java.util.HashMap;
 import mx.mercatto.mercastock.Configuracion;
 import mx.mercatto.mercastock.FragmentArticulo;
 
+import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.ListaAdaptador;
 
+import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
 /**
@@ -89,21 +92,31 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
         } catch (UnsupportedEncodingException e) {
-            showToast(e.getMessage());
+           // showToast(e.getMessage());
+            bandera=false;
         } catch (JSONException e) {
-            showToast(e.getMessage());
+         //   showToast(e.getMessage());
+            bandera=false;
         } catch (Exception e) {
-            showToast(e.getMessage());
+            //showToast(e.getMessage());
+            bandera=false;
         }
         return jObj;
 
     }
-
+boolean bandera=true;
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
+            if(bandera)
             ListViewCategorias(file_url);
+            else{
+
+                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            }
             jObj=null;
                }
         catch (Exception e) {

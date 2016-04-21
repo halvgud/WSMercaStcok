@@ -1,11 +1,11 @@
 package mx.mercatto.mercastock;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.FragmentManager;
@@ -41,46 +41,47 @@ public class Main extends AppCompatActivity
        // setContentView(R.layout.activity_main);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
-        if(controlUsuario ==-1){
-        setContentView(R.layout.activity_main);
-        }
-        else if(controlUsuario ==0)
-        setContentView(R.layout.activity_main_logged);
-        else
-        setContentView(R.layout.activity_main_logged_user);
+            if (controlUsuario == -1) {
+                setContentView(R.layout.activity_main);
+            } else if (controlUsuario == 0)
+                setContentView(R.layout.activity_main_logged);
+            else
+                setContentView(R.layout.activity_main_logged_user);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        GCMClientManager pushClientManager = new GCMClientManager(this, PROJECT_NUMBER);
-        pushClientManager.registerIfNeeded(new GCMClientManager.RegistrationCompletedHandler() {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            GCMClientManager pushClientManager = new GCMClientManager(this, PROJECT_NUMBER);
+            pushClientManager.registerIfNeeded(new GCMClientManager.RegistrationCompletedHandler() {
 
-            @Override
-            public void onSuccess(String registrationId, boolean isNewRegistration) {
-                Log.d("Registration id", registrationId);
-            }
+                @Override
+                public void onSuccess(String registrationId, boolean isNewRegistration) {
+                    Log.d("Registration id", registrationId);
+                }
 
-            @Override
-            public void onFailure(String ex) {
-                super.onFailure(ex);
-            }
-        });
+                @Override
+                public void onFailure(String ex) {
+                    super.onFailure(ex);
+                }
+            });
 
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
-            public  void  onDrawerStateChanged(int newState){
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-            }
-        };
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+                public void onDrawerStateChanged(int newState) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                }
+            };
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
             Configuracion.Inicializar(this);
+            revisarApi();
 
-        revisarApi();
+
+
     }
     public  void showToast(String msg) {
         Context context = this.getApplicationContext();
@@ -93,6 +94,7 @@ public class Main extends AppCompatActivity
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
             bgt = new BGTAPI("http://192.168.1.17/wsMercaStock/usuario/api", this,jsonObj1 );
+
             bgt.execute();
         } catch (Exception e){
             this.showToast(e.getMessage());
@@ -247,10 +249,15 @@ public class Main extends AppCompatActivity
 
     @Override
     public  void onResume(){
-        if(idSesion==1 && bandera==1) {
-            revisarApi();
-            //bandera = 0;
-        }
+        //if(isNetworkAvailable(this)){
+            if(idSesion==1 && bandera==1) {
+                revisarApi();
+                //bandera = 0;
+            }
+     //   revisarApi();
+       // }else{
+         //   finish();
+        //}
 
         super.onResume();
     }
@@ -261,6 +268,13 @@ public class Main extends AppCompatActivity
         bandera=1;}
 
         super.onRestart();
+    }
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(conMan.getActiveNetworkInfo() != null && conMan.getActiveNetworkInfo().isConnected())
+            return true;
+        else
+            return false;
     }
 
 }

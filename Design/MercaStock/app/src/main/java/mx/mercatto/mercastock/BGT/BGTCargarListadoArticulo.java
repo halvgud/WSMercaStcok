@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,9 +39,11 @@ import java.util.HashMap;
 import mx.mercatto.mercastock.Configuracion;
 
 import mx.mercatto.mercastock.FragmentArticulo;
+import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.FragmentFormularioArticulo;
 
 import mx.mercatto.mercastock.ListaAdaptador;
+import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
 /**
@@ -78,7 +81,7 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
         }
 
     }
-
+boolean bandera=true;
     @Override
     protected JSONObject doInBackground(String... params) {
         try {
@@ -102,15 +105,18 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
         } catch (UnsupportedEncodingException e) {
-            showToast(e.getMessage());
+         bandera=false;
+          //  showToast(e.getMessage());
         } catch (Exception e) {
-            showToast(e.getMessage());
+            bandera=false;
+           // showToast(e.getMessage());
+
         }
         return jObj;
 
     }
     public void showToast(String msg) {
-        Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText((Context)activity, msg, Toast.LENGTH_LONG).show();
     }
 
     public static int devolverConteo(){
@@ -120,9 +126,15 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
-
+                if(bandera) {
                     ListViewArticulos(file_url);
 
+                }else{
+
+                    FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                }
                }
         catch (Exception e) {
             throw e;
