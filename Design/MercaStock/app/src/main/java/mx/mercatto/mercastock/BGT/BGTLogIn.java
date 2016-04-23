@@ -153,6 +153,7 @@ boolean bandera=true;
                     editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
                     editor.putString("controlusuario", datos.getString("idNivelAutorizacion"));
                     editor.putString("login", "true");
+                    editor.putString("claveGCM",Main.idRegistro);
                     editor.apply();
                     Main.idSesion=1;
                     Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
@@ -188,7 +189,7 @@ boolean bandera=true;
                 }
                 break;
                 default:
-                    showToast(Integer.toString(BackGroundTask.CodeResponse));
+                    showToast(Integer.toString(BGTLogIn.CodeResponse));
             }
         }catch(JSONException e){
             showToast(e.getMessage());

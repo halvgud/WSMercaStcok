@@ -7,6 +7,7 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -44,7 +45,9 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         getActivity().setTitle("MercaStock");
         Button upButton = (Button) rootView.findViewById(R.id.button2);
         upButton.setOnClickListener(this);
-
+        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        FragmentConexionPerdida.conexionPerdida=false;
         Main.idSesion=0;
         Main.controlUsuario=-1;
 
@@ -147,6 +150,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("usuario", usuario);
             jsonObj1.put("contrasena", password);
+            jsonObj1.put("claveGCM",Main.idRegistro);
             // Create the POST object and add the parameters
             bgt = new BGTLogIn(Configuracion.getApiUrlLogIn(),getActivity(),jsonObj1);
             bgt.execute();
@@ -155,25 +159,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         }catch (Exception e){
             showToast(e.toString());
         }
-
-    }
-
-     public void onBackPressed()  {
-        getActivity().finish();
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        new CountDownTimer(5000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            public void onFinish() {
-            }
-        }.start();
 
     }
 

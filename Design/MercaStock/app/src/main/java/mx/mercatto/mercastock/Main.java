@@ -35,6 +35,7 @@ public class Main extends AppCompatActivity
     public static int idSesion=0;
     public static int inicio=0;
     public static int bandera=0;
+    public static String idRegistro;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +57,7 @@ public class Main extends AppCompatActivity
                 @Override
                 public void onSuccess(String registrationId, boolean isNewRegistration) {
                     Log.d("Registration id", registrationId);
+                    idRegistro=registrationId;
                 }
 
                 @Override
@@ -77,7 +79,10 @@ public class Main extends AppCompatActivity
             toggle.syncState();
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
+        Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        if (!Configuracion.settings.getString("ip", "").equals("")) {
             Configuracion.Inicializar(this);
+        }
             revisarApi();
 
 
@@ -90,10 +95,10 @@ public class Main extends AppCompatActivity
     public void revisarApi() {
         BGTAPI bgt;
         try {
-            Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
-            bgt = new BGTAPI("http://192.168.1.17/wsMercaStock/usuario/api", this,jsonObj1 );
+            bgt = new BGTAPI(Configuracion.getApiUrlRevisarApi(), this,jsonObj1 );
 
             bgt.execute();
         } catch (Exception e){
@@ -155,11 +160,27 @@ public class Main extends AppCompatActivity
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
+                if(FragmentConexionPerdida.conexionPerdida&&!Configuracion.settings.getString("ip","").equals("")){
+                    FragmentConexionPerdida fragment2 = new FragmentConexionPerdida();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.content_main, fragment2);
+                    fragmentTransaction.commit();
+                }
+                else if(!FragmentConexionPerdida.conexionPerdida||!Configuracion.settings.getString("ip","").equals("")){
                 FragmentLogin fragment2 = new FragmentLogin();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment2);
                 fragmentTransaction.commit();
+                }
+                else{
+                    FragmentConexionPerdida fragment2 = new FragmentConexionPerdida();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.content_main, fragment2);
+                    fragmentTransaction.commit();
+                }
             }
         }
         if (currentFragment instanceof RegistroUsuario) {
@@ -209,9 +230,6 @@ public class Main extends AppCompatActivity
 
             editor.putString("usuario", "");
             editor.putString("ClaveApi", "");
-            //editor.putString("sucursal", "");
-            //editor.putString("ip", "");
-            //editor.putString("idsucursal", "");
             editor.apply();
             idSesion=0;
             controlUsuario =-1;
@@ -249,32 +267,18 @@ public class Main extends AppCompatActivity
 
     @Override
     public  void onResume(){
-        //if(isNetworkAvailable(this)){
-            if(idSesion==1 && bandera==1) {
-                revisarApi();
-                //bandera = 0;
-            }
-     //   revisarApi();
-       // }else{
-         //   finish();
-        //}
 
         super.onResume();
     }
     @Override
     public  void onRestart(){
-        //BackGroundTask.ClAp=11;
         if(bandera==0&&idSesion==1){
         bandera=1;}
-
+        if(idSesion==1 && bandera==1) {
+            revisarApi();
+        }
         super.onRestart();
     }
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(conMan.getActiveNetworkInfo() != null && conMan.getActiveNetworkInfo().isConnected())
-            return true;
-        else
-            return false;
-    }
+
 
 }

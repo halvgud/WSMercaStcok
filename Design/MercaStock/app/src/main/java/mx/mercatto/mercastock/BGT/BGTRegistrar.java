@@ -3,12 +3,7 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -29,15 +24,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-
-import mx.mercatto.mercastock.FragmentConexionPerdida;
-import mx.mercatto.mercastock.Main;
-import mx.mercatto.mercastock.R;
+import mx.mercatto.mercastock.*;
 
 /**
  * Created by Ryu on 16/04/2016.
  */
-public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObject> {
+public class BGTRegistrar extends AsyncTask<String, String, JSONObject> {
     String URL = null;
     static InputStream is = null;
     static JSONObject jObj = null;
@@ -49,7 +41,7 @@ public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObj
     public static String User = "Default";
 
     static Integer CodeResponse;
-    public BGTPostFormularioArticulo(String url, Activity activity, JSONObject postparams) {
+    public BGTRegistrar(String url, Activity activity, JSONObject postparams) {
         this.URL = url;
         this.activity = activity;
         this.postparams = postparams;
@@ -65,7 +57,7 @@ public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObj
             asyncDialog.setIndeterminate(false);
             asyncDialog.setCancelable(false);
             asyncDialog.setProgress(0);
-            asyncDialog.setMessage("Cargando Usuario");
+            asyncDialog.setMessage("Guardando Usuario");
 
         }
 
@@ -104,13 +96,60 @@ public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObj
 
     }
 Boolean bandera=true;
+    EditText txtusuario ;
+    EditText txtpassword;
+    EditText txtpassword2;
+    EditText txtnombre ;
+    Spinner txtsexo;
+    EditText txtapellido ;
+    private String[] arraySpinner;
     @Override
     protected void onPostExecute(JSONObject file_url) {
+        super.onPostExecute(file_url);
+        txtusuario = (EditText) activity.findViewById(R.id.editText5);
+        txtpassword = (EditText) activity.findViewById(R.id.editText6);
+        txtpassword2= (EditText) activity.findViewById(R.id.editText7);
+        txtnombre = (EditText) activity.findViewById(R.id.editText8);
+        txtapellido = (EditText) activity.findViewById(R.id.editText9);
+        String usuario = txtusuario.getText().toString().toUpperCase();
+        String password = txtpassword.getText().toString();
+        String password2 = txtpassword2.getText().toString();
+        String nombre = txtnombre.getText().toString();
+        String apellido = txtapellido.getText().toString();
+        arraySpinner=new String[]{
+                "Masculino","Femenino"
+        };
+        txtsexo = (Spinner) activity.findViewById(R.id.spinnerSexo);
         try {
-            super.onPostExecute(file_url);
-            if(bandera) {
 
+            if(bandera) {
                 switch (BGTRegistrar.CodeResponse) {
+
+                    case 200: {
+                        showToast("Se registró correctamente el usuario");
+                        //FragmentCategoria fragment = new FragmentCategoria();
+                        //FragmentManager fragmentManager = getActivity().getFragmentManager();
+                        //fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
+                        txtusuario.requestFocus();
+                        usuario = "";
+                        txtusuario.setText("");
+                        password = "";
+                        txtpassword.setText("");
+                        password2 = "";
+                        txtpassword2.setText("");
+                        nombre = "";
+                        txtnombre.setText("");
+                        apellido = "";
+                        txtapellido.setText("");
+                        arraySpinner=new String[]{
+                                "Masculino","Femenino"
+                        };
+                        txtsexo = (Spinner) activity.findViewById(R.id.spinnerSexo);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
+                                android.R.layout.simple_spinner_dropdown_item, arraySpinner);
+                        txtsexo.setAdapter(adapter);
+                    }
+                    break;
                     case 401:{
                         showToast(file_url.getString("mensaje"));
                     }break;
@@ -124,10 +163,10 @@ Boolean bandera=true;
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
             }
                     jObj=null;
-               }catch(JSONException e){
+               }
+        catch (JSONException e){
 
-        }
-        catch (Exception e) {
+        }catch (Exception e) {
             throw e;
         }
         finally{

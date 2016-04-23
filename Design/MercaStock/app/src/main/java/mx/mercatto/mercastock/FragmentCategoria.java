@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import mx.mercatto.mercastock.BGT.BGTCargarListadoCategoria;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BGTCargarListadoCategoria;
+import mx.mercatto.mercastock.BGT.BGTLogIn;
 
 
 public class FragmentCategoria extends Fragment {
@@ -23,12 +26,16 @@ public class FragmentCategoria extends Fragment {
     }
 
     public void cargarListadoCategoria() {
-        BGTCargarListadoCategoria bgt;
-        bgt = new BGTCargarListadoCategoria(Configuracion.getApiUrlCategoria(),getActivity());
         try {
+        BGTCargarListadoCategoria bgt;
+        JSONObject jsonObj1 = new JSONObject();
+        jsonObj1.put("claveApi", Configuracion.settings.getString("ClaveApi",""));
+        // Create the POST object and add the parameters
+        bgt = new BGTCargarListadoCategoria(Configuracion.getApiUrlCategoria(),getActivity(),jsonObj1);
+
            bgt.execute();
-        } catch (Exception e) {
-            throw e;
+        } catch (JSONException e) {
+           // throw e;
         }
     }
 

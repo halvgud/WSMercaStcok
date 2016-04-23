@@ -17,7 +17,6 @@ import android.widget.EditText;
 import org.json.JSONObject;
 
 import mx.mercatto.mercastock.BGT.BGTCambiarPIN;
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 
 /**

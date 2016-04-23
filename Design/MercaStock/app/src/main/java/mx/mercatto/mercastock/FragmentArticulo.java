@@ -31,6 +31,7 @@ public class FragmentArticulo extends Fragment {
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put(Configuracion.getIdCategoria(), cat_id);
+            jsonObj1.put("claveApi", Configuracion.settings.getString("ClaveApi",""));
             BGTCargarListadoArticulo bgt = new BGTCargarListadoArticulo(Configuracion.getApiUrlArticulo(), getActivity(), jsonObj1);
             bgt.execute();
         } catch (JSONException e) {

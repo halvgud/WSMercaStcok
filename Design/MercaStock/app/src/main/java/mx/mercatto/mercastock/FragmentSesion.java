@@ -24,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mx.mercatto.mercastock.BGT.BGTSesion;
-import mx.mercatto.mercastock.BGT.BackGroundTask;
 
 
 /**
@@ -37,7 +36,6 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
 
     BGTSesion bgt;
     TextView txtSucursal;
-//    BackGroundTask bgt;
     public static  int contador2=0;
     public FragmentSesion() {
 
@@ -49,7 +47,6 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
         getActivity().setTitle("Sesión");
 
         DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        //drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         Button upButton = (Button) rootView.findViewById(R.id.button5);
@@ -144,22 +141,8 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment2);
                 fragmentTransaction.commit();
-                /*
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("usuario", "");
-                editor.putString("ClaveApi", "");
-                editor.putString("nombre","");
-                editor.putString("controlusuario", "-1");
-                editor.apply();
-                Main.idSesion=0;*/
-
-                //editor.putString("sucursal", "");
-
-
             }
             break;
-            // similarly for other buttons
         }
     }
 

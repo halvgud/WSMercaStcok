@@ -132,7 +132,7 @@ public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject
                     Configuracion.setDescripcionRegistro(c.getString("parametro").equals("TAG_DESCRIPCION_REGISTRO") ? c.getString("valor") : Configuracion.getDescripcionRegistro());
                     Configuracion.setApiUrlRegistro(c.getString("parametro").equals("API_URL_REGISTRO") ? c.getString("valor") : Configuracion.getApiUrlRegistro());
                     //if(getApiUrl().length() == 0) {
-                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : Configuracion.getApiUrl());
+                    Configuracion.setApiUrl(c.getString("parametro").equals("API_URL") ? c.getString("valor") : "http://"+Configuracion.settings.getString("ip","192.168.1.17")+"/");
                     //}
                     Configuracion.setConfirmacion_Mensaje_Gurdado(c.getString("parametro").equals("CONFIRMACION_MENSAJE_GUARDADO") ? c.getString("valor") : Configuracion.getConfirmacion_Mensaje_Gurdado());
                     Configuracion.setConfirmacion_Habilitar_Decimales(c.getString("parametro").equals("CONFIRMACION_HABILITAR_DECIMALES") ? c.getString("valor") : Configuracion.getConfirmacion_Habilitar_Decimales());
@@ -147,6 +147,9 @@ public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject
                     Configuracion.setDescripcionSucursal(c.getString("parametro").equals("TAG_DESCRIPCION_SUCURSAL") ? c.getString("valor") : Configuracion.getDescripcionSucursal());
                     Configuracion.setApiUrlPin(c.getString("parametro").equals("TAG_API_URL_PIN") ? c.getString("valor") : Configuracion.getApiUrlPin());
                     Configuracion.setProcesadoCategoria(c.getString("parametro").equals("TAG_PROCESADO_CATEGORIA") ? c.getString("valor") : Configuracion.getProcesadoCategoria());
+                    Configuracion.setApiUrlConfiguracion(c.getString("parametro").equals("TAG_API_URL_CONFIGURACION") ? c.getString("valor") : Configuracion.getApiUrlConfiguracion());
+                    Configuracion.setApiUrlConfigurarIp(c.getString("parametro").equals("TAG_API_URL_CONFIGURAR_IP") ? c.getString("valor") : Configuracion.getApiUrlConfigurarIp());
+                    Configuracion.setApiUrlRevisarApi(c.getString("parametro").equals("TAG_API_URL_REVISAR_API") ? c.getString("valor") : Configuracion.getApiUrlRevisarApi());
                 }
             }
             Configuracion.Finalizado=true;

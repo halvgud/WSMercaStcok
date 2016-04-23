@@ -17,8 +17,12 @@ import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +30,11 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -43,20 +51,21 @@ import mx.mercatto.mercastock.R;
  * Created by Ryu on 16/04/2016.
  */
 public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObject> {
-    String URL = null;
+    String sURL = null;
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
-
+     JSONObject postparams;
     Activity activity;
     ProgressDialog asyncDialog;
+    public static Integer CodeResponse;
     public static JSONArray _JsonGenerico = null;
     public static ArrayList<HashMap<String, String>>_Listado;
 
-    public BGTCargarListadoCategoria(String url, Activity activity) {
-        this.URL = url;
+    public BGTCargarListadoCategoria(String url, Activity activity, JSONObject postparams) {
+        this.sURL = url;
         this.activity = activity;
-
+        this.postparams = postparams;
         if (activity!= null)
             asyncDialog = new ProgressDialog(activity);
     }
@@ -76,18 +85,29 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
         _Listado = new ArrayList<>();
         _JsonGenerico = null;
         try {
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(URL);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+            URL url=new URL(sURL);
+            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+            httpCon.setDoOutput(true);
+            httpCon.setUseCaches(false);
+            httpCon.setRequestProperty("Content-Type", "application/json");
+            httpCon.setRequestProperty("Accept", "application/json");
+            httpCon.setRequestMethod("POST");
+
+            httpCon.connect(); // Note the connect() here
+
+            OutputStream os = httpCon.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+
+            osw.write(postparams.toString());
+            osw.flush();
+            osw.close();
             StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
+            BufferedReader br = new BufferedReader(new InputStreamReader( httpCon.getInputStream(),"utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
                 sb.append(line + "\n");
             }
-            is.close();
+
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 

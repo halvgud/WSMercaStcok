@@ -143,10 +143,15 @@ showToast(":(");
 
             }
             else{
-
-                FragmentConexionPerdida fragment = new FragmentConexionPerdida();
-                FragmentManager fragmentManager = activity.getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                if(Main.inicio==1) {
+                    FragmentConexionPerdida fragment = new FragmentConexionPerdida();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                }else{
+                    FragmentSucursal fragment = new FragmentSucursal();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                }
             }
                     jObj=null;
                }
@@ -164,11 +169,11 @@ showToast(":(");
         if (transaccionCompleta) {
             try {
                 ClAp = file_url.getInt("estado");
-
-                if (Main.inicio == 1) {
+                String us = Configuracion.settings.getString("usuario", "");
+                String lo = Configuracion.settings.getString("login", "");
+                //if (Main.inicio == 1) {
                     if (ClAp == 9) {
-                        String us = Configuracion.settings.getString("usuario", "");
-                        String lo = Configuracion.settings.getString("login", "");
+
                         if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
                             /*Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
                             activity.finish();
@@ -202,7 +207,7 @@ showToast(":(");
                             Main.inicio = 1;
                         }
                     }
-                } else {
+           /*     } else {
                     if (Configuracion.settings.getString("ip", "").equals("")) {
                         FragmentSucursal fragment = new FragmentSucursal();
                         FragmentManager fragmentManager = activity.getFragmentManager();
@@ -213,7 +218,7 @@ showToast(":(");
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                         Main.inicio = 1;
                     }
-                }
+                }*/
 
                 jObj = null;
             } catch (JSONException e) {

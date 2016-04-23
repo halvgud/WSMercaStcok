@@ -191,7 +191,7 @@ boolean bandera = true;
                 }
                 break;
                 default:
-                    showToast(Integer.toString(BackGroundTask.CodeResponse));
+                    showToast(Integer.toString(BGTSesion.CodeResponse));
             }
         }catch(JSONException e){
             showToast(e.getMessage());

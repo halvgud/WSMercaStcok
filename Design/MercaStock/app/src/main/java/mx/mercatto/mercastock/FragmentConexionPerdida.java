@@ -30,6 +30,7 @@ public class FragmentConexionPerdida extends Fragment implements View.OnClickLis
     EditText txtIp;
     View rootView;
     InputMethodManager imm;
+    public  static  boolean conexionPerdida = false;
     public FragmentConexionPerdida() {
 
     }
@@ -52,7 +53,7 @@ public class FragmentConexionPerdida extends Fragment implements View.OnClickLis
         if(!Configuracion.settings.getString("ip","").equals("")){
             txtIp.setText(Configuracion.settings.getString("ip", ""));
         }
-
+        conexionPerdida=true;
         Button upButton = (Button) rootView.findViewById(R.id.button6);
         upButton.setOnClickListener(this);
         Button upButton2 = (Button) rootView.findViewById(R.id.button);
@@ -95,7 +96,6 @@ public class FragmentConexionPerdida extends Fragment implements View.OnClickLis
         switch(v.getId())
         {
             case R.id.button6: {
-                //peticion();
                 getActivity().finish();
                 Intent intent = getActivity().getIntent();
                 startActivity(intent);
@@ -114,15 +114,6 @@ public class FragmentConexionPerdida extends Fragment implements View.OnClickLis
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
-    public void peticion() {
-        BGTConfigurarServidorSucursal bgt;
-        String ip = txtIp.getText().toString();
-        try {
-            bgt = new BGTConfigurarServidorSucursal("http://" + ip + "/wsMercaStock/sucursal", getActivity());
-            bgt.execute();
-        } catch (Exception e) {
-            showToast("No jala");
-            e.printStackTrace();
-        }
-    }
-   }
+
+
+}

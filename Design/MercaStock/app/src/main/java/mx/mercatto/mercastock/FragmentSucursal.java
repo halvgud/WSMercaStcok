@@ -128,7 +128,8 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
             //JSONObject jsobj = new JSONObject();
             //jsobj.put("idSucursal","");
             //jsobj.put("nombre","");
-            bgt = new BGTConfigurarServidorSucursal("http://" + ip + "/wsMercaStock/sucursal", getActivity());
+
+            bgt = new BGTConfigurarServidorSucursal("http://" + ip + Configuracion.getApiUrlConfigurarIp(), getActivity());
             bgt.execute();
 
             //showToast("Se ha establecido la conexión");

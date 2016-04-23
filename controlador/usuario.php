@@ -33,7 +33,7 @@
         public static function post($peticion)
         {
             if ($peticion[0] == 'registro') {
-                return self::crear();
+                return self::registrar();
             } else if ($peticion[0] == 'login') {
                 return self::loguear();
     
@@ -45,7 +45,10 @@
                 return self::cambiar_pin();
             }else if ($peticion[0] == 'api') {
                 return self::api();
-            }else {
+            }else if($peticion[0]=='apiregistro'){
+                return self::apiregistro();
+            }
+            else {
                 throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
             }
         }
@@ -83,11 +86,28 @@
          * @param mixed $datosUsuario columnas del registro
          * @return int codigo para determinar si la inserci�n fue exitosa
          */
+        public static function apiregistro(){
+            $post = json_decode(file_get_contents('php://input'),true);
+            $claveApi2=$post['claveApi2'];
+            $comando = " SELECT claveApi FROM ".self::NOMBRE_TABLA." WHERE claveApi='".$claveApi2."'";
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+    
+            $sentencia->bindParam(1, $claveApi2);
+            $sentencia->execute();
+            $resultado = $sentencia->fetch();
+            if(isset($resultado['claveApi'])){
+            return true;}
+            else{   
+           return null;
+            }
+        }
+        
         public static function crear()//$datosUsuario
         {
             $post = json_decode(file_get_contents('php://input'),true);
             
             //$idusuario=$post['idUsuario'];
+            $claveApi2=$post['claveApi2'];
             $usuario=$post['usuario'];
             $contrasena =$post['contrasena'];
             $contrasenaEncriptada = self::encriptarContrasena($contrasena);
@@ -158,14 +178,19 @@
                 $sentencia->bindParam(10,$idEstado);
                 //$sentencia->bindParam(12,$fechaEstado);
               // $sentencia->bindParam(13,$fechaSesion);
-                
+                if(!self::apiregistro($claveApi2)==null){
                 $resultado = $sentencia->execute();
-    
-                if ($resultado) {
-                    return self::ESTADO_CREACION_EXITOSA;
-                } else {
-                    return self::ESTADO_CREACION_FALLIDA;
+                    if ($resultado) {
+                        return self::ESTADO_CREACION_EXITOSA;
+                    } else {
+                        return self::ESTADO_CREACION_FALLIDA;
+                    }
                 }
+                else{
+                     throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
+                        "Clave Api invalida",401);
+                }
+                
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
@@ -220,9 +245,12 @@
                     utf8_encode("usuario o contraseña inválidos"),401);
             }
         }
-        public static function dumy ($usuario){
+        public static function dumy ($correo,$gcm){
+            //$post=json_decode(file_get_contents('php://input'),true);
+            //$usuario=$post['usuario'];
+            //$gcm=$post['claveGCM'];
             // $correo = $usuario['usuario'];
-            $comando2 = "UPDATE ms_usuario SET fechaSesion=NOW() WHERE usuario='".$usuario."'";
+            $comando2 = "UPDATE ms_usuario SET fechaSesion=NOW(),claveGCM='".$gcm."' WHERE usuario='".$correo."'";
     
             try {
     
@@ -241,7 +269,7 @@
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(),401);
             }
         }
-        public static function autenticar($correo, $contrasena)
+        public static function autenticar($correo, $contrasena,$gcm)
         {
             $comando = "SELECT idUsuario,contrasena,IDESTADO,idNivelAutorizacion FROM " . self::NOMBRE_TABLA .
                 " WHERE " . self::USUARIO . "=? ";
@@ -258,7 +286,7 @@
                     $resultado = $sentencia->fetch();
                    // return var_dump(self::validarEstado($resultado['IDESTADO']));
                   //  if (self::validarEstado($resultado['IDESTADO'],$resultado['idUsuario'])) {
-                    if(self::validarContrasena($contrasena, $resultado['contrasena'])&&self::dumy($correo)){
+                    if(self::validarContrasena($contrasena, $resultado['contrasena'])&&self::dumy($correo,$gcm)){
                    //self::generarClaveApi();
                         $claveApi = self::generarClaveApi();
                         

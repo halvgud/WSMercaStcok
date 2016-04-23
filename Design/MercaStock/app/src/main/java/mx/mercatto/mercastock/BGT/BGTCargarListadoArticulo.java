@@ -32,7 +32,11 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,6 +54,8 @@ import mx.mercatto.mercastock.R;
  * Created by Ryu on 16/04/2016.
  */
 public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObject> {
+    String sURL = null;
+
     String URL = null;
     static InputStream is = null;
     static JSONObject jObj = null;
@@ -62,7 +68,7 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
 
     static Integer CodeResponse;
     public BGTCargarListadoArticulo(String url, Activity activity, JSONObject postparams) {
-        this.URL = url;
+        this.sURL = url;
         this.activity = activity;
         this.postparams = postparams;
         _Listado = new ArrayList<>();
@@ -84,7 +90,7 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
 boolean bandera=true;
     @Override
     protected JSONObject doInBackground(String... params) {
-        try {
+        try {/*
             HttpPost httpPost = new HttpPost(URL);
             StringEntity entity = new StringEntity(postparams.toString(), HTTP.UTF_8);
             entity.setContentType("application/json");
@@ -100,10 +106,33 @@ boolean bandera=true;
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
             }
-            is.close();
+            is.close();*/
+            java.net.URL url=new URL(sURL);
+            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+            httpCon.setDoOutput(true);
+            httpCon.setUseCaches(false);
+            httpCon.setRequestProperty("Content-Type", "application/json");
+            httpCon.setRequestProperty("Accept", "application/json");
+            httpCon.setRequestMethod("POST");
+
+            httpCon.connect(); // Note the connect() here
+
+            OutputStream os = httpCon.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+
+            osw.write(postparams.toString());
+            osw.flush();
+            osw.close();
+            StringBuilder sb = new StringBuilder();
+            BufferedReader br = new BufferedReader(new InputStreamReader( httpCon.getInputStream(),"utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
-
+/*
         } catch (UnsupportedEncodingException e) {
          bandera=false;
           //  showToast(e.getMessage());
@@ -113,7 +142,18 @@ boolean bandera=true;
 
         }
         return jObj;
-
+*/
+        } catch (UnsupportedEncodingException e) {
+            // showToast(e.getMessage());
+            bandera=false;
+        } catch (JSONException e) {
+            //   showToast(e.getMessage());
+            bandera=false;
+        } catch (Exception e) {
+            //showToast(e.getMessage());
+            bandera=false;
+        }
+        return jObj;
     }
     public void showToast(String msg) {
         Toast.makeText((Context)activity, msg, Toast.LENGTH_LONG).show();

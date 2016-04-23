@@ -38,7 +38,6 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
     private static String esGranel="1";
     private static String clave="";
     private BGTPostFormularioArticulo bgt;
-    //private BackGroundTask bgt;
     InputMethodManager imm;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,6 +163,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             jsobj.put("idInventario",idInventario);
             jsobj.put("existenciaRespuesta",valor);
             jsobj.put("art_id",art_id);
+            jsobj.put("claveApi2",Configuracion.settings.getString("ClaveApi",""));
             bgt = new BGTPostFormularioArticulo(Configuracion.getApiUrlInventario(),getActivity(),jsobj);
             bgt.execute();
             Toast t=Toast.makeText(getActivity(),"Se ha guardado correctamente.", Toast.LENGTH_SHORT);

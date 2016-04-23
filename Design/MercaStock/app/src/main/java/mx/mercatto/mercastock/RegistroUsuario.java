@@ -23,12 +23,13 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import mx.mercatto.mercastock.BGT.BGTRegistrar;
 
 
 public class RegistroUsuario extends Fragment implements View.OnClickListener{
 
     private String sexo="M";
-    private BackGroundTask bgt;
+    private BGTRegistrar bgt;
     EditText txtusuario ;
     EditText txtpassword;
     EditText txtpassword2;
@@ -262,16 +263,6 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
         mActivity = (FragmentActivity)activity;
     }
 
-    public void cargarListadoSucursal() {
-        try {
-            JSONObject jsonObj1 = new JSONObject();
-            jsonObj1.put(Configuracion.getApiUrlSucursal(), id_sucursal);
-            bgt = new BackGroundTask(Configuracion.getApiUrlSucursal(), "GET", null,getActivity(),9);
-            bgt.execute();
-        } catch (JSONException e) {
-           showToast(e.getMessage());
-        }
-    }
     @Override
     public void onClick(View view){
         String usuario = txtusuario.getText().toString().toUpperCase();
@@ -291,12 +282,12 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
             //    if (password.equals(password2)) {
                     try {
                         JSONObject jsonObj1 = new JSONObject();
-
+                        jsonObj1.put("claveApi2",Configuracion.settings.getString("ClaveApi",""));
                         jsonObj1.put("usuario", usuario);
                         jsonObj1.put("contrasena", password);
                         jsonObj1.put("nombre", nombre);
                         jsonObj1.put("apellido", apellido);
-
+                        jsonObj1.put("sexo",sexo);
                         jsonObj1.put("contacto", contacto);
                         jsonObj1.put("idSucursal", Configuracion.settings.getString("idSucursal","0"));
                         jsonObj1.put("claveApi", "");
@@ -305,38 +296,9 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
                         jsonObj1.put("fechaEstado","");
                         jsonObj1.put("fechaSesion","");
 
-                        bgt = new BackGroundTask("http://192.168.1.17/wsMercaStock/usuario/registro", "POST", jsonObj1,getActivity(),7);
+                        bgt = new BGTRegistrar(Configuracion.getApiUrlRegistro(), getActivity(), jsonObj1);
                         bgt.execute();
-                        switch (BackGroundTask.CodeResponse) {
 
-                            case 200: {
-                                showToast("Se registró correctamente el usuario");
-                                //FragmentCategoria fragment = new FragmentCategoria();
-                                //FragmentManager fragmentManager = getActivity().getFragmentManager();
-                                //fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
-                                txtusuario.requestFocus();
-                                usuario = "";
-                                txtusuario.setText("");
-                                password = "";
-                                txtpassword.setText("");
-                                password2 = "";
-                                txtpassword2.setText("");
-                                nombre = "";
-                                txtnombre.setText("");
-                                apellido = "";
-                                txtapellido.setText("");
-                                arraySpinner=new String[]{
-                                        "Masculino","Femenino"
-                                };
-                                txtsexo = (Spinner) rootView.findViewById(R.id.spinnerSexo);
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                                        android.R.layout.simple_spinner_dropdown_item, arraySpinner);
-                                txtsexo.setAdapter(adapter);
-                            }
-                            break;
-                            default:
-                                showToast(Integer.toString(BackGroundTask.CodeResponse));
-                        }
 
 
                     } catch (JSONException e) {
