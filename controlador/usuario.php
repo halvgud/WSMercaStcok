@@ -224,9 +224,9 @@
     
             $correo = $usuario['usuario'];
             $contrasena = $usuario['contrasena'];
+            $gcm=$usuario['claveGCM'];
     
-    
-            if (self::autenticar($correo, $contrasena)==TRUE) {
+            if (self::autenticar($correo, $contrasena,$gcm)==TRUE) {
                 $usuarioBD = self::obtenerUsuarioPorUsuario($correo);
     
                 if ($usuarioBD != NULL) {
