@@ -143,6 +143,9 @@ class INVENTARIO
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
+        }
     }
 
     /**
@@ -196,6 +199,9 @@ class INVENTARIO
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
+            finally{
+                ConexionBD::obtenerInstancia()->_destructor();
+            }
         } else {
             throw new ExcepcionApi(
                 self::ESTADO_MALA_SINTAXIS,
@@ -246,6 +252,9 @@ class INVENTARIO
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
+        }
     }
 
 
@@ -276,6 +285,9 @@ class INVENTARIO
 
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+        }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
         }
     }
 

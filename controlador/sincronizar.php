@@ -118,6 +118,9 @@ class sync
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
+        }
     }
 
     public static function aplicarBatch($payload, $idUsuario)
@@ -157,6 +160,9 @@ class sync
 
         } catch (PDOException $e) {
             throw new ExcepcionApi($pdo->errorCode(), $e->getMessage(), 422);
+        }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
         }
     }
 

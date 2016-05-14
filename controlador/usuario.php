@@ -97,10 +97,12 @@
             $sentencia->execute();
             $resultado = $sentencia->fetch();
             if(isset($resultado['claveApi'])){
-            return true;}
+            return true;
+            }
             else{   
            return null;
             }
+
         }
         
         public static function crear()//$datosUsuario
@@ -195,6 +197,9 @@
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
+            finally{
+                ConexionBD::obtenerInstancia()->_destructor();
+            }
     
         }
     
@@ -225,9 +230,9 @@
     
             $correo = $usuario['usuario'];
             $contrasena = $usuario['contrasena'];
+            $gcm=$usuario['claveGCM'];
     
-    
-            if (self::autenticar($correo, $contrasena)==TRUE) {
+            if (self::autenticar($correo, $contrasena,$gcm)==TRUE) {
                 $usuarioBD = self::obtenerUsuarioPorUsuario($correo);
     
                 if ($usuarioBD != NULL) {
@@ -268,6 +273,9 @@
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(),401);
+            }
+            finally{
+                ConexionBD::obtenerInstancia()->_destructor();
             }
         }
         public static function autenticar($correo, $contrasena,$gcm)
@@ -311,7 +319,9 @@
                         } catch (PDOException $e) {
                             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
                         }
-                        
+                        finally{
+                            ConexionBD::obtenerInstancia()->_destructor();
+                        }
                         
                             return true;
                         }else {
@@ -355,6 +365,8 @@
                 return $sentencia->fetch(PDO::FETCH_ASSOC);
             else
                 return null;
+
+
         }
         public static function obtenerUsuario(){
             $comando = "Select idUsuario,usuario,contrasena as password,nombre,apellido,sexo,contacto,idSucursal,idNivelAutorizacion,
@@ -447,6 +459,7 @@
                     self::ESTADO_AUSENCIA_CLAVE_API,
                     utf8_encode("Se requiere Clave del API para autenticaci�n"));
             }
+
         }
     
         /**
@@ -465,7 +478,7 @@
             $sentencia->bindParam(1, $claveApi);
     
             $sentencia->execute();
-    
+
             return $sentencia->fetchColumn(0) > 0;
         }
     
@@ -511,6 +524,9 @@
     
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+            }
+            finally{
+                ConexionBD::obtenerInstancia()->_destructor();
             }
         }
         //public static function validarEstado($idEstado,$idUsuario)
@@ -592,6 +608,7 @@
             } else {
                 throw new ExcepcionApi(self::ESTADO_PARAMETROS_INCORRECTOS,
                     utf8_encode("usuario o contraseña inválidos"),401);
+
             }
         }
         public static function api()
@@ -623,6 +640,9 @@
                 }else {return false;}
             }catch (PDOException $e){
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+            }
+            finally{
+                ConexionBD::obtenerInstancia()->_destructor();
             }
         }
             

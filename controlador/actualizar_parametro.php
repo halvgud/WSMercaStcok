@@ -43,6 +43,9 @@ class ACTUALIZAR_PARAMETRO
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
+        }
     }
 
 }
