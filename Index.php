@@ -1,25 +1,23 @@
 <?php
-    
+
     require 'controlador/articulo.php';
     require 'controlador/usuario.php';
+
     require 'controlador/sincronizar.php';
     require 'controlador/sucursal.php';
     require 'controlador/categoria.php';
+
     require 'controlador/inventario.php';
     require 'controlador/parametro.php';
     require 'controlador/actualizar.php';
     require 'controlador/actualizar_parametro.php';
     require 'vista/VistaJson.php';
     require 'utilidad/ExcepcionApi.php';
-    
-    
-    
-    
     // Constantes de estado
     const ESTADO_URL_INCORRECTA = 2;
     const ESTADO_EXISTENCIA_RECURSO = 3;
     const ESTADO_METODO_NO_PERMITIDO = 4;
-    
+
     // Preparar manejo de excepciones
     $formato = isset($_GET['formato']) ? $_GET['formato'] : 'json';
     
@@ -49,13 +47,14 @@
     // Extraer segmento de la url
     if (isset($_GET['PATH_INFO'])) {
         $segmentos = explode('/', $_GET['PATH_INFO']);
-    
+
     } else {
         throw new ExcepcionApi(ESTADO_URL_INCORRECTA, utf8_encode("No se reconoce la petición"));
     }
     
     // Obtener recurso
     $recurso = array_shift($segmentos);
+
     $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar','actualizar_parametro');
     
     // Comprobar si existe el recurso

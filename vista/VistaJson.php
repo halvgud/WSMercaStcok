@@ -18,7 +18,7 @@ class VistaJson extends VistaApi
             http_response_code($this->estado);
         }
         header('Content-Type: application/json; charset=utf8');
-        echo json_encode($cuerpo, JSON_UNESCAPED_UNICODE);
+        print json_encode($cuerpo, JSON_UNESCAPED_UNICODE);
         exit;
     }
 }
