@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="MySQL - sicar@192.168.1.185" uuid="47af0419-58d5-4df9-9097-8abe5313b1c1">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>sicar.*</schema-pattern>
+      <default-schemas>sicar.*</default-schemas>
+    </data-source>
+  </component>
+</project>

@@ -62,7 +62,7 @@ class ARTICULO
                 
             // Ejecutar sentencia preparada
             if ($sentencia->execute()) {
-                http_response_code(200);
+               // http_response_code(200);
                 return
                     [
                         "estado" => self::ESTADO_EXITO,

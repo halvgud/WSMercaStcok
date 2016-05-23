@@ -15,11 +15,11 @@
         const ESTADO_ERROR=10;
         public static function post($peticion)
         {
-            if ($peticion[0] == 'seleccionarDepartamento') {
+            if ($peticion[0] == 'departamento') {
                 return self::seleccionarDepartamento();
-            } else if ($peticion[0] == 'seleccionarCategoria') {
+            } else if ($peticion[0] == 'categoria') {
                 return self::seleccionarCategoria();
-            } else if ($peticion[0] == 'seleccionarArticulo') {
+            } else if ($peticion[0] == 'articulo') {
                 return self::seleccionarArticulo();
             }else {
                 throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
