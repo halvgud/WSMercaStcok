@@ -59,31 +59,18 @@ public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             if (activity!= null){
-        //    showToast(e.getMessage());
                 FragmentConexionPerdida fragment = new FragmentConexionPerdida();
                 FragmentManager fragmentManager = activity.getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-         }
-        } catch (JSONException e) {
-            if (activity!= null){}
-        //    showToast(e.getMessage());
-            FragmentConexionPerdida fragment = new FragmentConexionPerdida();
-            FragmentManager fragmentManager = activity.getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-        } catch (Exception e) {
-            if (activity!= null){}
-         //   showToast(e.getMessage());
-            FragmentConexionPerdida fragment = new FragmentConexionPerdida();
-            FragmentManager fragmentManager = activity.getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            }
         }
         return jObj;
 

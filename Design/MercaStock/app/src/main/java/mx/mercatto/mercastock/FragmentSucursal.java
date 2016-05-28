@@ -66,7 +66,7 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 } else {
                     rootView.findViewById(R.id.button6).setEnabled(false);
                     //getView().findViewById(R.id.button9).setEnabled(false);
-                    getView().findViewById(R.id.button6).setEnabled(true);
+                    rootView.findViewById(R.id.button6).setEnabled(true);
                 }
             }
 
@@ -105,7 +105,7 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
-                editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada.toString());
+                editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
                 //editor.putString("idsucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada.toString());
                 editor.putString("ip", txtIp.getText().toString());
                 editor.apply();

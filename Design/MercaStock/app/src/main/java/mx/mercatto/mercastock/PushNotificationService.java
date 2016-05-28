@@ -1,6 +1,5 @@
 package mx.mercatto.mercastock;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -13,9 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-/**
- * Created by kundan on 10/22/2015.
- */
+
 public class PushNotificationService extends GcmListenerService {
 
     @Override

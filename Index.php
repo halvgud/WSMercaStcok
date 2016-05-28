@@ -6,7 +6,7 @@
     require 'controlador/sincronizar.php';
     require 'controlador/sucursal.php';
     require 'controlador/categoria.php';
-
+    require 'controlador/importar.php';
     require 'controlador/inventario.php';
     require 'controlador/parametro.php';
     require 'controlador/actualizar.php';
@@ -56,7 +56,7 @@
     // Obtener recurso
     $recurso = array_shift($segmentos);
 
-    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar','actualizar_parametro','exportar');
+    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar','actualizar_parametro','exportar','importar');
     // Comprobar si existe el recurso
     if (!in_array($recurso, $recursos_existentes)) {
         throw new ExcepcionApi(ESTADO_EXISTENCIA_RECURSO,
@@ -74,8 +74,8 @@
             if (method_exists($recurso, $metodo)) {
                 $respuesta = call_user_func(array($recurso, $metodo), $segmentos);
                 $vista->imprimir($respuesta);
-                break;
-            }
+
+            } break;
         default:
             // Método no aceptado
             $vista->estado = 405;

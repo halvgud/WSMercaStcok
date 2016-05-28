@@ -62,6 +62,12 @@ public class Main extends AppCompatActivity
 
                 @Override
                 public void onFailure(String ex) {
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("usuario", "");
+                    editor.putString("ClaveApi", "");
+                    editor.putString("ip", "default");
+                    editor.apply();
                     super.onFailure(ex);
                 }
             });
@@ -214,6 +220,7 @@ public class Main extends AppCompatActivity
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
+
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

@@ -1,11 +1,9 @@
 package mx.mercatto.mercastock;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+
 import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -20,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import mx.mercatto.mercastock.BGT.BGTRegistrar;
@@ -29,22 +26,19 @@ import mx.mercatto.mercastock.BGT.BGTRegistrar;
 public class RegistroUsuario extends Fragment implements View.OnClickListener{
 
     private String sexo="M";
-    private BGTRegistrar bgt;
     EditText txtusuario ;
     EditText txtpassword;
     EditText txtpassword2;
     EditText txtnombre ;
     EditText txtapellido ;
     Spinner txtsexo;
-    Spinner listaSucSpinner;
+    //Spinner listaSucSpinner;
     Button guardar;
-    String id_sucursal="";
+    //String id_sucursal="";
     public RegistroUsuario() {
 
     }
 
-    // TODO: Rename and change types and number of parameters
-    private String[] arraySpinner;
     protected View rootView;
 
 
@@ -54,11 +48,11 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
         super.onCreateView(inflater, container, savedInstanceState);
         this.rootView = inflater.inflate(R.layout.fragment_registro_usuario, container, false);
         getActivity().setTitle("Registrar Usuario");
-        arraySpinner=new String[]{
-                "Masculino","Femenino"
+        String[] arraySpinner = new String[]{
+                "Masculino", "Femenino"
         };
         txtsexo = (Spinner) rootView.findViewById(R.id.spinnerSexo);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, arraySpinner);
         txtsexo.setAdapter(adapter);
         txtsexo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -267,16 +261,16 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
     public void onClick(View view){
         String usuario = txtusuario.getText().toString().toUpperCase();
         String password = txtpassword.getText().toString();
-        String password2 = txtpassword2.getText().toString();
+        //String password2 = txtpassword2.getText().toString();
         String nombre = txtnombre.getText().toString();
         String apellido = txtapellido.getText().toString();
         String contacto = "";
 
-        String claveapi = "";
+        //String claveapi = "";
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        String idsucursal = settings.getString("idSucursal","");
-        SharedPreferences.Editor editor = settings.edit();
+        //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        //String idsucursal = settings.getString("idSucursal","");
+        //SharedPreferences.Editor editor = settings.edit();
         //if(usuario.length()>0&&password.length()>0&&password2.length()>0&&nombre.length()>0&&apellido.length()>0) {
           //  if(password.length()==4&&password2.length()==4){
             //    if (password.equals(password2)) {
@@ -296,15 +290,13 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
                         jsonObj1.put("fechaEstado","");
                         jsonObj1.put("fechaSesion","");
 
-                        bgt = new BGTRegistrar(Configuracion.getApiUrlRegistro(), getActivity(), jsonObj1);
+                        BGTRegistrar bgt = new BGTRegistrar(Configuracion.getApiUrlRegistro(), getActivity(), jsonObj1);
                         bgt.execute();
 
 
 
-                    } catch (JSONException e) {
+                    }  catch (Exception e) {
                         showToast(e.toString());
-                    } catch (Exception e) {
-
                     }
                 /*} else {
                     showToast("Las contraseñas no coinciden");

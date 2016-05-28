@@ -3,15 +3,7 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Vibrator;
-import android.preference.PreferenceManager;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -27,16 +19,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
 
 import mx.mercatto.mercastock.FragmentConexionPerdida;
-import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
-/**
- * Created by Ryu on 16/04/2016.
- */
 public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObject> {
     String URL = null;
     static InputStream is = null;
@@ -46,7 +32,6 @@ public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObj
     Activity activity;
     ProgressDialog asyncDialog;
     public static String ClaveApi = "Default";
-    public static String User = "Default";
 
     static Integer CodeResponse;
     public BGTPostFormularioArticulo(String url, Activity activity, JSONObject postparams) {
@@ -87,15 +72,12 @@ public class BGTPostFormularioArticulo extends AsyncTask<String, String, JSONObj
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (UnsupportedEncodingException e) {
-          //  showToast(e.getMessage());
-            bandera=false;
         } catch (Exception e) {
             bandera=false;
           //  showToast(e.getMessage());
@@ -110,7 +92,7 @@ Boolean bandera=true;
             super.onPostExecute(file_url);
             if(bandera) {
 
-                switch (BGTRegistrar.CodeResponse) {
+                switch (CodeResponse) {
                     case 401:{
                         showToast(file_url.getString("mensaje"));
                     }break;
@@ -124,12 +106,11 @@ Boolean bandera=true;
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
             }
                     jObj=null;
-               }catch(JSONException e){
-
+               }catch(JSONException ignored){
         }
-        catch (Exception e) {
+        /*catch (Exception e) {
             throw e;
-        }
+        }*/
         finally{
             if(activity!=null){
                 asyncDialog.dismiss();

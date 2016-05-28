@@ -42,7 +42,7 @@ class ARTICULO
     {
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-                $comando = "SELECT mi.idInventario, a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO.",a.granel,a.clave FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
+                $comando = "SELECT mi.idInventario,a.art_id ,a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO.",a.granel,a.clave FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
                 MI ON ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") inner join ms_usuario mu on (mu.claveApi='". $post['claveApi']."' AND mu.claveApi!='') INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
                 INNER JOIN Unidad U ON (a.UnidadCompra=U.Uni_ID) WHERE a.".self::ID_CATEGORIA."=".$post['cat_id']." AND a.".self::SERVICIO."=0 AND ".self::EXISTENCIA." >0
                 AND MI.".self::ID_ESTADO." IN (SELECT ".self::VALOR_FILTRO." 
@@ -66,7 +66,7 @@ class ARTICULO
                 return
                     [
                         "estado" => self::ESTADO_EXITO,
-                        "datos" => $sentencia->fetchAll(PDO::FETCH_ASSOC)
+                        "datos" => $sentencia->fetchAll(PDO::FETCH_OBJ)
                     ];
             } else
                 throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
@@ -82,40 +82,29 @@ class ARTICULO
     {
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-            //return var_dump($post);
+
             $claveApi2=$post['claveApi2'];
-                $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado =(SELECT VALOR FROM MS_PARAMETRO WHERE PARAMETRO='ID_ESTADO_PROCESADO'),
-                fechaRespuesta=NOW(), existenciaRespuesta='".$post['existenciaRespuesta']."' ,
-                existenciaEjecucion=(SELECT EXISTENCIA FROM ARTICULO WHERE art_id='".$post['art_id']."')
-                WHERE idInventario='".$post['idInventario']."'";
-                // Preparar sentencia
-                //return $comando;
-                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                // Ligar idContacto e idUsuario<
-                //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
-                //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
-                //for ($i = 0 ;$i<100000000;$i++){
-                    
-                    
-                //}
-                
-            // Ejecutar sentencia preparada
+            $comando = "Update ms_inventario set idEstado = (Select valor from ms_parametro where parametro='ID_ESTADO_PROCESADO')
+             ,fechaRespuesta=now()
+             ,existenciaRespuesta=:existenciaRespuesta
+             ,existenciaEjecucion=(Select existencia from articulo where art_id=:art_id)
+             where idInventario=:idInventario";
+
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            $sentencia->bindParam("existenciaRespuesta",$post['existenciaRespuesta']);
+            $sentencia->bindParam("art_id",$post['art_id']);
+            $sentencia->bindParam("idInventario",$post['idInventario']);
+
             if(!usuario::apiregistro($claveApi2)==null){
                if ($sentencia->execute()) {
                     http_response_code(200);
                     return
                         [
                             "estado" => self::ESTADO_EXITO,
-                            "datos" => $sentencia->rowCount()
+                            "mensaje" => $sentencia->rowCount()
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
-
-                    if ($resultado) {
-                        return self::ESTADO_CREACION_EXITOSA;
-                    } else {
-                        return self::ESTADO_CREACION_FALLIDA;
-                    }
                 }
                 else{
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,

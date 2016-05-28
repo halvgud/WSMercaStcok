@@ -1,12 +1,9 @@
 package mx.mercatto.mercastock;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,8 +23,6 @@ import mx.mercatto.mercastock.BGT.BGTCargarSucursal;
 import mx.mercatto.mercastock.BGT.BGTLogIn;
 
 public class FragmentLogin extends Fragment implements View.OnClickListener {
-    private BGTLogIn bgt;
-    private BGTCargarSucursal bgtSucursal;
     TextView txSucursal;
 
 
@@ -54,10 +49,10 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         txSucursal=(TextView) rootView.findViewById(R.id.textView13);
 
        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-      SharedPreferences.Editor editor = settings.edit();
+      //SharedPreferences.Editor editor = settings.edit();
         String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
         txtUsuario = (EditText) rootView.findViewById(R.id.editText);
-        if (auth_token_string != "") {
+        if (!auth_token_string.equals("")) {
             txtUsuario = (EditText) rootView.findViewById(R.id.editText);
             txtPassword = (EditText) rootView.findViewById(R.id.editText2);
         } else {
@@ -82,9 +77,14 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
                 value2 = txtPassword.getText().toString();
 
                 if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 1 && value2.length() == 4)) {
-                    getView().findViewById(R.id.button2).setEnabled(true);
+                    if(getView()!=null) {
+                        getView().findViewById(R.id.button2).setEnabled(true);
+                    }
+
                 } else {
-                    getView().findViewById(R.id.button2).setEnabled(false);
+                    if(getView()!=null) {
+                        getView().findViewById(R.id.button2).setEnabled(false);
+                    }
                 }
             }
 
@@ -102,7 +102,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         txtPassword.addTextChangedListener(new TextWatcher() {
             String value1 = "";
             String value2 = "";
-            String value3 = "";
             String gg = "";
 
             @Override
@@ -111,9 +110,13 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
                 value2 = txtPassword.getText().toString();
 
                 if ((!value1.equals(gg) && !value2.equals(gg)) && (value1.length() > 1 && value2.length() == 4 )) {
-                    getView().findViewById(R.id.button2).setEnabled(true);
+                    if(getView()!=null) {
+                        getView().findViewById(R.id.button2).setEnabled(true);
+                    }
                 } else {
-                    getView().findViewById(R.id.button2).setEnabled(false);
+                    if(getView()!=null) {
+                        getView().findViewById(R.id.button2).setEnabled(false);
+                    }
                 }
             }
 
@@ -152,11 +155,9 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
             jsonObj1.put("contrasena", password);
             jsonObj1.put("claveGCM",Main.idRegistro);
             // Create the POST object and add the parameters
-            bgt = new BGTLogIn(Configuracion.getApiUrlLogIn(),getActivity(),jsonObj1);
+            BGTLogIn bgt = new BGTLogIn(Configuracion.getApiUrlLogIn(), getActivity(), jsonObj1);
             bgt.execute();
-        } catch(JSONException e){
-            showToast(e.toString());
-        }catch (Exception e){
+        } catch (Exception e){
             showToast(e.toString());
         }
 
@@ -170,7 +171,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         try {
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put(Configuracion.getApiUrlSucursal(), id_sucursal);
-            bgtSucursal = new BGTCargarSucursal(Configuracion.getApiUrlSucursal(),getActivity());
+            BGTCargarSucursal bgtSucursal = new BGTCargarSucursal(Configuracion.getApiUrlSucursal(), getActivity());
             bgtSucursal.execute();
 
         } catch (JSONException e) {
