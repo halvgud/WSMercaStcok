@@ -8,9 +8,7 @@ import android.widget.SimpleAdapter;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by Juan Carlos De León on 02/04/2016.
- */
+
 public class ListaAdaptador extends SimpleAdapter {
     private int[] colors = new int[] { 0x00000000, 0xAAF5F5F5 };
 

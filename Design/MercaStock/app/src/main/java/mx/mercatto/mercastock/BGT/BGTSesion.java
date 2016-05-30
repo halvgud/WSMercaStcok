@@ -8,7 +8,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.widget.EditText;
+import android.util.Log;
+//import android.widget.EditText;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -24,7 +25,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+//import java.io.UnsupportedEncodingException;
 
 import mx.mercatto.mercastock.Configuracion;
 import mx.mercatto.mercastock.FragmentCategoria;
@@ -34,9 +35,6 @@ import mx.mercatto.mercastock.FragmentSesion;
 
 import mx.mercatto.mercastock.R;
 
-/**
- * Created by Ryu on 16/04/2016.
- */
 public class BGTSesion extends AsyncTask<String, String, JSONObject> {
     String URL = null;
     static InputStream is = null;
@@ -84,15 +82,15 @@ public class BGTSesion extends AsyncTask<String, String, JSONObject> {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (UnsupportedEncodingException e) {
+        } /*catch (UnsupportedEncodingException e) {
             showToast(e.getMessage());
-        } catch (Exception e) {
+        *}*/ catch (Exception e) {
             showToast(e.getMessage());
         }
         return jObj;
@@ -114,6 +112,7 @@ boolean bandera = true;
                     jObj=null;
                }
         catch (Exception e) {
+            Log.d("", e.getMessage());
             throw e;
         }
         finally{
@@ -126,16 +125,16 @@ boolean bandera = true;
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
     }
     private void Login2(JSONObject file_url){
-        String txtUsuario;
-        EditText txtPassword;
+      //  String txtUsuario;
+      //  EditText txtPassword;
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
 
-        String usuario = settings.getString("usuario", "");
-        txtPassword   = (EditText)activity.findViewById(R.id.editText4);
+     //   String usuario = settings.getString("usuario", "");
+     //   txtPassword   = (EditText)activity.findViewById(R.id.editText4);
 
 
         try{
-            String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+       //     String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
             SharedPreferences.Editor editor = settings.edit();
             switch (CodeResponse) {
                 case 200: {

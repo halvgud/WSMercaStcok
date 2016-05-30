@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+//import java.io.UnsupportedEncodingException;
 
 import mx.mercatto.mercastock.FragmentCategoria;
 
@@ -73,14 +73,12 @@ public class BGTCambiarPIN extends AsyncTask<String, String, JSONObject> {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (UnsupportedEncodingException e) {
-            showToast(e.getMessage());
         } catch (Exception e) {
             showToast(e.getMessage());
         }
@@ -101,9 +99,9 @@ boolean bandera=true;
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
             }
                }
-        catch (Exception e) {
+        /*catch (Exception e) {
             throw e;
-        }
+        }*/
         finally{
             if(activity!=null){
                 asyncDialog.dismiss();

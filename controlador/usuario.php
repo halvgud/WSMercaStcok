@@ -82,14 +82,8 @@
             }
         }
     
-        /**
-         * Crea un nuevo usuario en la tabla "usuario"
-         * @param mixed $datosUsuario columnas del registro
-         * @return int codigo para determinar si la inserci�n fue exitosa
-         */
-        public static function apiregistro(){
-            $post = json_decode(file_get_contents('php://input'),true);
-            $claveApi2=$post['claveApi2'];
+
+        public static function apiregistro($claveApi2){
             $comando = " SELECT claveApi FROM ".self::NOMBRE_TABLA." WHERE claveApi='".$claveApi2."'";
             $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
     
@@ -365,56 +359,6 @@
             }
         }
 
-        public static function modificarEnBatch()
-        {
-            $usuario = json_decode(file_get_contents('php://input'));
-            // Preparar operaci�n de modificaci�n para cada contacto
-
-            $comando = "insert into ms_usuario (usuario,contrasena,nombre,apellido,sexo,contacto,idSucursal,claveApi,idNivelAutorizacion,idEstado,fechaEstado,fechaSesion
-      ,claveGCM) values (:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveApi,:idNivelAutorizacion,:idEstado,now(),now(),'')
-        on duplicate key update contrasena=:password,nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto,
-        idSucursal=:idSucursal,idNivelAutorizacion=:idNivelAutorizacion,idEstado=:idEstado";
-            // Preparar la sentencia update
-            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-
-
-
-
-            // Procesar array de contactos
-            $contador=0;
-            foreach ($usuario->data as $usuarioRow) {
-                $usuario =$usuarioRow->usuario;
-                $password = $usuarioRow->password;
-                $nombre = $usuarioRow->nombre;
-                $apellido = $usuarioRow->apellido;
-                $sexo = $usuarioRow->sexo;
-                $contacto = $usuarioRow->contacto;
-                $idNivelAutorizacion=$usuarioRow->idNivelAutorizacion;
-                $idEstado = $usuarioRow->idEstado;
-                $idSucursal =$usuarioRow->idSucursal;
-                $claveApi="";
-               // $claveGCM = $usuarioRow->claveGCM;
-                $sentencia->bindParam("password", $password);
-                $sentencia->bindParam("nombre", $nombre);
-                $sentencia->bindParam("apellido", $apellido);
-                $sentencia->bindParam("sexo", $sexo);
-                $sentencia->bindParam("claveApi",$claveApi);
-                $sentencia->bindParam("contacto", $contacto);
-                $sentencia->bindParam("idNivelAutorizacion", $idNivelAutorizacion);
-                $sentencia->bindParam("idEstado", $idEstado);
-                //$sentencia->bindParam("claveGCM",$claveGCM);
-                $sentencia->bindParam("usuario",$usuario);
-                $sentencia->bindParam("idSucursal",$idSucursal);
-                $sentencia->execute();
-                $contador++;
-            }
-         return   $arreglo =[
-                "estado" => 200,
-                "success" => "",
-                "data" => $contador
-            ];
-
-        }
 
         /**
          * Otorga los permisos a un usuario para que acceda a los recursos

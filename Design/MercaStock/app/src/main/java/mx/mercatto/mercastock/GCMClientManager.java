@@ -18,7 +18,7 @@ import java.io.IOException;
 public class GCMClientManager {
     // Constants
     public static final String TAG = "GCMClientManager";
-    public static final String EXTRA_MESSAGE = "message";
+    //public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -134,7 +134,7 @@ public class GCMClientManager {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
+        editor.apply();
     }
     private SharedPreferences getGCMPreferences(Context context) {
         // This sample app persists the registration ID in shared preferences, but

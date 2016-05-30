@@ -19,15 +19,12 @@ import org.json.JSONObject;
 import mx.mercatto.mercastock.BGT.BGTCambiarPIN;
 
 
-/**
- * Created by Juan Carlos De León on 10/04/2016.
- */
+
 public class FragmentPassword extends Fragment implements View.OnClickListener  {
 
     public EditText txtPinActual;
     public EditText txtPinNuevo;
     public EditText txtPinNuevoR;
-    private BGTCambiarPIN bgt;
 
     public FragmentPassword() {
 
@@ -58,12 +55,7 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
                 value1 = txtPinActual.getText().toString();
                 value2=txtPinNuevo.getText().toString();
                 value3=txtPinNuevoR.getText().toString();
-
-                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg)) && (value2.equals(value3))&&(value1.length()==4 && value2.length()==4 && value2.length()==4)) {
-                    getView().findViewById(R.id.button8).setEnabled(true);
-                } else {
-                    getView().findViewById(R.id.button8).setEnabled(false);
-                }
+                evaluar(value1,value2,value3,gg);
             }
 
             @Override
@@ -89,12 +81,8 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
                 value1 = txtPinActual.getText().toString();
                 value2=txtPinNuevo.getText().toString();
                 value3=txtPinNuevoR.getText().toString();
+                evaluar(value1,value2,value3,gg);
 
-                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg)) && (value2.equals(value3)) && (value2.equals(value3))&&(value1.length()==4 && value2.length()==4 && value2.length()==4)) {
-                    getView().findViewById(R.id.button8).setEnabled(true);
-                } else {
-                    getView().findViewById(R.id.button8).setEnabled(false);
-                }
             }
 
             @Override
@@ -109,6 +97,7 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
             }
         });
 
+
         txtPinNuevoR.addTextChangedListener(new TextWatcher() {
             String value1 = "";
             String value2 = "";
@@ -120,12 +109,7 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
                 value1 = txtPinActual.getText().toString();
                 value2=txtPinNuevo.getText().toString();
                 value3=txtPinNuevoR.getText().toString();
-
-                if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg)) && (value2.equals(value3)) && (value2.equals(value3))&&(value1.length()==4 && value2.length()==4 && value2.length()==4)) {
-                    getView().findViewById(R.id.button8).setEnabled(true);
-                } else {
-                    getView().findViewById(R.id.button8).setEnabled(false);
-                }
+                evaluar(value1,value2,value3,gg);
             }
 
             @Override
@@ -142,7 +126,17 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
 
         return rootView;
     }
-
+    private void evaluar(String value1,String value2, String value3,String gg){
+        if ((!value1.equals(gg) && !value2.equals(gg) && !value3.equals(gg)) && (value2.equals(value3)) && (value2.equals(value3))&&(value1.length()==4 && value2.length()==4 && value2.length()==4)) {
+            if (getView()!=null) {
+                getView().findViewById(R.id.button8).setEnabled(true);
+            }
+        } else {
+            if (getView()!=null) {
+                getView().findViewById(R.id.button8).setEnabled(false);
+            }
+        }
+    }
     protected FragmentActivity mActivity;
     @Override
     public void onAttach(Activity activity) {
@@ -165,7 +159,7 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
             jsobj.put("usuario",auth_token_string);
             jsobj.put("pin_viejo", txtPinActual.getText().toString());
             jsobj.put("pin_nuevo",txtPinNuevo.getText().toString());
-            bgt = new BGTCambiarPIN(Configuracion.getApiUrlPin(),getActivity(),jsobj);
+            BGTCambiarPIN bgt = new BGTCambiarPIN(Configuracion.getApiUrlPin(), getActivity(), jsobj);
             bgt.execute();
         } catch (Exception e) {
             e.printStackTrace();

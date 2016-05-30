@@ -14,11 +14,14 @@ class SUCURSAL
     public static function get($peticion)
     {
 
-
         if (empty($peticion[0]))
             return self::obtenerSucursal();
         else
             http_response_code(404);
+
+    }
+    public static function post($peticion){
+        return self::login();
 
     }
 
@@ -47,6 +50,30 @@ class SUCURSAL
         finally{
             ConexionBD::obtenerInstancia()->_destructor();
         }
+    }
+    public static function login()
+    {
+         $post = json_decode(file_get_contents('php://input'),true);
+       // var_dump($post);
+        if($post['usuario']=="admin"&& $post['password']=="sysadmin11"){
+            $comando = "select idSucursal,usuario,password from ms_sucursal";
+            try {
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                if ($sentencia->execute()) {
+                    http_response_code(200);
+                    return ($sentencia->fetchAll(PDO::FETCH_ASSOC));
+                } else
+                    throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+
+            } catch (PDOException $e) {
+                throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+            } finally {
+                ConexionBD::obtenerInstancia()->_destructor();
+            }
+        }else{
+            throw new ExcepcionApi(401, "credenciales incorrectas",401);
+        }
+
     }
 
 }

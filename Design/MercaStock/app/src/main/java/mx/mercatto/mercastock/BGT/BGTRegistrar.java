@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -22,13 +23,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import mx.mercatto.mercastock.*;
 
-/**
- * Created by Ryu on 16/04/2016.
- */
+
 public class BGTRegistrar extends AsyncTask<String, String, JSONObject> {
     String URL = null;
     static InputStream is = null;
@@ -38,7 +36,13 @@ public class BGTRegistrar extends AsyncTask<String, String, JSONObject> {
     Activity activity;
     ProgressDialog asyncDialog;
     public static String ClaveApi = "Default";
-    public static String User = "Default";
+    Boolean bandera=true;
+    EditText txtusuario ;
+    EditText txtpassword;
+    EditText txtpassword2;
+    EditText txtnombre ;
+    Spinner txtsexo;
+    EditText txtapellido ;
 
     static Integer CodeResponse;
     public BGTRegistrar(String url, Activity activity, JSONObject postparams) {
@@ -79,30 +83,21 @@ public class BGTRegistrar extends AsyncTask<String, String, JSONObject> {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (UnsupportedEncodingException e) {
-          //  showToast(e.getMessage());
-            bandera=false;
-        } catch (Exception e) {
+        }  catch (Exception e) {
             bandera=false;
           //  showToast(e.getMessage());
         }
         return jObj;
 
     }
-Boolean bandera=true;
-    EditText txtusuario ;
-    EditText txtpassword;
-    EditText txtpassword2;
-    EditText txtnombre ;
-    Spinner txtsexo;
-    EditText txtapellido ;
-    private String[] arraySpinner;
+
+
     @Override
     protected void onPostExecute(JSONObject file_url) {
         super.onPostExecute(file_url);
@@ -111,14 +106,7 @@ Boolean bandera=true;
         txtpassword2= (EditText) activity.findViewById(R.id.editText7);
         txtnombre = (EditText) activity.findViewById(R.id.editText8);
         txtapellido = (EditText) activity.findViewById(R.id.editText9);
-        String usuario = txtusuario.getText().toString().toUpperCase();
-        String password = txtpassword.getText().toString();
-        String password2 = txtpassword2.getText().toString();
-        String nombre = txtnombre.getText().toString();
-        String apellido = txtapellido.getText().toString();
-        arraySpinner=new String[]{
-                "Masculino","Femenino"
-        };
+        String[] arraySpinner;
         txtsexo = (Spinner) activity.findViewById(R.id.spinnerSexo);
         try {
 
@@ -131,21 +119,16 @@ Boolean bandera=true;
                         //FragmentManager fragmentManager = getActivity().getFragmentManager();
                         //fragmentManager.beginTransaction().replace(R.id.content_main,fragment).addToBackStack(null).commit();
                         txtusuario.requestFocus();
-                        usuario = "";
                         txtusuario.setText("");
-                        password = "";
                         txtpassword.setText("");
-                        password2 = "";
                         txtpassword2.setText("");
-                        nombre = "";
                         txtnombre.setText("");
-                        apellido = "";
                         txtapellido.setText("");
-                        arraySpinner=new String[]{
+                        arraySpinner =new String[]{
                                 "Masculino","Femenino"
                         };
                         txtsexo = (Spinner) activity.findViewById(R.id.spinnerSexo);
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
                                 android.R.layout.simple_spinner_dropdown_item, arraySpinner);
                         txtsexo.setAdapter(adapter);
                     }
@@ -165,8 +148,9 @@ Boolean bandera=true;
                     jObj=null;
                }
         catch (JSONException e){
-
+            Log.d("",e.getMessage());
         }catch (Exception e) {
+            Log.d("",e.getMessage());
             throw e;
         }
         finally{

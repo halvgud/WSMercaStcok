@@ -19,16 +19,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import mx.mercatto.mercastock.BGT.BGTSesion;
 
-
-/**
- * Created by Juan Carlos De León on 10/04/2016.
- */
 public class FragmentSesion extends Fragment implements View.OnClickListener {
 
     TextView txtNombre;
@@ -62,9 +56,9 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
         String nombre= Configuracion.settings.getString("nombre", "");
         String sucursal =Configuracion.settings.getString("sucursal","");
         txtNombre=(TextView)rootView.findViewById(R.id.textView18);
-        txtNombre.setText("Usuario: " + nombre);
+        txtNombre.setText(String.format("Usuario: %s", nombre));
         txtSucursal=(TextView)rootView.findViewById(R.id.textView14);
-        txtSucursal.setText("Sucursal: "+sucursal);
+        txtSucursal.setText(String.format("Sucursal: %s", sucursal));
         txtPin= (EditText)rootView.findViewById(R.id.editText4);
 
         txtPin.addTextChangedListener(new TextWatcher() {
@@ -77,9 +71,11 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                 value1 = txtPin.getText().toString();
 
                 if ((!value1.equals(gg) && (value1.length() == 4))) {
-                    getView().findViewById(R.id.button5).setEnabled(true);
+                    if(getView()!=null)
+                        getView().findViewById(R.id.button5).setEnabled(true);
                 } else {
-                    getView().findViewById(R.id.button5).setEnabled(false);
+                    if(getView()!=null)
+                        getView().findViewById(R.id.button5).setEnabled(false);
                 }
             }
 
@@ -111,9 +107,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                     bgt = new BGTSesion(Configuracion.getApiUrlLogIn(),getActivity(),jsonObj1);
                     bgt.execute();
 
-                } catch(JSONException e){
-                    showToast(e.getMessage());
-                }catch (Exception e){
+                } catch (Exception e){
                     showToast(e.getMessage());
                 }
                 break;

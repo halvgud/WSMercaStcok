@@ -1,14 +1,10 @@
 package mx.mercatto.mercastock;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,10 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import mx.mercatto.mercastock.BGT.BGTConfigurarServidorSucursal;
-import mx.mercatto.mercastock.Configuracion;
-import mx.mercatto.mercastock.FragmentLogin;
-import mx.mercatto.mercastock.R;
 
 
 public class FragmentConexionPerdida extends Fragment implements View.OnClickListener {

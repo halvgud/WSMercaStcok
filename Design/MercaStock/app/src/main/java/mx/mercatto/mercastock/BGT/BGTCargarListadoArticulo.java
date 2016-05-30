@@ -3,56 +3,41 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+//import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+//import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+//import java.net.MalformedURLException;
+//import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import mx.mercatto.mercastock.Configuracion;
-
-import mx.mercatto.mercastock.FragmentArticulo;
 import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.FragmentFormularioArticulo;
 
 import mx.mercatto.mercastock.ListaAdaptador;
-import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
-/**
- * Created by Ryu on 16/04/2016.
- */
+
 public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObject> {
     String sURL = null;
 
@@ -64,9 +49,9 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
     Activity activity;
     ProgressDialog asyncDialog;
     public static String ClaveApi = "Default";
-    public static String User = "Default";
+    //public static String User = "Default";
 
-    static Integer CodeResponse;
+    //static Integer CodeResponse;
     public BGTCargarListadoArticulo(String url, Activity activity, JSONObject postparams) {
         this.sURL = url;
         this.activity = activity;
@@ -107,7 +92,7 @@ boolean bandera=true;
                 sb.append(line + "\n");
             }
             is.close();*/
-            java.net.URL url=new URL(sURL);
+            java.net.URL url = new URL(sURL);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
             httpCon.setDoOutput(true);
             httpCon.setUseCaches(false);
@@ -124,10 +109,10 @@ boolean bandera=true;
             osw.flush();
             osw.close();
             StringBuilder sb = new StringBuilder();
-            BufferedReader br = new BufferedReader(new InputStreamReader( httpCon.getInputStream(),"utf-8"));
-            String line = null;
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpCon.getInputStream(), "utf-8"));
+            String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
 
             json = sb.toString();
@@ -143,20 +128,14 @@ boolean bandera=true;
         }
         return jObj;
 */
-        } catch (UnsupportedEncodingException e) {
+        } catch (IOException|JSONException e) {
             // showToast(e.getMessage());
-            bandera=false;
-        } catch (JSONException e) {
-            //   showToast(e.getMessage());
-            bandera=false;
-        } catch (Exception e) {
-            //showToast(e.getMessage());
-            bandera=false;
+            bandera = false;
         }
         return jObj;
     }
     public void showToast(String msg) {
-        Toast.makeText((Context)activity, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
     }
 
     public static int devolverConteo(){
@@ -175,11 +154,7 @@ boolean bandera=true;
                     FragmentManager fragmentManager = activity.getFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 }
-               }
-        catch (Exception e) {
-            throw e;
-        }
-        finally{
+               } finally{
             if(activity!=null){
                 asyncDialog.dismiss();
             }

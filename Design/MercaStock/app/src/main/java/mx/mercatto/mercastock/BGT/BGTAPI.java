@@ -3,7 +3,6 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -22,10 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
+
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.net.URL;
+
 import java.net.UnknownHostException;
 
 import mx.mercatto.mercastock.Configuracion;
@@ -38,9 +37,6 @@ import mx.mercatto.mercastock.FragmentSucursal;
 import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
-/**
- * Created by Ryu on 16/04/2016.
- */
 public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     String URL = null;
     static InputStream is = null;
@@ -50,7 +46,7 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     Activity activity;
     ProgressDialog asyncDialog;
     public static String ClaveApi = "Default";
-    public static String User = "Default";
+    //public static String User = "Default";
 public boolean transaccionCompleta=false;
     static Integer CodeResponse;
     public BGTAPI(String url, Activity activity, JSONObject postparams) {
@@ -68,7 +64,7 @@ public boolean transaccionCompleta=false;
     @Override
     protected JSONObject doInBackground(String... params) {
         try {
-            String x="1";
+
             HttpPost httpPost = new HttpPost(URL);
             StringEntity entity = new StringEntity(postparams.toString(), HTTP.UTF_8);
             entity.setContentType("application/json");
@@ -82,7 +78,7 @@ public boolean transaccionCompleta=false;
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
@@ -116,10 +112,10 @@ showToast(":(");
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
             transaccionCompleta=true;
-        } */catch (UnknownHostException |JSONException|MalformedURLException |UnsupportedEncodingException|ProtocolException e) {
+        } */catch (IllegalArgumentException|UnknownHostException |JSONException|MalformedURLException |UnsupportedEncodingException|ProtocolException e) {
             e.printStackTrace();
             transaccionCompleta=false;
-        }catch(IOException e){
+        }catch(RuntimeException|IOException e){
             //e.printStackTrace();
             transaccionCompleta=false;
         }
@@ -154,11 +150,7 @@ showToast(":(");
                 }
             }
                     jObj=null;
-               }
-        catch (Exception e) {
-            throw e;
-        }
-        finally{
+               } finally{
             if(activity!=null){
                 asyncDialog.dismiss();
             }
@@ -169,8 +161,8 @@ showToast(":(");
         if (transaccionCompleta) {
             try {
                 ClAp = file_url.getInt("estado");
-                String us = Configuracion.settings.getString("usuario", "");
-                String lo = Configuracion.settings.getString("login", "");
+                //String us = Configuracion.settings.getString("usuario", "");
+                //String lo = Configuracion.settings.getString("login", "");
                 //if (Main.inicio == 1) {
                     if (ClAp == 9) {
 
@@ -225,8 +217,6 @@ showToast(":(");
                 e.printStackTrace();
             }
 
-        } else {
-//showToast(":(");
         }
     }
 

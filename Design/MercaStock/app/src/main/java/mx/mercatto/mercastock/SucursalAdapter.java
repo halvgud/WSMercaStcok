@@ -1,8 +1,5 @@
 package mx.mercatto.mercastock;
 
-/**
- * Created by Ryu on 23/03/2016.
- */
 
 import android.app.Activity;
 import android.view.LayoutInflater;

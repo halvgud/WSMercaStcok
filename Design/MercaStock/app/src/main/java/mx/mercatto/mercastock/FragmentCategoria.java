@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mx.mercatto.mercastock.BGT.BGTCargarListadoCategoria;
-import mx.mercatto.mercastock.BGT.BGTLogIn;
+
 
 
 public class FragmentCategoria extends Fragment {

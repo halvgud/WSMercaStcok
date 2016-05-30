@@ -33,7 +33,7 @@ public class Configuracion {
 
     public static Boolean Finalizado=false;
 
-    private static String _ApiUrl="http://localhost/";
+    private static String _ApiUrl="http://192.168.1.185/";
 
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
@@ -114,7 +114,7 @@ public class Configuracion {
     public static String getApiUrlCategoria(){return (_ApiUrlCategoria.contains("http://")?_ApiUrlCategoria:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlCategoria:(_ApiUrlCategoria.contains("http://")?_ApiUrlCategoria:getApiUrl()+_ApiUrlCategoria))));}
     public static void setApiUrlCategoria(String ApiUrlCategoria) {_ApiUrlCategoria=ApiUrlCategoria;}
 
-    private static String _IdArticulo="cat_id";
+    private static String _IdArticulo="art_id";
     public static String getIdArticulo(){ return _IdArticulo;}
     public static void setIdArticulo(String IdArticulo) {_IdArticulo=IdArticulo;}
 
@@ -187,7 +187,25 @@ public class Configuracion {
     public  static  SharedPreferences.Editor editor;// = settings.edit();
 
     private static String _ApiUrlConfiguracion="wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL";
-    public static String getApiUrlConfiguracion(){return (_ApiUrlConfiguracion.contains("http://")?_ApiUrlConfiguracion:(!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlConfiguracion:(_ApiUrlConfiguracion.contains("http://")?_ApiUrlConfiguracion:getApiUrl()+_ApiUrlConfiguracion)));}
+    public static String getApiUrlConfiguracion(){
+        if (!settings.getString("ip", "default").equals("default")) {
+            if (_ApiUrlConfiguracion.contains("http://")) {
+                return _ApiUrlConfiguracion;
+            }
+            else {
+                return "http://" + settings.getString("ip", "") + "/" + _ApiUrlConfiguracion;
+            }
+        }
+        else if (_ApiUrlConfiguracion.contains("http://")) {
+            return _ApiUrlConfiguracion;
+        }
+        else if (_ApiUrlConfiguracion.contains("http://")) {
+            return _ApiUrlConfiguracion;
+        }
+        else {
+            return getApiUrl() + _ApiUrlConfiguracion;
+        }
+    }
     public static void setApiUrlConfiguracion(String ApiUrlConfiguracion){_ApiUrlConfiguracion=ApiUrlConfiguracion;}
 
     private static String _ApiUrlConfigurarIp="/wsMercaStock/sucursal";

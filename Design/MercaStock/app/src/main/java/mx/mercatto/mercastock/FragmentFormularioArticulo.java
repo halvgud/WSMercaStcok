@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import mx.mercatto.mercastock.BGT.BGTCargarListadoArticulo;
@@ -31,42 +30,35 @@ import mx.mercatto.mercastock.BGT.BGTPostFormularioArticulo;
 public class FragmentFormularioArticulo extends Fragment  implements View.OnClickListener{
 
     private static String idInventario="";
-    private static String NombreArticulo="";
-    private static String cat_id="";
     private static String art_id="";
-    private static String existencia="";
-    private static String esGranel="1";
-    private static String clave="";
-    private BGTPostFormularioArticulo bgt;
     InputMethodManager imm;
+    //    private static  String TAG_VALOR_INVENTARIO;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_formulario_articulo, container, false);
         Bundle args = getArguments();
         idInventario = args.getString(Configuracion.getIdInventario());
-        NombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
-        TAG_VALOR_INVENTARIO = args.getString(Configuracion.getIdInventario());
-        cat_id = args.getString(Configuracion.getIdCategoria());
+        String nombreArticulo = args.getString(Configuracion.getDescripcioArticulo());
+        //TAG_VALOR_INVENTARIO = args.getString(Configuracion.getIdInventario());
+        //String cat_id = args.getString(Configuracion.getIdCategoria());
         art_id = args.getString(Configuracion.getIdArticulo());
-        existencia = args.getString(Configuracion.getExistenciaArticulo());
-        esGranel=args.getString(Configuracion.getGranelArticulo());
-        clave = args.getString(Configuracion.getClaveArticulo());
+        //String existencia = args.getString(Configuracion.getExistenciaArticulo());
+        String esGranel = args.getString(Configuracion.getGranelArticulo());
+        String clave = args.getString(Configuracion.getClaveArticulo());
         getActivity().setTitle("Artículo :");
 
         EditText txt1 = (EditText) rootView.findViewById(R.id.editText3);
         TextView txtTituloInferior = (TextView) rootView.findViewById(R.id.FormularioArticulotxtTituloInferior);
         TextView txtCodigoDeBarras = (TextView) rootView.findViewById(R.id.FormularioArticulotxtCodigoDeBarras);
-        txtTituloInferior.setText(NombreArticulo);
+        txtTituloInferior.setText(nombreArticulo);
         txtCodigoDeBarras.setText(clave);
         TextView txtCantidad = (TextView) rootView.findViewById(R.id.textView4);
-        txtCantidad.setText("Cantidad por " + args.getString(Configuracion.getUnidadArticulo()) + ":");
+        txtCantidad.setText(String.format("Cantidad por %s:", args.getString(Configuracion.getUnidadArticulo())));
         Button upButton = (Button) rootView.findViewById(R.id.button3);
         upButton.setOnClickListener(this);
 
         txt1.addTextChangedListener(new TextWatcher() {
-            String value = "";
-            String gg = "";
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -111,12 +103,13 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
 
             }
         });
+        assert esGranel != null;
         if(esGranel.equals("1")){
             txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
         }
         else
         {
-            txt1.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            txt1.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
 
         return rootView;
@@ -127,7 +120,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         final EditText valor;
 
         valor = (EditText) getActivity().findViewById(R.id.editText3);
-        if (Configuracion.getConfirmacion_Mensaje_Gurdado().toString().equals("TRUE")) {
+        if (Configuracion.getConfirmacion_Mensaje_Gurdado().equals("TRUE")) {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getActivity());
             dialogo1.setTitle("Aviso");
             dialogo1.setMessage("Se va a registrar la cantidad de \n" + valor.getText().toString() + "\n ¿Desea continuar?");
@@ -136,7 +129,9 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
                 public void onClick(DialogInterface dialogo1, int id) {
                     aceptar(valor.getText().toString());
                     imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                    if (getView() != null && getView().getWindowToken() != null) {
+                        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                    }
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -156,7 +151,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
 
     }
 
-    private static  String TAG_VALOR_INVENTARIO;
+
     public void aceptar(String valor) {
         try{
             JSONObject jsobj = new JSONObject();
@@ -164,11 +159,11 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             jsobj.put("existenciaRespuesta",valor);
             jsobj.put("art_id",art_id);
             jsobj.put("claveApi2",Configuracion.settings.getString("ClaveApi",""));
-            bgt = new BGTPostFormularioArticulo(Configuracion.getApiUrlInventario(),getActivity(),jsobj);
+            BGTPostFormularioArticulo bgt = new BGTPostFormularioArticulo(Configuracion.getApiUrlInventario(), getActivity(), jsobj);
             bgt.execute();
             Toast t=Toast.makeText(getActivity(),"Se ha guardado correctamente.", Toast.LENGTH_SHORT);
             t.show();
-        }catch(JSONException e){
+        }catch(Exception e){
             showToast(e.getMessage());
         }
         finally {

@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.widget.EditText;
+//import android.widget.EditText;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -25,19 +25,16 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 
 import mx.mercatto.mercastock.Configuracion;
-import mx.mercatto.mercastock.FragmentCategoria;
+
 
 import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
-/**
- * Created by Ryu on 16/04/2016.
- */
+
 public class BGTLogIn extends AsyncTask<String, String, JSONObject> {
     String URL = null;
     static InputStream is = null;
@@ -85,15 +82,12 @@ public class BGTLogIn extends AsyncTask<String, String, JSONObject> {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (UnsupportedEncodingException e) {
-            bandera=false;
-        //    showToast(e.getMessage());
         } catch (Exception e) {
         //    showToast(e.getMessage());
             bandera=false;
@@ -116,9 +110,9 @@ boolean bandera=true;
                 }
                     jObj=null;
                }
-        catch (Exception e) {
+       /* catch (Exception e) {
             throw e;
-        }
+        }*/
         finally{
             if(activity!=null){
                 asyncDialog.dismiss();
@@ -129,16 +123,16 @@ boolean bandera=true;
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
     }
     private void Login(JSONObject file_url){
-        EditText txtusuario;
+       /* EditText txtusuario;
         EditText txtpassword;
         txtusuario   = (EditText)activity.findViewById(R.id.editText);
         txtpassword   = (EditText)activity.findViewById(R.id.editText2);
         String usuario = txtusuario.getText().toString();
-        String password = txtpassword.getText().toString();
+        String password = txtpassword.getText().toString();*/
         try{
             //TextView txtusuario = (TextView) activity.findViewById(R.id.editText);
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-            String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
+           // String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
             SharedPreferences.Editor editor = settings.edit();
             switch (CodeResponse) {
                 case 200: {

@@ -3,36 +3,21 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,13 +28,8 @@ import mx.mercatto.mercastock.FragmentArticulo;
 
 import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.ListaAdaptador;
-
-import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
-/**
- * Created by Ryu on 16/04/2016.
- */
 public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObject> {
     String sURL = null;
     static InputStream is = null;
@@ -58,7 +38,7 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
      JSONObject postparams;
     Activity activity;
     ProgressDialog asyncDialog;
-    public static Integer CodeResponse;
+    //public static Integer CodeResponse;
     public static JSONArray _JsonGenerico = null;
     public static ArrayList<HashMap<String, String>>_Listado;
 
@@ -103,22 +83,16 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
             osw.close();
             StringBuilder sb = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader( httpCon.getInputStream(),"utf-8"));
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
 
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (UnsupportedEncodingException e) {
-           // showToast(e.getMessage());
-            bandera=false;
-        } catch (JSONException e) {
-         //   showToast(e.getMessage());
-            bandera=false;
         } catch (Exception e) {
-            //showToast(e.getMessage());
+           // showToast(e.getMessage());
             bandera=false;
         }
         return jObj;
@@ -138,9 +112,6 @@ boolean bandera=true;
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
             }
             jObj=null;
-               }
-        catch (Exception e) {
-            throw e;
         }
         finally{
             if(activity!=null){

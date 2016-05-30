@@ -1,8 +1,6 @@
 package mx.mercatto.mercastock;
 
-/**
- * Created by Ryu on 23/03/2016.
- */
+
 public class ListaSucursal {
     private String id;
     private String name;
