@@ -125,24 +125,6 @@
             $idEstado = $post['idEstado'];
             $fechaEstado = $post['fechaEstado'];
             $fechaSesion = $post['fechaSesion'];
-            //
-            //$idusuario=$datosUsuario->idUsuario;
-            //$usuario=$datosUsuario->usuario;
-            //$contrasena = $datosUsuario->contrasena;
-            //$contrasenaEncriptada = self::encriptarContrasena($contrasena);
-            //$nombre = $datosUsuario->nombre;
-            //$apellido = $datosUsuario->apellido;
-            //$sexo=$datosUsuario->sexo;
-            //$contacto=$datosUsuario->contacto;
-            //$idsucursal=$datosUsuario->idSucursal;
-            ////$claveApi = self::generarClaveApi();
-            //$claveApi=$datosUsuario->claveApi;
-            //$idNivelAutorizacion=$datosUsuario->idNivelAutorizacion;
-            //$idEstado = $datosUsuario->idEstado;
-            //$fechaEstado = $datosUsuario->fechaEstado;
-            //$fechaSesion = $datosUsuario->fechaSesion;
-            
-            
             //return var_dump($datosUsuario);
             try {
     

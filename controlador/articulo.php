@@ -82,7 +82,7 @@ class ARTICULO
     {
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-            //return var_dump($post);
+            return var_dump($post);
             $claveApi2=$post['claveApi2'];
                 $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado =(SELECT VALOR FROM MS_PARAMETRO WHERE PARAMETRO='ID_ESTADO_PROCESADO'),
                 fechaRespuesta=NOW(), existenciaRespuesta='".$post['existenciaRespuesta']."' ,
@@ -95,10 +95,10 @@ class ARTICULO
                 //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
                 //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
                 //for ($i = 0 ;$i<100000000;$i++){
-                    
-                    
+
+
                 //}
-                
+
             // Ejecutar sentencia preparada
             if(!usuario::apiregistro($claveApi2)==null){
                if ($sentencia->execute()) {
@@ -121,7 +121,7 @@ class ARTICULO
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
                         "Clave Api invalida",401);
                 }
-            
+
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
