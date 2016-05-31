@@ -28,6 +28,9 @@
                 return self::seleccionarVenta();
                 }
             }
+            else if($peticion[0]=='listagcm'){
+                return self::seleccionarListaGcm();
+            }
             else {
                 throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
             }
@@ -173,6 +176,46 @@
             }
             finally{
                 ConexionBD::obtenerInstancia()->_destructor();
+            }
+        }
+
+        public static function seleccionarListaGcm()
+        {
+            $postrequest = json_decode(file_get_contents('php://input'));
+            $query = "select claveGCM from ms_usuario where claveGCM!=''";
+            try{
+                $db = ConexionBD::obtenerInstancia()->obtenerBD();
+                $sentencia = $db->prepare($query);
+                //sentencia->bindParam("",$postrequest->algunargumento);
+                $sentencia -> execute();
+                $resultado = $sentencia->fetchAll(PDO::FETCH_COLUMN,0);
+                if($resultado){
+                     $arreglo =
+                                [
+                                    "estado" => 200,
+                                    "success" => "",
+                                    "data" => $resultado
+                                ];
+
+                        } else {
+                            $arreglo =
+                                [
+                                    "estado" => "warning",
+                                    "mensaje" => "",
+                                    "data" => $resultado
+                                ];
+
+                          }//else
+            }catch(PDOException $e){
+                $arreglo = [
+                    "estado" =>$e -> getCode(),
+                    "error" =>$e->getMessage(),
+                    "data" => json_encode($postrequest)
+                ];
+            }
+            finally{
+                $db=null;
+                return $arreglo;
             }
         }
     }
