@@ -41,7 +41,7 @@
                         [
                             $arreglo = [
                                 "estado" => 200,
-                                "success" => "Se cargo con éxito",
+                                "success" => "Se ha exportado éxito",
                                 "data" => $resultado
                             ]
                         ];

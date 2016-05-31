@@ -156,8 +156,7 @@ boolean bandera=true;
                                             int position, long id) {
                         Toast.makeText(activity, "Se ha seleccionado " + _Listado.get(+position).get("nombre"), Toast.LENGTH_SHORT).show();
                         String descripcionArticulo = _Listado.get(+position).get("nombre");
-                        //   String art_id = _Listado.get(+position).get("art_id");
-                        String cat_id = _Listado.get(+position).get("cat_id");
+                         String cat_id = _Listado.get(+position).get("cat_id");
                         FragmentArticulo fragment = new FragmentArticulo();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         Bundle args = Bundle.EMPTY;

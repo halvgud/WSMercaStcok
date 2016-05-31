@@ -46,10 +46,6 @@ class importar2{
             $fechaRespuesta = $jsonRow->fechaRespuesta;
             $existenciaEjecucion = $jsonRow->existenciaEjecucion;
             $idEstado = $jsonRow->idEstado;
-
-            //$sentencia->bindParam("idInventario", $idInventario);
-            //$sentencia->bindParam("idInventarioLocal", $idInventarioLocal);
-            //$sentencia->bindParam("idSucursal", $idSucursal);
             $sentencia->bindParam("art_id", $art_id);
             $sentencia->bindParam("existenciaSolicitud", $existenciaSolicitud);
             $sentencia->bindParam("existenciaRespuesta", $existenciaRespuesta);

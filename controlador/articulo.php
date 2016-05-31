@@ -42,7 +42,7 @@ class ARTICULO
     {
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-                $comando = "SELECT mi.idInventario, a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO.",a.granel,a.clave FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
+                $comando = "SELECT a.art_id,mi.idInventario, a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO.",a.granel,a.clave FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
                 MI ON ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") inner join ms_usuario mu on (mu.claveApi='". $post['claveApi']."' AND mu.claveApi!='') INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
                 INNER JOIN Unidad U ON (a.UnidadCompra=U.Uni_ID) WHERE a.".self::ID_CATEGORIA."=".$post['cat_id']." AND a.".self::SERVICIO."=0 AND ".self::EXISTENCIA." >0
                 AND MI.".self::ID_ESTADO." IN (SELECT ".self::VALOR_FILTRO." 
@@ -82,7 +82,7 @@ class ARTICULO
     {
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-            return var_dump($post);
+
             $claveApi2=$post['claveApi2'];
                 $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado =(SELECT VALOR FROM MS_PARAMETRO WHERE PARAMETRO='ID_ESTADO_PROCESADO'),
                 fechaRespuesta=NOW(), existenciaRespuesta='".$post['existenciaRespuesta']."' ,
