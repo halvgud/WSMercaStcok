@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import mx.mercatto.mercastock.BGT.BGTCargarListadoArticulo;
+import mx.mercatto.mercastock.BGT.BGTCargarListadoCategoria;
 import mx.mercatto.mercastock.BGT.BGTPostFormularioArticulo;
 
 
@@ -170,6 +172,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             if(BGTCargarListadoArticulo.devolverConteo()>1){
                 getActivity().getFragmentManager().popBackStack();
             }
+
             else{
                 FragmentCategoria fragment2 = new FragmentCategoria();
                 FragmentManager fragmentManager = getFragmentManager();

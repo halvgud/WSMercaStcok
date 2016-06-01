@@ -104,6 +104,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                     JSONObject jsonObj1 = new JSONObject();
                     jsonObj1.put("usuario", usuario);
                     jsonObj1.put("contrasena", password);
+                    jsonObj1.put("claveGCM",Configuracion.settings.getString("claveGCM",""));
                     bgt = new BGTSesion(Configuracion.getApiUrlLogIn(),getActivity(),jsonObj1);
                     bgt.execute();
 

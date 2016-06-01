@@ -30,7 +30,7 @@ public class Configuracion {
 
     }
 
-
+    public static String cat;
     public static Boolean Finalizado=false;
 
     private static String _ApiUrl="http://192.168.1.185/";
@@ -116,7 +116,9 @@ public class Configuracion {
 
     private static String _IdArticulo="art_id";
     public static String getIdArticulo(){ return _IdArticulo;}
-    public static void setIdArticulo(String IdArticulo) {_IdArticulo=IdArticulo;}
+    public static void setIdArticulo(String IdArticulo) {
+        Log.d("art_idd",_IdArticulo);
+        _IdArticulo=IdArticulo;}
 
     private static String _DescripcioArticulo="NombreArticulo";
     public static String getDescripcioArticulo(){ return _DescripcioArticulo;}
@@ -180,7 +182,13 @@ public class Configuracion {
     public  static  void  setClaveArticulo(String ClaveArticulo){_ClaveArticulo=ClaveArticulo;}
 
     private static String _ApiUrlPin="wsMercaStock/usuario/cambiar_pin";
-    public static String getApiUrlPin(){return (_ApiUrlPin.contains("http://")?_ApiUrlPin:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlPin:(_ApiUrlPin.contains("http://")?_ApiUrlPin:getApiUrl()+_ApiUrlPin))));}
+    public static String getApiUrlPin(){
+        if (_ApiUrlPin.contains("http://")) return _ApiUrlPin;
+        else if (!settings.getString("ip", "default").equals("default"))
+            return ("http://" + settings.getString("ip", "") + "/" + _ApiUrlPin);
+        else if (_ApiUrlPin.contains("http://")) return (_ApiUrlPin);
+        else return (getApiUrl() + _ApiUrlPin);
+    }
     public static void setApiUrlPin(String ApiUrlPin) {_ApiUrlPin=ApiUrlPin;}
 
     public  static  SharedPreferences settings=null; //= PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());

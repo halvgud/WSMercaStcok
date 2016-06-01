@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -28,9 +29,11 @@ import mx.mercatto.mercastock.FragmentArticulo;
 
 import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.ListaAdaptador;
+import mx.mercatto.mercastock.PushNotificationService;
 import mx.mercatto.mercastock.R;
 
 public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObject> {
+    public static boolean banderaTest;
     String sURL = null;
     static InputStream is = null;
     static JSONObject jObj = null;
@@ -99,6 +102,7 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
 
     }
 boolean bandera=true;
+
     @Override
     protected void onPostExecute(JSONObject file_url) {
         try {
@@ -120,57 +124,77 @@ boolean bandera=true;
         }
     }
 
-    public ListView list;
+    public static  ListView list;
+    public static int devolverConteo2(){
+        return list.getCount();
+    }
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
     }
     private void ListViewCategorias(JSONObject file_url){
+
         try {
             _JsonGenerico = file_url.getJSONArray(Configuracion.getDatos());
-
-            for (int i = 0; i < _JsonGenerico.length(); i++) {
-                JSONObject c = _JsonGenerico.getJSONObject(i);
-                String cat_id = c.getString(Configuracion.getIdCategoria());
-                String nombreCategoria = c.getString(Configuracion.getDescripcionCategoria());
-                 int cantidad = c.getInt(Configuracion.getCantidadCategoria());
-                 int procesado = c.getInt(Configuracion.getProcesadoCategoria());
-                HashMap<String, String> map = new HashMap<>();
-                map.put(Configuracion.getDescripcionCategoria(),nombreCategoria);
-                map.put(Configuracion.getCantidadCategoria(), Integer.toString(cantidad));
-                map.put(Configuracion.getIdCategoria(), cat_id);
-                map.put(Configuracion.getProcesadoCategoria(), Integer.toString(procesado));
-             map.put("proceso",Integer.toString(procesado)+"/"+Integer.toString(cantidad));
-                _Listado.add(map);
-                list = (ListView) activity.findViewById(R.id.ListView);
-
-                ListAdapter adapter = new ListaAdaptador(activity, _Listado,
-                        R.layout.list_v,
-                        new String[]{Configuracion.getDescripcionCategoria(), "proceso"}, new int[]{R.id.descripcionColumna, R.id.api});
-
-                list.setAdapter(adapter);
-
-                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        Toast.makeText(activity, "Se ha seleccionado " + _Listado.get(+position).get("nombre"), Toast.LENGTH_SHORT).show();
-                        String descripcionArticulo = _Listado.get(+position).get("nombre");
-                         String cat_id = _Listado.get(+position).get("cat_id");
-                        FragmentArticulo fragment = new FragmentArticulo();
-                        FragmentManager fragmentManager = activity.getFragmentManager();
-                        Bundle args = Bundle.EMPTY;
-                        if (args == null) {
-                            args = new Bundle();
-                        } else {
-                            args = new Bundle(args);
+            if(_JsonGenerico.length()>0 ) {
+                for (int i = 0; i < _JsonGenerico.length(); i++) {
+                    JSONObject c = _JsonGenerico.getJSONObject(i);
+                    String cat_id = c.getString(Configuracion.getIdCategoria());
+                    Log.d("ww", cat_id);
+                    String nombreCategoria = c.getString(Configuracion.getDescripcionCategoria());
+                    int cantidad = c.getInt(Configuracion.getCantidadCategoria());
+                    int procesado = c.getInt(Configuracion.getProcesadoCategoria());
+                    HashMap<String, String> map = new HashMap<>();
+                    if (PushNotificationService.Xrray != null) {
+                        for (int j = 0; j < PushNotificationService.Xrray.size(); j++) {
+                            if (PushNotificationService.Xrray.get(j).equals(cat_id)) {
+                                map.put(Configuracion.getDescripcionCategoria(), nombreCategoria);
+                                map.put("nuevo","(NUEVO)");
+                                break;
+                            } else {
+                                map.put(Configuracion.getDescripcionCategoria(), nombreCategoria);
+                            }
                         }
-                        args.putString("cat_id", cat_id);
-                        args.putString("articulo", descripcionArticulo);
-                        fragment.setArguments(args);
-                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    } else {
+                        map.put(Configuracion.getDescripcionCategoria(), nombreCategoria);
                     }
-                });
+
+                    map.put(Configuracion.getCantidadCategoria(), Integer.toString(cantidad));
+                    map.put(Configuracion.getIdCategoria(), cat_id);
+                    map.put(Configuracion.getProcesadoCategoria(), Integer.toString(procesado));
+                    map.put("procesado", Integer.toString(procesado) + "/" + Integer.toString(cantidad));
+                    _Listado.add(map);
+                    list = (ListView) activity.findViewById(R.id.ListView);
+
+                    ListAdapter adapter = new ListaAdaptador(activity, _Listado,
+                            R.layout.list_v,
+                            new String[]{Configuracion.getDescripcionCategoria(), "procesado","nuevo"}, new int[]{R.id.descripcionColumna, R.id.api,R.id.cat_id});
+
+                    list.setAdapter(adapter);
+                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view,
+                                                int position, long id) {
+                            Toast.makeText(activity, "Se ha seleccionado " + _Listado.get(+position).get("nombre"), Toast.LENGTH_SHORT).show();
+                            String descripcionArticulo = _Listado.get(+position).get("nombre");
+                            String cat_id = _Listado.get(+position).get("cat_id");
+                            FragmentArticulo fragment = new FragmentArticulo();
+                            FragmentManager fragmentManager = activity.getFragmentManager();
+                            Bundle args = Bundle.EMPTY;
+                            if (args == null) {
+                                args = new Bundle();
+                            } else {
+                                args = new Bundle(args);
+                            }
+                            args.putString("cat_id", cat_id);
+                            args.putString("articulo", descripcionArticulo);
+                            fragment.setArguments(args);
+                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        }
+                    });
+                }
+            }else{
+                showToast("No existen productos por inventariar");
             }
         }catch(JSONException e){
             showToast(e.getMessage());

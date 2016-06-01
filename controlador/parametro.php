@@ -34,7 +34,7 @@
         public static function get($peticion){
 
         if (!empty($peticion[0]))
-            return self::obtenerConfiguracion($peticion[0]);
+            return self::obtenerConfiguracion($peticion[1]);
         else
             http_response_code(404);
 
@@ -68,7 +68,7 @@
                     return
                         [
                             "estado" => self::ESTADO_EXITO,
-                            "datos" => $sentencia->fetchAll(PDO::FETCH_ASSOC)
+                            "datos" => $sentencia->fetchAll(PDO::FETCH_OBJ)
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");

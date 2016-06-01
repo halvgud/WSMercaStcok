@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -59,10 +60,11 @@ public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
+                sb.append(line+"\n");
             }
             is.close();
             json = sb.toString();
+            Log.d("J S O N",json);
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
         } catch (Exception e) {
@@ -95,9 +97,12 @@ public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject
 
                 // looping through All countries
                 for (int i = 0; i < countries.length(); i++) {
+                    Log.d("L E N G T H",countries.length()+"");
 
                     JSONObject c = countries.getJSONObject(i);
-                    Configuracion.setDatos(c.getString("parametro").equals("TAG_DATOS") ? c.getString("valor") : Configuracion.getDatos());
+                    Log.d("O B J E T O",c.getString("valor"));
+                    Log.d("P A R A M E T R O",c.getString("parametro"));
+                            Configuracion.setDatos(c.getString("parametro").equals("TAG_DATOS") ? c.getString("valor") : Configuracion.getDatos());
                     Configuracion.setIdLogin(c.getString("parametro").equals("TAG_ID_LOGIN") ? c.getString("valor") : Configuracion.getIdLogin());
                     Configuracion.setDescripcionLogin(c.getString("parametro").equals("TAG_DESCRIPCION_LOGIN") ? c.getString("valor") : Configuracion.getDescripcionLogin());
                     Configuracion.setApiUrlLogIn(c.getString("parametro").equals("API_URL_LOGIN") ? c.getString("valor") : Configuracion.getApiUrlLogIn());

@@ -136,7 +136,7 @@ boolean bandera=true;
             SharedPreferences.Editor editor = settings.edit();
             switch (CodeResponse) {
                 case 200: {
-
+                    BGTCargarListadoCategoria.banderaTest=true;
                     JSONObject datos = file_url.getJSONObject("datos");
                     ClaveApi = datos.getString("claveApi");
                     User = datos.getString("usuario");

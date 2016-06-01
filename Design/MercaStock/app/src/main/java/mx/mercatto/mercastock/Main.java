@@ -98,7 +98,7 @@ public class Main extends AppCompatActivity
         Context context = this.getApplicationContext();
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
-    public void revisarApi() {
+    public  void revisarApi() {
         BGTAPI bgt;
         try {
 
@@ -111,6 +111,7 @@ public class Main extends AppCompatActivity
             this.showToast(e.getMessage());
         }
     }
+
 
     @Override
     public void onBackPressed() {
