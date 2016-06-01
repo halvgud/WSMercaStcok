@@ -59,6 +59,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.getResponseCode();
+            conn.setConnectTimeout(7000);
              is = conn.getErrorStream();
             if (is == null) {
                is  = conn.getInputStream();

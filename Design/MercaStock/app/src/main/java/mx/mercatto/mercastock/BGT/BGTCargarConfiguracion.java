@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -63,6 +64,7 @@ public class BGTCargarConfiguracion extends AsyncTask<String, String, JSONObject
             }
             is.close();
             json = sb.toString();
+            Log.d("JSON",json);
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
         } catch (Exception e) {
