@@ -198,6 +198,7 @@
     
         public static function loguear()
         {
+            try{
             $respuesta = array();
     
            // $body = file_get_contents('php://input');
@@ -226,6 +227,10 @@
                 throw new ExcepcionApi(self::ESTADO_PARAMETROS_INCORRECTOS,
                     utf8_encode("usuario o contraseña inválidos"),401);
             }
+            }catch(PDOException $e){
+                throw new ExcepcionApi(self::ESTADO_PARAMETROS_INCORRECTOS,
+                    utf8_encode("usuario o contraseña inválidos"),401);
+        }
         }
         public static function dumy ($correo,$gcm){
             //$post=json_decode(file_get_contents('php://input'),true);
