@@ -82,9 +82,10 @@ class SUCURSAL
          $post = json_decode(file_get_contents('php://input'),true);
        // var_dump($post);
         if($post['usuario']=="admin"&& $post['password']=="sysadmin11"){
-            $comando = "select idSucursal,usuario,password from ms_sucursal";
+            $comando = "select idSucursal,usuario,password from ms_sucursal where idSucursal=:idSucursal";
             try {
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                $sentencia->bindParam("idSucursal", $post['idSucursal']);
                 if ($sentencia->execute()) {
                     http_response_code(200);
                     return ($sentencia->fetchAll(PDO::FETCH_ASSOC));
@@ -97,7 +98,7 @@ class SUCURSAL
                 ConexionBD::obtenerInstancia()->_destructor();
             }
         }else{
-            throw new ExcepcionApi(401, "credenciales incorrectas",401);
+            throw new ExcepcionApi(401, "error",401);
         }
 
     }
