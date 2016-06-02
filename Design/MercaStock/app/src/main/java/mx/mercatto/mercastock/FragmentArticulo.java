@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class FragmentArticulo extends Fragment {
             Bundle args = getArguments();
             String articulo = args.getString("articulo");
             cat_id = args.getString(Configuracion.getIdCategoria());
-            getActivity().setTitle("Lista de " + articulo + PushNotificationService.Xrray.get(0));
+            getActivity().setTitle("Lista de " + articulo);
             if (PushNotificationService.Xrray != null) {
                 for (int j = 0; j < PushNotificationService.Xrray.size(); j++) {
                     if (PushNotificationService.Xrray.get(j).equals(cat_id)) {
@@ -56,6 +57,21 @@ public class FragmentArticulo extends Fragment {
             bgt.execute();
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
+
 import mx.mercatto.mercastock.BGT.BGTSesion;
 
 public class FragmentSesion extends Fragment implements View.OnClickListener {
@@ -149,6 +151,21 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
     }
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

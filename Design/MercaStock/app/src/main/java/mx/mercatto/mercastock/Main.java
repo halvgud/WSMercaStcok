@@ -104,7 +104,7 @@ public class Main extends AppCompatActivity
 
             JSONObject jsonObj1 = new JSONObject();
             jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
-            bgt = new BGTAPI(Configuracion.getApiUrlRevisarApi(), this,jsonObj1 );
+            bgt = new BGTAPI(Configuracion.getApiUrlRevisarApi(), this,jsonObj1,false );
 
             bgt.execute();
         } catch (Exception e){
@@ -282,7 +282,7 @@ public class Main extends AppCompatActivity
     public  void onRestart(){
         if(bandera==0&&idSesion==1){
         bandera=1;}
-        if(idSesion==1 && bandera==1) {
+       else if(idSesion==1 && bandera==1) {
             revisarApi();
         }
         super.onRestart();

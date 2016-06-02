@@ -16,12 +16,19 @@ class SUCURSAL
 
         if (empty($peticion[0]))
             return self::obtenerSucursal();
+
         else
             http_response_code(404);
 
     }
     public static function post($peticion){
-        return self::login();
+        if($peticion[0]=='login'){
+            return self::login();
+        }
+    else if($peticion[0]=='seleccionar'){
+            return self::setearConexion();
+        }
+
 
     }
 
@@ -29,7 +36,7 @@ class SUCURSAL
     {
         try {
 
-                $comando = "SELECT ".self::ID_TABLA.",".self::DESC_TABLA." FROM " . self::TABLA_SUCURSAL ;
+                $comando = "SELECT ".self::ID_TABLA.",".self::DESC_TABLA.",claveApi FROM " . self::TABLA_SUCURSAL ;
 
                 // Preparar sentencia
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
@@ -40,7 +47,8 @@ class SUCURSAL
             // Ejecutar sentencia preparada
             if ($sentencia->execute()) {
                 http_response_code(200);
-                return (["estado" => self::ESTADO_EXITO,"datos" => $sentencia->fetchAll(PDO::FETCH_ASSOC)]);
+                $arreglo=$sentencia->fetchAll(PDO::FETCH_ASSOC);
+                return (["estado" => self::ESTADO_EXITO,"datos" => $arreglo]);
             } else
                 throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
 
@@ -50,6 +58,24 @@ class SUCURSAL
         finally{
             ConexionBD::obtenerInstancia()->_destructor();
         }
+    }
+    public static function setearConexion(){
+        $post = json_decode(file_get_contents('php://input'),true);
+        if(isset($post['idSucursal'])){
+            $comando = "select claveApi from ms_sucursal where idSucursal=:idSucursal";
+            try{
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                $sentencia->bindParam("idSucursal",$post['idSucursal']);
+                $sentencia->execute();
+                $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+                if($resultado){
+                    $_SESSION['DB']=$resultado[0]['claveApi'];;
+
+                    return (["estado" => self::ESTADO_EXITO,"datos" => $resultado]);
+                }
+            }catch(PDOException $e){}finally{$db=null;}
+        }
+
     }
     public static function login()
     {

@@ -1,5 +1,5 @@
 <?php
-
+    session_start();
     require 'controlador/articulo.php';
     require 'controlador/usuario.php';
 

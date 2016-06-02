@@ -1,14 +1,16 @@
     <?php
-/**
- * Clase que envuelve una instancia de la clase PDO
- * para el manejo de la base de controladores
- */
 
-require_once 'login_mysql.php';
+
 
 
 class ConexionBD
 {
+    static $NOMBRE_HOST ="192.168.1.185";// Nombre del host
+    static $USUARIO ="root"; // Nombre del usuario
+    static $CONTRASENA ="sysadmin"; // Constraseña
+
+    static $DB_NOMBRE = "sicar"; // Nombre de la base de controladores
+
 
     /**
      * Única instancia de la clase
@@ -43,7 +45,7 @@ class ConexionBD
         }
         return self::$db;
     }
-
+    static $FLAG_SUCURSAL=false;
     /**
      * Crear una nueva conexión PDO basada
      * en las constantes de conexión
@@ -53,11 +55,12 @@ class ConexionBD
     {
         try{
         if (self::$pdo == null) {
+            self::$DB_NOMBRE=isset($_SESSION['DB'])?$_SESSION['DB']:self::$DB_NOMBRE;
             self::$pdo = new PDO(
-                'mysql:dbname=' . BASE_DE_DATOS .
-                ';host=' . NOMBRE_HOST . ";",
-                USUARIO,
-                CONTRASENA,
+                'mysql:dbname=' . self::$DB_NOMBRE .
+                ';host=' . self::$NOMBRE_HOST . ";",
+                self::$USUARIO,
+                self::$CONTRASENA,
                 array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
             );
 

@@ -92,6 +92,7 @@ boolean bandera=true;
                 sb.append(line + "\n");
             }
             is.close();*/
+
             java.net.URL url = new URL(sURL);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
             httpCon.setDoOutput(true);
@@ -99,7 +100,8 @@ boolean bandera=true;
             httpCon.setRequestProperty("Content-Type", "application/json");
             httpCon.setRequestProperty("Accept", "application/json");
             httpCon.setRequestMethod("POST");
-
+            httpCon.setConnectTimeout(5000);
+            httpCon.setReadTimeout(5000);
             httpCon.connect(); // Note the connect() here
 
             OutputStream os = httpCon.getOutputStream();
@@ -128,7 +130,7 @@ boolean bandera=true;
         }
         return jObj;
 */
-        } catch (IOException|JSONException e) {
+        } catch (Exception e) {
             // showToast(e.getMessage());
             bandera = false;
         }

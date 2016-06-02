@@ -59,7 +59,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.getResponseCode();
-            conn.setConnectTimeout(10000);
+            conn.setConnectTimeout(5000);
              is = conn.getErrorStream();
             if (is == null) {
                is  = conn.getInputStream();
@@ -109,6 +109,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
     Button guardar;
     Button probar;
     public static String sucursalSeleccionada="";
+    public static String idSucursalSeleccionada="";
     public void cargarListadoSucursal(JSONObject file_url) {
         if (transaccionCompleta) {
             try {
@@ -134,6 +135,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         ListaSucursal selectedCountry = _listaSucursal.get(position);
                         sucursalSeleccionada=selectedCountry.toString();
+                        idSucursalSeleccionada=selectedCountry.getId();
                     }
 
                     @Override

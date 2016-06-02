@@ -75,7 +75,7 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
             httpCon.setRequestProperty("Content-Type", "application/json");
             httpCon.setRequestProperty("Accept", "application/json");
             httpCon.setRequestMethod("POST");
-
+            httpCon.setConnectTimeout(5000);
             httpCon.connect(); // Note the connect() here
 
             OutputStream os = httpCon.getOutputStream();

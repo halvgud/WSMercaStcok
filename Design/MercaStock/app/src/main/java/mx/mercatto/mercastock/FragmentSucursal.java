@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import java.lang.reflect.Field;
+
 import mx.mercatto.mercastock.BGT.BGTConfigurarServidorSucursal;
+import mx.mercatto.mercastock.BGT.BGTSeleccionarSucursal;
 
 
 public class FragmentSucursal extends Fragment implements View.OnClickListener  {
@@ -102,9 +109,18 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 break;
 
             case R.id.button9: {
+
+                JSONObject jsonObj1 = new JSONObject();
+                try{
+                    jsonObj1.put("idSucursal",BGTConfigurarServidorSucursal.idSucursalSeleccionada);
+                    BGTSeleccionarSucursal bgtSeleccionarSucursal=new BGTSeleccionarSucursal("sucursal/seleccionar",getActivity(),jsonObj1);
+                    bgtSeleccionarSucursal.execute();
+                }catch(Exception e){
+                    Log.d("",e.getMessage());
+                }
+
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
                 //editor.putString("idsucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada.toString());
                 editor.putString("ip", txtIp.getText().toString());
@@ -140,5 +156,20 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
     }
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

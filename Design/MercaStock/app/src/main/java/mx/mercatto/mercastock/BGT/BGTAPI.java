@@ -2,8 +2,10 @@ package mx.mercatto.mercastock.BGT;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -12,6 +14,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +44,7 @@ import mx.mercatto.mercastock.R;
 
 public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     String URL = null;
+    Boolean FLAG_ASYNCDIALOG=false;
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
@@ -49,15 +55,23 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     //public static String User = "Default";
 public boolean transaccionCompleta=false;
     static Integer CodeResponse;
-    public BGTAPI(String url, Activity activity, JSONObject postparams) {
+    public BGTAPI(String url, Activity activity, JSONObject postparams,Boolean flag_asyncdialog) {
         this.URL = url;
         this.activity = activity;
         this.postparams = postparams;
         if (activity!= null)
             asyncDialog = new ProgressDialog(activity);
+            this.FLAG_ASYNCDIALOG=flag_asyncdialog;
     }
     protected void onPreExecute() {
         super.onPreExecute();
+        if(FLAG_ASYNCDIALOG){
+            asyncDialog.setIndeterminate(false);
+            asyncDialog.setCancelable(false);
+            asyncDialog.setProgress(0);
+            asyncDialog.setMessage("Reconectando...");
+            asyncDialog.show();
+        }
 
     }
 
@@ -69,7 +83,18 @@ public boolean transaccionCompleta=false;
             StringEntity entity = new StringEntity(postparams.toString(), HTTP.UTF_8);
             entity.setContentType("application/json");
             httpPost.setEntity(entity);
-            HttpClient client = new DefaultHttpClient();
+            HttpParams httpParameters = new BasicHttpParams();
+// Set the timeout in milliseconds until a connection is established.
+// The default value is zero, that means the timeout is not used.
+            int timeoutConnection = 3000;
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+// Set the default socket timeout (SO_TIMEOUT)
+// in milliseconds which is the timeout for waiting for data.
+            int timeoutSocket = 5000;
+            HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+
+            HttpClient client = new DefaultHttpClient(httpParameters);
+
             HttpResponse response = client.execute(httpPost);
             HttpEntity httpEntity = response.getEntity();
             CodeResponse = response.getStatusLine().getStatusCode();
@@ -119,11 +144,8 @@ showToast(":(");
             //e.printStackTrace();
             transaccionCompleta=false;
         }
-        if(transaccionCompleta){
-        return jObj;}
-        else {
+
             return jObj;
-        }
     }
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
@@ -138,19 +160,32 @@ showToast(":(");
                 Login(file_url);
 
             }
-            else{
-                if(Main.inicio==1) {
-                    FragmentConexionPerdida fragment = new FragmentConexionPerdida();
-                    FragmentManager fragmentManager = activity.getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                }else{
+            else if(activity!=null){
+                showToast("Conexion fallida");
+           /*     if(Main.inicio==1) {
+                    BGTAPI bgt;
+                    try {
+
+                        JSONObject jsonObj1 = new JSONObject();
+                        jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
+                        bgt = new BGTAPI(Configuracion.getApiUrlRevisarApi(), activity,jsonObj1 );
+
+                        bgt.execute();
+                    } catch (Exception e){
+                        this.showToast(e.getMessage());
+                    }
+
+                }else if(!FragmentConexionPerdida.FLAG_CONEXION_PERDIDA){
                     FragmentSucursal fragment = new FragmentSucursal();
                     FragmentManager fragmentManager = activity.getFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 }
-            }
+           */ }else if(FLAG_ASYNCDIALOG){
+                    asyncDialog.dismiss();
+                    }
                     jObj=null;
-               } finally{
+               }
+        finally{
             if(activity!=null){
                 asyncDialog.dismiss();
             }
@@ -185,6 +220,7 @@ showToast(":(");
                             FragmentManager fragmentManager = activity.getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                             Main.inicio = 1;
+
                         }
                     }
                     if (ClAp == 11) {

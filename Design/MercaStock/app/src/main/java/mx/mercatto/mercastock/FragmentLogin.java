@@ -29,7 +29,10 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     EditText txtUsuario;
     EditText txtPassword;
     String id_sucursal;
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
 
 
 

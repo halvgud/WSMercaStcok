@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
+
 import mx.mercatto.mercastock.BGT.BGTCargarListadoArticulo;
 import mx.mercatto.mercastock.BGT.BGTCargarListadoCategoria;
 import mx.mercatto.mercastock.BGT.BGTPostFormularioArticulo;
@@ -185,6 +187,21 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
 
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

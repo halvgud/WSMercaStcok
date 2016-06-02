@@ -66,7 +66,7 @@ class ARTICULO
                 return
                     [
                         "estado" => self::ESTADO_EXITO,
-                        "datos" => $sentencia->fetchAll(PDO::FETCH_ASSOC)
+                        "datos" => $_SESSION['clave']
                     ];
             } else
                 throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
