@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -30,7 +31,7 @@ import mx.mercatto.mercastock.BGT.BGTSeleccionarSucursal;
 
 public class FragmentSucursal extends Fragment implements View.OnClickListener  {
 
-
+    Spinner listaSucSpinner;
     EditText txtIp;
     InputMethodManager imm;
     View rootView;
@@ -44,7 +45,7 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_sucursal, container, false);
-        getActivity().setTitle("Configurar Servidor Sucursal");
+        getActivity().setTitle("Configurar Servidor Sucursal"+Configuracion.settings.getString("idSucursal",""));
 
         txtIp= (EditText)rootView.findViewById(R.id.editText13);
         if(!Configuracion.settings.getString("ip","").equals("")){
@@ -67,6 +68,8 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
             @Override
             public void afterTextChanged(Editable s) {
                 String valorIp = txtIp.getText().toString();
+                listaSucSpinner = (Spinner) getActivity().findViewById(R.id.spinnerRegistroUsuario);
+                listaSucSpinner.setAdapter(null);
                 if (!valorIp.equals(gg) && valorIp.length()>=7) {
                     rootView.findViewById(R.id.button6).setEnabled(true);
                    //getView().findViewById(R.id.button9).setEnabled(true);
@@ -74,6 +77,9 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                     rootView.findViewById(R.id.button6).setEnabled(false);
                     //getView().findViewById(R.id.button9).setEnabled(false);
                     rootView.findViewById(R.id.button6).setEnabled(true);
+                }
+                if(listaSucSpinner.getAdapter()==null){
+                    rootView.findViewById(R.id.button9).setEnabled(false);
                 }
             }
 
@@ -110,15 +116,6 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
 
             case R.id.button9: {
 
-               /* JSONObject jsonObj1 = new JSONObject();
-                try{
-                    jsonObj1.put("idSucursal",BGTConfigurarServidorSucursal.idSucursalSeleccionada);
-                    BGTSeleccionarSucursal bgtSeleccionarSucursal=new BGTSeleccionarSucursal(Configuracion.getApiUrl()+"wsMercaStock/sucursal/seleccionar",getActivity(),jsonObj1);
-                    bgtSeleccionarSucursal.execute();
-                }catch(Exception e){
-                    Log.d("",e.getMessage());
-                }
-                */
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
@@ -128,12 +125,22 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 editor.putString("ip", txtIp.getText().toString());
                 editor.apply();
                 Configuracion.Inicializar(getActivity());
+
+              /*  SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
+                editor.putString("idSucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada);
+                //editor.putString("idsucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada.toString());
+                editor.putString("ip", txtIp.getText().toString());
+                editor.apply();*/
+                /*
+>>>>>>> 99243102798b5987ba87f0c485800113033d234d
                 FragmentLogin fragment2 = new FragmentLogin();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment2);
                 fragmentTransaction.commit();
-
+*/
             }
                 break;
             // similarly for other buttons

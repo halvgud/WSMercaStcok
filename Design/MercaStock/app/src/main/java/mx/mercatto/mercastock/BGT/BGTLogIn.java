@@ -144,7 +144,7 @@ boolean bandera=true;
                     User = datos.getString("usuario");
                     editor.putString("ClaveApi", ClaveApi);
                     editor.putString("usuario", datos.getString("usuario"));
-                    //editor.putString("idSucursal","1");
+                   // editor.putString("idSucursal",settings.getString("idSucursal",""));
                     editor.putString("nombre", datos.getString("nombre"));
                     editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
                     editor.putString("controlusuario", datos.getString("idNivelAutorizacion"));

@@ -51,14 +51,18 @@ class ARTICULO
                 FROM ".self::TABLA_PARAMETRO." WHERE ACCION='".self::ACCION_FILTRO."' AND
                 PARAMETRO='".self::PARAMETRO_FILTRO."')";
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                $sentencia->execute();
-                $resultados=$sentencia->fetchAll(PDO::FETCH_ASSOC);
-            if ($resultados) {
+
+
+            $sentencia->execute();
+            $resultado=$sentencia->fetchAll(PDO::FETCH_ASSOC);
+            // Ejecutar sentencia preparada
+            if ($resultado>0) {
+
                 http_response_code(200);
                 return
                     [
                         "estado" => self::ESTADO_EXITO,
-                        "datos" => $resultados
+                        "datos" => $resultado
                     ];
             } else
                 throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
@@ -109,7 +113,7 @@ class ARTICULO
                         return self::ESTADO_CREACION_EXITOSA;
                     } else {
                         return self::ESTADO_CREACION_FALLIDA;
-                    }
+                    }cec15f7a58ba7eca2dd9cdfe52910b8f
                 }
                 else{
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,

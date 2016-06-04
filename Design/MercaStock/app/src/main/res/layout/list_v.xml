@@ -22,7 +22,7 @@
         />
     <TextView
         android:id="@+id/cat_id"
-        android:textColor="@android:color/holo_red_dark"
+        android:textColor="#9f3032"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/strut"

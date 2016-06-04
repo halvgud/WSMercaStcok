@@ -259,7 +259,7 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view){
-        String usuario = txtusuario.getText().toString().toUpperCase();
+        String usuario = txtusuario.getText().toString();
         String password = txtpassword.getText().toString();
         //String password2 = txtpassword2.getText().toString();
         String nombre = txtnombre.getText().toString();
@@ -283,9 +283,9 @@ public class RegistroUsuario extends Fragment implements View.OnClickListener{
                         jsonObj1.put("apellido", apellido);
                         jsonObj1.put("sexo",sexo);
                         jsonObj1.put("contacto", contacto);
-                        jsonObj1.put("idSucursal", Configuracion.settings.getString("idSucursal","0"));
+                        jsonObj1.put("idSucursal", Configuracion.settings.getString("idSucursal",""));
                         jsonObj1.put("claveApi", "");
-                        jsonObj1.put("idNivelAutorizacion",1);
+                        jsonObj1.put("idNivelAutorizacion",2);
                         jsonObj1.put("idEstado","A");
                         jsonObj1.put("fechaEstado","");
                         jsonObj1.put("fechaSesion","");

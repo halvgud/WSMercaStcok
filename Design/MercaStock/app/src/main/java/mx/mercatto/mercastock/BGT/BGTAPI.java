@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ import mx.mercatto.mercastock.FragmentSesion;
 
 import mx.mercatto.mercastock.FragmentSucursal;
 import mx.mercatto.mercastock.Main;
+import mx.mercatto.mercastock.PushNotificationService;
 import mx.mercatto.mercastock.R;
 
 public class BGTAPI extends AsyncTask<String, String, JSONObject> {
@@ -53,7 +56,7 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
     ProgressDialog asyncDialog;
     public static String ClaveApi = "Default";
     //public static String User = "Default";
-public boolean transaccionCompleta=false;
+    public boolean transaccionCompleta=false;
     static Integer CodeResponse;
     public BGTAPI(String url, Activity activity, JSONObject postparams,Boolean flag_asyncdialog) {
         this.URL = url;
@@ -61,7 +64,7 @@ public boolean transaccionCompleta=false;
         this.postparams = postparams;
         if (activity!= null)
             asyncDialog = new ProgressDialog(activity);
-            this.FLAG_ASYNCDIALOG=flag_asyncdialog;
+        this.FLAG_ASYNCDIALOG=flag_asyncdialog;
     }
     protected void onPreExecute() {
         super.onPreExecute();
@@ -108,7 +111,7 @@ public boolean transaccionCompleta=false;
             is.close();
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
-transaccionCompleta=true;
+            transaccionCompleta=true;
         }
          /*catch (UnsupportedEncodingException e) {
             showToast(e.getMessage());
@@ -145,7 +148,7 @@ showToast(":(");
             transaccionCompleta=false;
         }
 
-            return jObj;
+        return jObj;
     }
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
@@ -155,36 +158,43 @@ showToast(":(");
         try {
             super.onPostExecute(file_url);
             if(transaccionCompleta) {
-                //if(!Configuracion.settings.getString("controlusuario","").equals(""))
-                  //  Main.controlUsuario = Integer.parseInt(Configuracion.settings.getString("controlusuario", ""));
-                Login(file_url);
+                if (!PushNotificationService.idSucursal.equals("0")) {
+                    Log.d("idSucursal:",PushNotificationService.idSucursal);
+                    if (Configuracion.settings.getString("idSucursal","").equals(PushNotificationService.idSucursal)) {
+                        Login(file_url);
+                        Log.d("entro aqui:", PushNotificationService.idSucursal);
+                    } else {
 
+                        /**/
+                      /*  Configuracion.editor = Configuracion.settings.edit();
+
+                        Configuracion.editor.putString("sucursal", PushNotificationService.Sucursal);
+                        Configuracion.editor.putString("idSucursal", PushNotificationService.idSucursal);
+                        Configuracion.setDBNombre("/wsMercastock/sicarcocina");
+                        Configuracion.editor.putString("db","/wsMercastock/sicarcocina");
+                        Configuracion.editor.apply();
+                        Configuracion.Inicializar(activity);*/
+
+                        Log.d("o aca:",PushNotificationService.idSucursal);
+                        FragmentLogin fragment = new FragmentLogin();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        Main.inicio = 1;
+                        PushNotificationService.Sucursal="0";
+                    }
+                } else {
+                    Log.d("nevermind:",PushNotificationService.idSucursal);
+                    Login(file_url);
+                }
             }
             else if(activity!=null){
                 showToast("Conexion fallida");
-           /*     if(Main.inicio==1) {
-                    BGTAPI bgt;
-                    try {
 
-                        JSONObject jsonObj1 = new JSONObject();
-                        jsonObj1.put("claveApi",Configuracion.settings.getString("ClaveApi",""));
-                        bgt = new BGTAPI(Configuracion.getApiUrlRevisarApi(), activity,jsonObj1 );
-
-                        bgt.execute();
-                    } catch (Exception e){
-                        this.showToast(e.getMessage());
-                    }
-
-                }else if(!FragmentConexionPerdida.FLAG_CONEXION_PERDIDA){
-                    FragmentSucursal fragment = new FragmentSucursal();
-                    FragmentManager fragmentManager = activity.getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                }
-           */ }else if(FLAG_ASYNCDIALOG){
-                    asyncDialog.dismiss();
-                    }
-                    jObj=null;
-               }
+            }else if(FLAG_ASYNCDIALOG){
+                asyncDialog.dismiss();
+            }
+            jObj=null;
+        }
         finally{
             if(activity!=null){
                 asyncDialog.dismiss();
@@ -196,57 +206,39 @@ showToast(":(");
         if (transaccionCompleta) {
             try {
                 ClAp = file_url.getInt("estado");
-                //String us = Configuracion.settings.getString("usuario", "");
-                //String lo = Configuracion.settings.getString("login", "");
-                //if (Main.inicio == 1) {
-                    if (ClAp == 9) {
+                if (CodeResponse == 200) {
 
-                        if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
-                            /*Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
-                            activity.finish();
-                            Intent intent = activity.getIntent();
-                            activity.startActivity(intent);*/
-                            FragmentCategoria fragment = new FragmentCategoria();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                        }
-                        else if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
-                            FragmentSesion fragment = new FragmentSesion();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                        }
-                        else{
-                            FragmentLogin fragment = new FragmentLogin();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                            Main.inicio = 1;
-
-                        }
-                    }
-                    if (ClAp == 11) {
-                        if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("")) {
-                            FragmentSesion fragment = new FragmentSesion();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                        }else{
-                            FragmentLogin fragment = new FragmentLogin();
-                            FragmentManager fragmentManager = activity.getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                            Main.inicio = 1;
-                        }
-                    }
-           /*     } else {
-                    if (Configuracion.settings.getString("ip", "").equals("")) {
-                        FragmentSucursal fragment = new FragmentSucursal();
+                    if (/*Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") &&*/ Configuracion.settings.getString("login", "").equals("true")) {
+                        FragmentCategoria fragment = new FragmentCategoria();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                    } else {
+                    }
+                    else if (/*Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") &&*/ Configuracion.settings.getString("login", "").equals("false")) {
+                        FragmentSesion fragment = new FragmentSesion();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }
+                    else{
                         FragmentLogin fragment = new FragmentLogin();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                         Main.inicio = 1;
+
                     }
-                }*/
+                }
+                if (CodeResponse == 401) {
+                   /* if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("")) {
+                        FragmentSesion fragment = new FragmentSesion();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }else{*/
+                        FragmentLogin fragment = new FragmentLogin();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        Main.inicio = 1;
+                        Log.d("CLAVE API",Configuracion.settings.getString("ClaveApi", ""));
+                    //}
+                }
 
                 jObj = null;
             } catch (JSONException e) {

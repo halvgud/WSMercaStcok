@@ -512,10 +512,12 @@
                   $post = json_decode(file_get_contents('php://input'),true);
                    $usuario = $post['usuario'];
                    $pin_viejo=$post['pin_viejo'];
+                    $gcm=$post['gcm'];
             //$contrasena = $usuario['contrasena'];
        
-            if (self::autenticar($usuario, $pin_viejo)==TRUE) {
+            if (self::autenticar($usuario, $pin_viejo,$gcm)==TRUE) {
                 //$usuarioBD = self::obtenerUsuarioPorUsuario($correo);self::encriptarContrasena($pin_nuevo);
+
                  $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::CONTRASENA." ='".self::encriptarContrasena($post['pin_nuevo'])."' WHERE usuario='".$post['usuario']."'";
                     // Preparar sentencia
                     $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
