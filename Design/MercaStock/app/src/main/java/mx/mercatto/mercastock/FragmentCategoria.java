@@ -40,6 +40,8 @@ public class FragmentCategoria extends Fragment {
         JSONObject jsonObj1 = new JSONObject();
         jsonObj1.put("claveApi", Configuracion.settings.getString("ClaveApi",""));
         // Create the POST object and add the parameters
+            Log.d("Clave Api ",Configuracion.settings.getString("ClaveApi",""));
+            Log.d("CATEGORIA URL",Configuracion.getApiUrlCategoria());
         bgt = new BGTCargarListadoCategoria(Configuracion.getApiUrlCategoria(),getActivity(),jsonObj1);
 
            bgt.execute();

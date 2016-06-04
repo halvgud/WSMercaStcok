@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 //import android.widget.EditText;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -49,6 +50,7 @@ public class BGTLogIn extends AsyncTask<String, String, JSONObject> {
     static Integer CodeResponse;
     public BGTLogIn(String url, Activity activity,JSONObject postparams) {
         this.URL = url;
+        Log.d("urllogin", URL);
         this.activity = activity;
         this.postparams = postparams;
         if (activity!= null)

@@ -18,18 +18,23 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
 public class PushNotificationService extends GcmListenerService {
     public static ArrayList<String> Xrray;
-
+    public static String idSucursal="0";
+    public static String Sucursal="0";
     @Override
     public void onMessageReceived(String from, Bundle data) {
             String message = data.getString("message");
             //createNotification(mTitle, push_msg);
             // Configuracion.cat=data.getString("data");
             //String x="15,15";
+            Log.d("data received",data.toString());
+            Sucursal = data.getString("descripcionSucursal");
+            idSucursal=data.getString("idSucursal");
             try {
                     Xrray = new ArrayList<String>();
                     JSONArray jar = new JSONArray(data.getString("data"));
@@ -37,6 +42,10 @@ public class PushNotificationService extends GcmListenerService {
                     for (int i=0;i<jar.length();i++){
                             Xrray.add(jar.get(i).toString());
                     }
+                    HashSet<String> hashSet = new HashSet<String>();
+                    hashSet.addAll(Xrray);
+                    Xrray.clear();
+                    Xrray.addAll(hashSet);
                     //Configuracion.cat=Xrray[1].toString();
             }catch(JSONException e){
                     Log.d("",e.getMessage());
@@ -44,7 +53,7 @@ public class PushNotificationService extends GcmListenerService {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.ic_stat_mstockicon)
-                            .setContentTitle("MercaStock!")
+                            .setContentTitle("MercaStock! Sucursal:"+Sucursal)
                             .setContentText(message);
 // Creates an explicit intent for an Activity in your app
             Intent resultIntent = new Intent(this, Main.class);

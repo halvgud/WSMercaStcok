@@ -221,9 +221,6 @@ boolean bandera=true;
                         args = new Bundle(args);
                     }
                     args.putString(Configuracion.getIdArticulo(), art_id);
-                    Log.d("art_id", art_id);
-                    Log.d("unidad", Configuracion.getUnidadArticulo());
-                    Log.d("idInventario",idInventario);
                     args.putString(Configuracion.getIdInventario(), idInventario);
                     args.putString(Configuracion.getUnidadArticulo(), unidad);
                     args.putString(Configuracion.getDescripcioArticulo(), descripcionArticulo);

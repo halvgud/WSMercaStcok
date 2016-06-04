@@ -86,7 +86,7 @@ public class Main extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
         Configuracion.settings=PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        if (!Configuracion.settings.getString("ip", "").equals("")) {
+        if (Configuracion.settings.getString("ip", "").equals("")) {
             Configuracion.Inicializar(this);
         }
             revisarApi();

@@ -69,13 +69,11 @@ class SUCURSAL
                 $sentencia->execute();
                 $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                 if($resultado){
-                    $_SESSION['DB']=$resultado[0]['claveApi'];;
-
+                    $_SESSION['DB']=$resultado[0]['claveApi'];
                     return (["estado" => self::ESTADO_EXITO,"datos" => $resultado]);
                 }
             }catch(PDOException $e){}finally{$db=null;}
         }
-
     }
     public static function login()
     {

@@ -25,7 +25,7 @@ public class Configuracion {
             bgt = new BGTCargarConfiguracion(Configuracion.getApiUrlConfiguracion(),activity);
             bgt.execute();
         }catch (Exception e){
-          // throw e;
+            // throw e;
         }
 
     }
@@ -34,9 +34,19 @@ public class Configuracion {
     public static Boolean Finalizado=false;
 
     private static String _ApiUrl="http://192.168.1.185/";
+    private static String _Db="/wsMercaStock/sicar";
 
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
+    public static String getDBNombre(){
+        if(settings.getString("db", "").equals("")){
+            return _Db;
+        }else{
+            return settings.getString("db", "");
+        }
+
+    }
+    public static void setDBNombre(String DB){_Db=DB;}
 
     private static String _ProcesadoCategoria="procesado";
     public static String getProcesadoCategoria(){return _ProcesadoCategoria;}
@@ -63,8 +73,23 @@ public class Configuracion {
 
 
 
-    private static String _ApiUrlBloqueo="wsMercaStock/usuario/bloqueo";
-    public static  String getApiUrlBloqueo(){return (_ApiUrlBloqueo.contains("http://")?_ApiUrlBloqueo:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlBloqueo:(_ApiUrlBloqueo.contains("http://")?_ApiUrlBloqueo:getApiUrl()+_ApiUrlBloqueo))));}
+    private static String _ApiUrlBloqueo="usuario/bloqueo";
+    public static  String getApiUrlBloqueo(){
+        if (_ApiUrlBloqueo.contains("http://")) {
+            return _ApiUrlBloqueo;
+        }
+        else if (!settings.getString("ip", "default").equals("default")) {
+            return ("http://" + settings.getString("ip", "")+getDBNombre() + "/" + _ApiUrlBloqueo);
+        }
+        else {
+            if (_ApiUrlBloqueo.contains("http://")) {
+                return (_ApiUrlBloqueo);
+            }
+            else {
+                return (getApiUrl()+getDBNombre() + _ApiUrlBloqueo);
+            }
+        }
+    }
     public static void setApiUrlBloqueo(String ApiUrlBloqueo){_ApiUrlBloqueo=ApiUrlBloqueo;}
 
 
@@ -88,13 +113,45 @@ public class Configuracion {
     public static String getDescripcionLogin(){ return _DescripcionLogin;}
     public static void setDescripcionLogin(String DescripcionLogin) {_DescripcionLogin=DescripcionLogin;}
 
-    private static String _ApiUrlSucursal ="wsMercaStock/sucursal";
-    public static String getApiUrlSucursal(){return (_ApiUrlSucursal.contains("http://")?_ApiUrlSucursal:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlSucursal:(_ApiUrlSucursal.contains("http://")? _ApiUrlSucursal : getApiUrl()+ _ApiUrlSucursal))));}
+    private static String _ApiUrlSucursal ="sucursal";
+    public static String getApiUrlSucursal(){
+        if (_ApiUrlSucursal.contains("http://")) {
+            return _ApiUrlSucursal;
+        }
+        else {
+            if (!settings.getString("ip", "default").equals("default")) {
+                return ("http://" + settings.getString("ip", "") + getDBNombre() + "/" + _ApiUrlSucursal);
+            }
+            else {
+                if (_ApiUrlSucursal.contains("http://")) {
+                    return (_ApiUrlSucursal);
+                }
+                else {
+                    return (getApiUrl()+getDBNombre() + _ApiUrlSucursal);
+                }
+            }
+        }
+    }
     public static void setApiUrlSucursal(String ApiUrlSucursal) {
         _ApiUrlSucursal =ApiUrlSucursal;}
 
-    private static String _ApiUrlLogIn ="wsMercaStock/usuario/login";
-    public static String getApiUrlLogIn(){return (_ApiUrlLogIn.contains("http://")?_ApiUrlLogIn:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlLogIn:(_ApiUrlLogIn.contains("http://")? _ApiUrlLogIn :getApiUrl()+ _ApiUrlLogIn))));}
+    private static String _ApiUrlLogIn ="usuario/login";
+    public static String getApiUrlLogIn(){
+        if (_ApiUrlLogIn.contains("http://")) {
+            return _ApiUrlLogIn;
+        }
+        else {
+            if (!settings.getString("ip", "default").equals("default")) {
+                return ("http://" + settings.getString("ip", "") +getDBNombre()+ "/" + _ApiUrlLogIn);
+            }
+            else if (_ApiUrlLogIn.contains("http://")) {
+                return (_ApiUrlLogIn);
+            }
+            else {
+                return (getApiUrl()+getDBNombre() + _ApiUrlLogIn);
+            }
+        }
+    }
     public static void setApiUrlLogIn(String ApiUrlLogIn) {
         _ApiUrlLogIn =ApiUrlLogIn;}
 
@@ -110,14 +167,28 @@ public class Configuracion {
     public static String getCantidadCategoria(){ return _CantidadCategoria;}
     public static void setCantidadCategoria(String CantidadCategoria) {_CantidadCategoria=CantidadCategoria;}
 
-    private static String _ApiUrlCategoria="wsMercaStock/categoria";
-    public static String getApiUrlCategoria(){return (_ApiUrlCategoria.contains("http://")?_ApiUrlCategoria:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlCategoria:(_ApiUrlCategoria.contains("http://")?_ApiUrlCategoria:getApiUrl()+_ApiUrlCategoria))));}
+    private static String _ApiUrlCategoria="categoria";
+    public static String getApiUrlCategoria(){
+        if (_ApiUrlCategoria.contains("http://")) {
+            return _ApiUrlCategoria;
+        }
+        else if (!settings.getString("ip", "default").equals("default")) {
+            return ("http://" + settings.getString("ip", "")+getDBNombre() + "/" + _ApiUrlCategoria);
+        }
+        else {
+            if (_ApiUrlCategoria.contains("http://")) {
+                return (_ApiUrlCategoria);
+            }
+            else {
+                return (getApiUrl()+getDBNombre() + _ApiUrlCategoria);
+            }
+        }
+    }
     public static void setApiUrlCategoria(String ApiUrlCategoria) {_ApiUrlCategoria=ApiUrlCategoria;}
 
     private static String _IdArticulo="art_id";
     public static String getIdArticulo(){ return _IdArticulo;}
     public static void setIdArticulo(String IdArticulo) {
-        Log.d("art_idd",_IdArticulo);
         _IdArticulo=IdArticulo;}
 
     private static String _DescripcioArticulo="NombreArticulo";
@@ -136,8 +207,19 @@ public class Configuracion {
     public static String getIdInventarioArticulo(){ return _IdInventarioArticulo;}
     public static void setIdInventarioArticulo(String IdInventarioArticulo) {_IdInventarioArticulo=IdInventarioArticulo;}
 
-    private static String _ApiUrlArticulo="wsMercaStock/articulo/obtener";
-    public static String getApiUrlArticulo(){return (_ApiUrlArticulo.contains("http://")?_ApiUrlArticulo:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlArticulo:(_ApiUrlArticulo.contains("http://")?_ApiUrlArticulo:getApiUrl()+_ApiUrlArticulo))));}
+    private static String _ApiUrlArticulo="articulo/obtener";
+    public static String getApiUrlArticulo(){
+        if (_ApiUrlArticulo.contains("http://")) {
+            return _ApiUrlArticulo;
+        }
+        else if (!settings.getString("ip", "default").equals("default")) {
+            return ("http://" + settings.getString("ip", "")+getDBNombre() + "/" + _ApiUrlArticulo);
+        }
+        else if (_ApiUrlArticulo.contains("http://")) {
+            return (_ApiUrlArticulo);
+        }
+        else return (getApiUrl()+getDBNombre() + _ApiUrlArticulo);
+    }
     public static void setApiUrlArticulo(String ApiUrlArticulo) {_ApiUrlArticulo=ApiUrlArticulo;}
 
     private static String _IdInventario="idInventario";
@@ -148,8 +230,23 @@ public class Configuracion {
     public static String getValorInventario(){ return _ValorInventario;}
     public static void setValorInventario(String ValorInventario) {_ValorInventario=ValorInventario;}
 
-    private static String _ApiUrlInventario="wsMercaStock/articulo/actualizar";
-    public static String getApiUrlInventario(){return (_ApiUrlInventario.contains("http://")?_ApiUrlInventario:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlInventario:(_ApiUrlInventario.contains("http://")?_ApiUrlInventario:getApiUrl()+_ApiUrlInventario))));}
+    private static String _ApiUrlInventario="articulo/actualizar";
+    public static String getApiUrlInventario(){
+        if (_ApiUrlInventario.contains("http://")) {
+            return _ApiUrlInventario;
+        }
+        else {
+            if (!settings.getString("ip", "default").equals("default")) {
+                return ("http://" + settings.getString("ip", "") + getDBNombre() + "/" + _ApiUrlInventario);
+            }
+            else if (_ApiUrlInventario.contains("http://")) {
+                return (_ApiUrlInventario);
+            }
+            else {
+                return (getApiUrl() +getDBNombre()+ _ApiUrlInventario);
+            }
+        }
+    }
     public static void setApiUrlInventario(String ApiUrlInventario) {_ApiUrlInventario=ApiUrlInventario;}
 
     private static String _IdRegistro="idSucursal";
@@ -160,8 +257,20 @@ public class Configuracion {
     public static String getDescripcionRegistro(){ return _DescripcioRegistro;}
     public static void setDescripcionRegistro(String DescripcioRegistro) {_DescripcioRegistro=DescripcioRegistro;}
 
-    private static String _ApiUrlRegistro="wsMercaStock/usuario/registro";
-    public static String getApiUrlRegistro(){return (_ApiUrlRegistro.contains("http://")?_ApiUrlRegistro:((!settings.getString("ip","default").equals("default")?"http://"+settings.getString("ip","")+"/"+_ApiUrlRegistro:(_ApiUrlRegistro.contains("http://")?_ApiUrlRegistro:getApiUrl()+_ApiUrlRegistro))));}
+    private static String _ApiUrlRegistro="usuario/registro";
+    public static String getApiUrlRegistro(){
+        if (_ApiUrlRegistro.contains("http://")) {
+            return _ApiUrlRegistro;
+        }
+        else {
+            if (!settings.getString("ip", "default").equals("default"))
+                return ("http://" + settings.getString("ip", "")+getDBNombre() + "/" + _ApiUrlRegistro);
+            else if (_ApiUrlRegistro.contains("http://")) {
+                return (_ApiUrlRegistro);
+            }
+            else return (getApiUrl()+getDBNombre() + _ApiUrlRegistro);
+        }
+    }
     public static void setApiUrlRegistro(String ApiUrlRegistro) {_ApiUrlRegistro=ApiUrlRegistro;}
 
     private static String _Confirmacion_Mensaje_Gurdado="TRUE";
@@ -181,27 +290,27 @@ public class Configuracion {
     public static String getClaveArticulo (){return  _ClaveArticulo;}
     public  static  void  setClaveArticulo(String ClaveArticulo){_ClaveArticulo=ClaveArticulo;}
 
-    private static String _ApiUrlPin="wsMercaStock/usuario/cambiar_pin";
+    private static String _ApiUrlPin="usuario/cambiar_pin";
     public static String getApiUrlPin(){
         if (_ApiUrlPin.contains("http://")) return _ApiUrlPin;
         else if (!settings.getString("ip", "default").equals("default"))
-            return ("http://" + settings.getString("ip", "") + "/" + _ApiUrlPin);
+            return ("http://" + settings.getString("ip", "")+getDBNombre() + "/" + _ApiUrlPin);
         else if (_ApiUrlPin.contains("http://")) return (_ApiUrlPin);
-        else return (getApiUrl() + _ApiUrlPin);
+        else return (getApiUrl()+getDBNombre() + _ApiUrlPin);
     }
     public static void setApiUrlPin(String ApiUrlPin) {_ApiUrlPin=ApiUrlPin;}
 
     public  static  SharedPreferences settings=null; //= PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
     public  static  SharedPreferences.Editor editor;// = settings.edit();
 
-    private static String _ApiUrlConfiguracion="wsMercaStock/parametro/accion/CONFIGURACION_TERMINAL";
+    private static String _ApiUrlConfiguracion="parametro/accion/CONFIGURACION_PRUEBA";
     public static String getApiUrlConfiguracion(){
         if (!settings.getString("ip", "default").equals("default")) {
             if (_ApiUrlConfiguracion.contains("http://")) {
                 return _ApiUrlConfiguracion;
             }
             else {
-                return "http://" + settings.getString("ip", "") + "/" + _ApiUrlConfiguracion;
+                return "http://" + settings.getString("ip", "")+getDBNombre() + "/" + _ApiUrlConfiguracion;
             }
         }
         else if (_ApiUrlConfiguracion.contains("http://")) {
@@ -216,14 +325,18 @@ public class Configuracion {
     }
     public static void setApiUrlConfiguracion(String ApiUrlConfiguracion){_ApiUrlConfiguracion=ApiUrlConfiguracion;}
 
-    private static String _ApiUrlConfigurarIp="/wsMercaStock/sucursal";
+    private static String _ApiUrlConfigurarIp="/wsMercaStock/sicar/sucursal";
     public static String getApiUrlConfigurarIp(){return _ApiUrlConfigurarIp;}
     public static void setApiUrlConfigurarIp(String ApiUrlConfigurarIp){_ApiUrlConfigurarIp=ApiUrlConfigurarIp;}
 
-    private static String _ApiUrlRevisarApi="wsMercaStock/usuario/api";
-    public static String getApiUrlRevisarApi(){return (_ApiUrlRevisarApi.contains("http://")?_ApiUrlRevisarApi:(!settings.getString("ip","default").equals("default")?
-            "http://"+settings.getString("ip","")+"/"+_ApiUrlRevisarApi:
-            (_ApiUrlRevisarApi.contains("http://")?_ApiUrlRevisarApi:getApiUrl()+_ApiUrlRevisarApi)));}
+    private static String _ApiUrlRevisarApi="usuario/api";
+    public static String getApiUrlRevisarApi(){
+        if (_ApiUrlRevisarApi.contains("http://")) return _ApiUrlRevisarApi;
+        else if (!settings.getString("ip", "default").equals("default"))
+            return "http://" + settings.getString("ip", "")+getDBNombre() + "/" + _ApiUrlRevisarApi;
+        else
+            return (_ApiUrlRevisarApi.contains("http://") ? _ApiUrlRevisarApi : getApiUrl() +getDBNombre()+ _ApiUrlRevisarApi);
+    }
     public static void setApiUrlRevisarApi(String ApiUrlRevisarApi){_ApiUrlRevisarApi=ApiUrlRevisarApi;}
 
 }

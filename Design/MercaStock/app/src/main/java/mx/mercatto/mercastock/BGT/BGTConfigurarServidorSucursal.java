@@ -3,6 +3,7 @@ package mx.mercatto.mercastock.BGT;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -56,6 +57,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
     protected JSONObject doInBackground(String... params) {
         try {
             java.net.URL url = new URL(URL);
+            Log.d("url",URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.getResponseCode();
@@ -120,7 +122,8 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
                         JSONObject c = countries.getJSONObject(i);
                         String id = c.getString(Configuracion.getIdSucursal());
                         String name = c.getString(Configuracion.getDescripcionSucursal());
-                        _listaSucursal.add(new ListaSucursal(id, name.toUpperCase()));
+                        String dburl = c.getString("claveApi");
+                        _listaSucursal.add(new ListaSucursal(dburl, name.toUpperCase()));
                     }
                 } else {
                     showToast(":(");

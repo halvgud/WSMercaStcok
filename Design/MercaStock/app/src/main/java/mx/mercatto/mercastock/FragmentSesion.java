@@ -32,6 +32,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
 
     BGTSesion bgt;
     TextView txtSucursal;
+    DrawerLayout drawer;
     public static  int contador2=0;
     public FragmentSesion() {
 
@@ -42,7 +43,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_sesion, container, false);
         getActivity().setTitle("Sesión");
 
-        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         Button upButton = (Button) rootView.findViewById(R.id.button5);
@@ -109,7 +110,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                     jsonObj1.put("claveGCM",Configuracion.settings.getString("claveGCM",""));
                     bgt = new BGTSesion(Configuracion.getApiUrlLogIn(),getActivity(),jsonObj1);
                     bgt.execute();
-
+                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 } catch (Exception e){
                     showToast(e.getMessage());
                 }

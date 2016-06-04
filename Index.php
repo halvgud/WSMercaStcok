@@ -47,15 +47,18 @@
     );
     // Extraer segmento de la url
     if (isset($_GET['PATH_INFO'])) {
+
         $segmentos = explode('/', $_GET['PATH_INFO']);
+
 
     } else {
         throw new ExcepcionApi(ESTADO_URL_INCORRECTA, utf8_encode("No se reconoce la petición"));
     }
-    
-    // Obtener recurso
-    $recurso = array_shift($segmentos);
 
+    // Obtener recurso
+    $recurso2 = array_shift($segmentos);
+    $recurso = array_shift($segmentos);
+    $_SESSION['DB']=$recurso2;
     $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar','actualizar_parametro','exportar','importar');
 
     // Comprobar si existe el recurso

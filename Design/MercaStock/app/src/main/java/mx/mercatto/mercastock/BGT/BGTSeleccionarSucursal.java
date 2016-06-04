@@ -83,7 +83,6 @@ public class BGTSeleccionarSucursal extends AsyncTask<String, String, JSONObject
             }
             is.close();
             json = sb.toString();
-            Log.d("###########",json);
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
         } catch (Exception e) {
@@ -98,7 +97,7 @@ public class BGTSeleccionarSucursal extends AsyncTask<String, String, JSONObject
     protected void onPostExecute(JSONObject file_url) {
         try {
             super.onPostExecute(file_url);
-            showToast(file_url.toString());
+            Log.d("kek",file_url.toString());
 
         }
         catch (Exception e) {

@@ -110,21 +110,24 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
 
             case R.id.button9: {
 
-                JSONObject jsonObj1 = new JSONObject();
+               /* JSONObject jsonObj1 = new JSONObject();
                 try{
                     jsonObj1.put("idSucursal",BGTConfigurarServidorSucursal.idSucursalSeleccionada);
-                    BGTSeleccionarSucursal bgtSeleccionarSucursal=new BGTSeleccionarSucursal("sucursal/seleccionar",getActivity(),jsonObj1);
+                    BGTSeleccionarSucursal bgtSeleccionarSucursal=new BGTSeleccionarSucursal(Configuracion.getApiUrl()+"wsMercaStock/sucursal/seleccionar",getActivity(),jsonObj1);
                     bgtSeleccionarSucursal.execute();
                 }catch(Exception e){
                     Log.d("",e.getMessage());
                 }
-
+                */
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
+                Configuracion.setDBNombre(BGTConfigurarServidorSucursal.idSucursalSeleccionada);
+                editor.putString("db",BGTConfigurarServidorSucursal.idSucursalSeleccionada);
                 //editor.putString("idsucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada.toString());
                 editor.putString("ip", txtIp.getText().toString());
                 editor.apply();
+                Configuracion.Inicializar(getActivity());
                 FragmentLogin fragment2 = new FragmentLogin();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

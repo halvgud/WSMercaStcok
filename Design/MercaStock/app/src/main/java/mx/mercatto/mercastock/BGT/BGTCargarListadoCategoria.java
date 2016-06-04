@@ -139,7 +139,6 @@ boolean bandera=true;
                 for (int i = 0; i < _JsonGenerico.length(); i++) {
                     JSONObject c = _JsonGenerico.getJSONObject(i);
                     String cat_id = c.getString(Configuracion.getIdCategoria());
-                    Log.d("ww", cat_id);
                     String nombreCategoria = c.getString(Configuracion.getDescripcionCategoria());
                     int cantidad = c.getInt(Configuracion.getCantidadCategoria());
                     int procesado = c.getInt(Configuracion.getProcesadoCategoria());
