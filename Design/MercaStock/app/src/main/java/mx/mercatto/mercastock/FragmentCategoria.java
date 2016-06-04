@@ -1,7 +1,9 @@
 package mx.mercatto.mercastock;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +19,17 @@ import mx.mercatto.mercastock.BGT.BGTCargarListadoCategoria;
 
 
 public class FragmentCategoria extends Fragment {
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_departamento, container, false);
 
-            if (PushNotificationService.Xrray != null) {
-                getActivity().setTitle("Lista de Categorias" + PushNotificationService.Xrray.get(0));
-            } else {
-                getActivity().setTitle("Lista de Categorias");
-            }
+           // if (PushNotificationService.Xrray != null) {
+          //      getActivity().setTitle("Lista de Categorias" + PushNotificationService.Xrray.get(0));
+          //  } else {
+                getActivity().setTitle("Lista de Categorias"+Configuracion.settings.getString("idSucursal",null));
+          //  }
 
             cargarListadoCategoria();
 

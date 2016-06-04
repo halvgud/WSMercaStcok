@@ -82,6 +82,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
             transaccionCompleta=false;
 
         }
+
         return jObj;
         }
 

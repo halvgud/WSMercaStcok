@@ -59,14 +59,15 @@ class ARTICULO
                     
                     
                 //}
-                
+            $sentencia->execute();
+            $resultado=$sentencia->fetchAll(PDO::FETCH_ASSOC);
             // Ejecutar sentencia preparada
-            if ($sentencia->execute()) {
+            if ($resultado>0) {
                 http_response_code(200);
                 return
                     [
                         "estado" => self::ESTADO_EXITO,
-                        "datos" => $_SESSION['clave']
+                        "datos" => $resultado
                     ];
             } else
                 throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");

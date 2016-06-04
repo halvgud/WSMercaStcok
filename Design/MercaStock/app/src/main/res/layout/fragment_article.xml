@@ -29,7 +29,9 @@
         android:inputType="text"
         android:textAlignment="center"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:digits="aábcdeéfghiíjklmnñoópqrstuúvwxyzAÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚVWXYZ0123456789 "
+        android:maxLength="15" />
 
     <TextView
         android:layout_width="wrap_content"

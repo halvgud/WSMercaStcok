@@ -120,9 +120,9 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                 if (Main.idSesion == 1) {
                     editor.putString("usuario", "");
                     editor.putString("ClaveApi", "");
-                    editor.putString("sucursal", "");
-                    editor.putString("ip", "");
-                    editor.putString("idsucursal", "");
+                    //editor.putString("sucursal", "");
+                    //editor.putString("ip", "");
+                    //editor.putString("idSucursal", "");
                     editor.apply();
                     Main.idSesion=0;
                     Main.inicio=0;

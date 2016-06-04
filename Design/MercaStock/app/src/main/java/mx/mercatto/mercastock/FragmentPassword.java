@@ -159,8 +159,10 @@ public class FragmentPassword extends Fragment implements View.OnClickListener  
             jsobj.put("usuario",auth_token_string);
             jsobj.put("pin_viejo", txtPinActual.getText().toString());
             jsobj.put("pin_nuevo",txtPinNuevo.getText().toString());
+            jsobj.put("gcm",Configuracion.settings.getString("claveGCM",""));
             BGTCambiarPIN bgt = new BGTCambiarPIN(Configuracion.getApiUrlPin(), getActivity(), jsobj);
             bgt.execute();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -191,11 +191,21 @@ public class Main extends AppCompatActivity
             }
         }
         if (currentFragment instanceof RegistroUsuario) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
                 getFragmentManager().popBackStack();
+            }*/
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                FragmentCategoria fragment2 = new FragmentCategoria();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, fragment2);
+                fragmentTransaction.commit();
             }
         }
         if (currentFragment instanceof FragmentSesion) {

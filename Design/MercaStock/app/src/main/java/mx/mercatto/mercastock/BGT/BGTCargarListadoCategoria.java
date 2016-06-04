@@ -94,10 +94,13 @@ public class BGTCargarListadoCategoria extends AsyncTask<String, String, JSONObj
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
 
-        } catch (Exception e) {
+        } catch (JSONException e) {
            // showToast(e.getMessage());
             bandera=false;
+        }catch (Exception e){
+            showToast("Text");
         }
+
         return jObj;
 
     }

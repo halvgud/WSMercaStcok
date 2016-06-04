@@ -149,7 +149,6 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         //String auth_token_string = settings.getString("ClaveApi", ""*//*default value*//*);
 
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("idSucursal",id_sucursal);
         editor.putString("sucursal",txSucursal.getText().toString());
         editor.apply();
         try {
