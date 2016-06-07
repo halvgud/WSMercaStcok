@@ -42,8 +42,6 @@
                 return self::cambiar_pin();
             }else if ($peticion[0] == 'api') {
                 return self::api();
-            }else if($peticion[0]=='apiregistro'){
-                return self::apiregistro();
             }else if($peticion[0]=='obtener'){
                 return self::obtenerUsuario();
             }else if($peticion[0]=='importar'){
@@ -549,7 +547,7 @@
             $post = json_decode(file_get_contents('php://input'),true);
                    $usuario = $post['claveApi'];
             try{
-                
+
                 $comando ="select claveApi from ms_usuario where claveApi=? AND claveApi!=''
                 and fechaSesion>now()- interval 1 day";
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
@@ -557,18 +555,27 @@
                 $sentencia->bindParam(1, $usuario);
                 //return var_dump($comando);
                 $sentencia->execute();
-              
-                if($sentencia){
-                    $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-                     if(isset($resultado[0]['claveApi'])){
-                        //return true;
+
+                $resultado = $sentencia->fetch(PDO::FETCH_OBJ);
+                if($resultado){
+                //return true;
                         return ["estado" => self::ESTADO_EXITO];
+                }else {
+                    $comando2 ="select claveApi from ms_usuario where claveApi=? AND claveApi!=''";
+                    $sentencia2 = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando2);
+
+                    $sentencia2->bindParam(1, $usuario);
+                    //return var_dump($comando);
+                    $sentencia2->execute();
+                    $resultado2 = $sentencia2->fetch(PDO::FETCH_OBJ);
+                    if($resultado2){
+                        http_response_code(201);
+                        return  ["estado" => self::ESTADO_EXITO];
                     }else{
-                        
                         throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'No hay clave api',401);
                     }
-                    
-                }else {return false;}
+
+                }
             }catch (PDOException $e){
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }

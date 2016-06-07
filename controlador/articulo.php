@@ -90,7 +90,7 @@ class ARTICULO
                 //return $comando;
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 // Ligar idContacto e idUsuario<
-                //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
+                //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);a
                 //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
                 //for ($i = 0 ;$i<100000000;$i++){
 
@@ -106,7 +106,7 @@ class ARTICULO
                             "estado" => self::ESTADO_EXITO,
                             "datos" => $sentencia->rowCount()
                         ];
-                } else
+                } else{
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
 /*
                     if ($resultado) {
@@ -114,6 +114,8 @@ class ARTICULO
                     } else {
                         return self::ESTADO_CREACION_FALLIDA;
                     }*/
+                    }//
+
                 }
                 else{
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,

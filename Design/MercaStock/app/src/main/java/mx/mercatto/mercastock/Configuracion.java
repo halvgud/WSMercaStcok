@@ -40,7 +40,7 @@ public class Configuracion {
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
     public static String getDBNombre(){
         if(settings.getString("db", "").equals("")){
-            return _Db;
+            return settings.getString("db", "");
         }else{
             return settings.getString("db", "");
         }
@@ -339,4 +339,12 @@ public class Configuracion {
     }
     public static void setApiUrlRevisarApi(String ApiUrlRevisarApi){_ApiUrlRevisarApi=ApiUrlRevisarApi;}
 
+    public static void reiniciarValoresDefault() {
+        setApiUrlRegistro("usuario/registro");
+        setApiUrlArticulo("articulo/obtener");
+        setApiUrlCategoria("categoria");
+        setApiUrlConfiguracion("parametro/accion/CONFIGURACION_PRUEBA");
+        setApiUrlLogIn("usuario/login");
+        setApiUrlRevisarApi("usuario/api");
+    }
 }

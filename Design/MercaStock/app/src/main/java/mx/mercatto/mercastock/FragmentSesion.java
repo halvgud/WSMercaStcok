@@ -118,7 +118,7 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
             case R.id.button4: {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
-                if (Main.idSesion == 1) {
+                //if (Main.idSesion == 1) {
                     editor.putString("usuario", "");
                     editor.putString("ClaveApi", "");
                     //editor.putString("sucursal", "");
@@ -129,8 +129,10 @@ public class FragmentSesion extends Fragment implements View.OnClickListener {
                     Main.inicio=0;
                     Main.bandera=0;
 
-                }
+               // }
                 Main.controlUsuario =-1;
+                editor.putBoolean("FLAG_DESTROY",true);
+                editor.apply();
                 getActivity().finish();
                 Intent intent = getActivity().getIntent();
                 startActivity(intent);
