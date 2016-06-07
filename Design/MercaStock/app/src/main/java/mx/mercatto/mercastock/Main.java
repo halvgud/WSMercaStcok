@@ -36,12 +36,15 @@ public class Main extends AppCompatActivity
     public static int inicio=0;
     public static int bandera=0;
     public static String idRegistro;
+    public static boolean FLAG_ON_DESTROY=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_main);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        controlUsuario=settings.getInt("controlusuario",-1);
             if (controlUsuario == -1) {
                 setContentView(R.layout.activity_main);
             } else if (controlUsuario == 0)
@@ -245,7 +248,7 @@ public class Main extends AppCompatActivity
         }else if(id==R.id.cerrarsesion){
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             SharedPreferences.Editor editor = settings.edit();
-
+            editor.putInt("controlusuario",-1);
             editor.putString("usuario", "");
             editor.putString("ClaveApi", "");
             editor.apply();
@@ -254,6 +257,7 @@ public class Main extends AppCompatActivity
             inicio=0;
 
             finish();
+
             Intent intent = getIntent();
             startActivity(intent);
             FragmentLogin fragment = new FragmentLogin();
@@ -277,21 +281,38 @@ public class Main extends AppCompatActivity
     @Override
     public void onDestroy() {
 
-        if (idSesion == 1) {
-        }
+
+
         super.onDestroy();
     }
 
 
     @Override
     public  void onResume(){
+        Log.d("resume","resume");
+/*
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        if(!settings.getBoolean("FLAG_DESTROY",false)){
+            Log.d("destroy", "destroy");
+            SharedPreferences.Editor editor = settings.edit();
 
+            editor.putBoolean("FLAG_DESTROY", false);
+            editor.apply();
+        }else{
+            SharedPreferences.Editor editor = settings.edit();
+            Log.d("login","login");
+            editor.putString("login", "false");
+            editor.apply();
+        }*/
         super.onResume();
     }
     @Override
     public  void onRestart(){
+        Log.d("restart","restart");
         if(bandera==0&&idSesion==1){
-        bandera=1;}
+        bandera=1;
+
+        }
        else if(idSesion==1 && bandera==1) {
             revisarApi();
         }
