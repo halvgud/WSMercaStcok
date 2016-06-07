@@ -550,7 +550,7 @@
                    $usuario = $post['claveApi'];
             try{
                 
-                $comando ="select claveApi from ms_usuario where claveApi='".$usuario."' AND claveApi!=''
+                $comando ="select claveApi from ms_usuario where claveApi=? AND claveApi!=''
                 and fechaSesion>now()- interval 1 day";
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
     
@@ -560,8 +560,7 @@
               
                 if($sentencia){
                     $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-                  // return var_dump($resultado);
-                    if(isset($resultado['claveApi'])){
+                     if(isset($resultado[0]['claveApi'])){
                         //return true;
                         return ["estado" => self::ESTADO_EXITO];
                     }else{

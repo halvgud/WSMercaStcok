@@ -108,12 +108,12 @@ class ARTICULO
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
-
+/*
                     if ($resultado) {
                         return self::ESTADO_CREACION_EXITOSA;
                     } else {
                         return self::ESTADO_CREACION_FALLIDA;
-                    }cec15f7a58ba7eca2dd9cdfe52910b8f
+                    }*/
                 }
                 else{
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,

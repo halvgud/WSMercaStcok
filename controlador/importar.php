@@ -189,10 +189,10 @@ class importar{
                     $resultado[0]->existencia
                     ;
             } else
-                throw new ExcepcionApi(self::ESTADO_ERROR, "No se han encontrado resultados",402);
+                throw new ExcepcionApi(402, "No se han encontrado resultados",402);
 
         } catch (PDOException $e) {
-            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
+            throw new ExcepcionApi(402, $e->getMessage(), 402);
         }
     }
 }//class
