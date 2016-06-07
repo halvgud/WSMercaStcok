@@ -26,6 +26,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import mx.mercatto.mercastock.Configuracion;
 
@@ -76,7 +77,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
             transaccionCompleta=true;
-        } catch (UnknownHostException |JSONException|MalformedURLException|UnsupportedEncodingException|ProtocolException e) {
+        } catch (UnknownHostException  |JSONException|MalformedURLException|UnsupportedEncodingException|IllegalArgumentException|ProtocolException e) {
             e.printStackTrace();
             transaccionCompleta=false;
         }catch(IOException e){
@@ -112,20 +113,31 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
     Button guardar;
     Button probar;
     public static String sucursalSeleccionada="";
-    public static String idSucursalSeleccionada="";
+    public static String dbPathSucursal ="";
+    public static String idSucursalInt="";
+    public static ArrayList<HashMap<String, String>>_Listado;
+
     public void cargarListadoSucursal(JSONObject file_url) {
+        _Listado = new ArrayList<>();
         if (transaccionCompleta) {
             try {
                 JSONArray countries = file_url.getJSONArray(Configuracion.getDatos());
 
+
                 if (countries.length() > 0) {
+
                     for (int i = 0; i < countries.length(); i++) {
+                        HashMap<String, String> map = new HashMap<>();
                         JSONObject c = countries.getJSONObject(i);
                         String id = c.getString(Configuracion.getIdSucursal());
                         String name = c.getString(Configuracion.getDescripcionSucursal());
                         String dburl = c.getString("claveApi");
-                        _listaSucursal.add(new ListaSucursal(dburl, name.toUpperCase()));
+                        map.put("db", dburl);
+                        map.put("idSucursal",id);
+                        _listaSucursal.add(new ListaSucursal(dburl, name.toUpperCase()+id));
+                        _Listado.add(map);
                     }
+
                 } else {
                     showToast(":(");
                     _listaSucursal.add(new ListaSucursal("", "".toUpperCase()));
@@ -139,7 +151,9 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         ListaSucursal selectedCountry = _listaSucursal.get(position);
                         sucursalSeleccionada=selectedCountry.toString();
-                        idSucursalSeleccionada=selectedCountry.getId();
+                        dbPathSucursal =selectedCountry.getId();
+                        idSucursalInt = _Listado.get(+position).get("idSucursal");
+                        Log.d("o.o",position+"");
                     }
 
                     @Override

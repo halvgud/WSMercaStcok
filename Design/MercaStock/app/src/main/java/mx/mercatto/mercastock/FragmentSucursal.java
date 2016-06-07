@@ -21,12 +21,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Field;
 
 import mx.mercatto.mercastock.BGT.BGTConfigurarServidorSucursal;
-import mx.mercatto.mercastock.BGT.BGTSeleccionarSucursal;
 
 
 public class FragmentSucursal extends Fragment implements View.OnClickListener  {
@@ -119,28 +116,32 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
-                Configuracion.setDBNombre(BGTConfigurarServidorSucursal.idSucursalSeleccionada);
-                editor.putString("db",BGTConfigurarServidorSucursal.idSucursalSeleccionada);
-                //editor.putString("idsucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada.toString());
+                Log.d("DB PATH",BGTConfigurarServidorSucursal.dbPathSucursal);
+                editor.putString("db", BGTConfigurarServidorSucursal.dbPathSucursal);
+                 editor.putString("idSucursal",BGTConfigurarServidorSucursal.idSucursalInt);
+               // editor.putString("idsucursal", BGTConfigurarServidorSucursal.dbPathSucursal);
                 editor.putString("ip", txtIp.getText().toString());
                 editor.apply();
+                Configuracion.reiniciarValoresDefault();
                 Configuracion.Inicializar(getActivity());
-
+                //Configuracion.setDBNombre(BGTConfigurarServidorSucursal.1idSucursalSeleccionada);
+                Log.d("DB PATH", BGTConfigurarServidorSucursal.dbPathSucursal);
               /*  SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
-                editor.putString("idSucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada);
-                //editor.putString("idsucursal", BGTConfigurarServidorSucursal.idSucursalSeleccionada.toString());
+                editor.putString("idSucursal", BGTConfigurarServidorSucursal.1idSucursalSeleccionada);
+                //editor.putString("idsucursal", BGTConfigurarServidorSucursal.1idSucursalSeleccionada.toString());
                 editor.putString("ip", txtIp.getText().toString());
                 editor.apply();*/
                 /*
 >>>>>>> 99243102798b5987ba87f0c485800113033d234d
+*/
                 FragmentLogin fragment2 = new FragmentLogin();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.content_main, fragment2);
                 fragmentTransaction.commit();
-*/
+
             }
                 break;
             // similarly for other buttons

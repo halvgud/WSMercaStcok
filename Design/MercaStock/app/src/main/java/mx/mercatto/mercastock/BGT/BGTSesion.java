@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Vibrator;
@@ -33,6 +34,7 @@ import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.FragmentLogin;
 import mx.mercatto.mercastock.FragmentSesion;
 
+import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
 
 public class BGTSesion extends AsyncTask<String, String, JSONObject> {
@@ -138,6 +140,7 @@ boolean bandera = true;
             SharedPreferences.Editor editor = settings.edit();
             switch (CodeResponse) {
                 case 200: {
+                    /*
                     JSONObject datos = file_url.getJSONObject("datos");
                     ClaveApi = datos.getString("claveApi");
                     User = datos.getString("usuario");
@@ -150,6 +153,35 @@ boolean bandera = true;
                     Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    */
+                    BGTCargarListadoCategoria.banderaTest=true;
+                    JSONObject datos = file_url.getJSONObject("datos");
+                    ClaveApi = datos.getString("claveApi");
+                    User = datos.getString("usuario");
+                    editor.putString("ClaveApi", ClaveApi);
+                    editor.putString("usuario", datos.getString("usuario"));
+                    // editor.putString("idSucursal",settings.getString("idSucursal",""));
+                    editor.putString("nombre", datos.getString("nombre"));
+                    editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
+                    editor.putString("controlusuario", datos.getString("idNivelAutorizacion"));
+                    editor.putString("login", "true");
+                    editor.putString("claveGCM", Main.idRegistro);
+                    editor.apply();
+                    Main.idSesion=1;
+                    //Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
+                    // Main.ClAp=Integer.parseInt(ClaveApi);
+
+                    Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(300);
+                    editor.putBoolean("FLAG_DESTROY",true);
+                    editor.apply();
+                    activity.finish();
+                    Intent intent = activity.getIntent();
+                    activity.startActivity(intent);
+
+                    FragmentCategoria fragment = new FragmentCategoria();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 }
                 break;
                 case 400:{

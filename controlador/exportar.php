@@ -93,7 +93,7 @@
 
         public static function seleccionarArticulo()
         {
-            $comando = "SELECT a.art_id as art_idLocal, a.clave, a.claveAlterna, a.descripcion, a.servicio,
+            $comando = "SELECT a.art_id, a.clave, a.claveAlterna, a.descripcion, a.servicio,
                         a.invMin, a.invMax, a.factor, a.precioCompra, a.preCompraProm as precioCompraProm, a.margen1, a.precio1, a.existencia,
                         a.lote, a.receta, a.granel, a.tipo, a.status, a.unidadCompra, a.unidadVenta, a.cat_id,
                         a.srp_id, ms.idSucursal FROM articulo a INNER JOIN ms_sucursal ms on (ms.idSucursal=ms.idSucursal)";

@@ -90,7 +90,7 @@ class ARTICULO
                 //return $comando;
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 // Ligar idContacto e idUsuario<
-                //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
+                //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);a
                 //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
                 //for ($i = 0 ;$i<100000000;$i++){
 
@@ -113,7 +113,7 @@ class ARTICULO
                         return self::ESTADO_CREACION_EXITOSA;
                     } else {
                         return self::ESTADO_CREACION_FALLIDA;
-                    }cec15f7a58ba7eca2dd9cdfe52910b8f
+                    }//cec15f7a58ba7eca2dd9cdfe52910b8f
                 }
                 else{
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,

@@ -35,7 +35,7 @@ class CATEGORIA
                 $comando = "select * from (SELECT a.".self::ID_CATEGORIA.", d.".self::DESCRIPCION.",sum(case when existenciaRespuesta>0 then 1 else 0 end)
                 as procesado,count(*) AS CANTIDAD FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO." MI ON
                 ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
-                 inner join ms_usuario mu on (mu.claveApi='". $post['claveApi']."' AND mu.claveApi!='') group by d.nombre) tt where tt.procesado<tt.cantidad AND a.idSucursal='". $post['idSucursal']."';";
+                 inner join ms_usuario mu on (mu.claveApi='". $post['claveApi']."' AND mu.claveApi!='') group by d.nombre) tt where tt.procesado<tt.cantidad;";
                 ;
 //return $comando;
                 // Preparar sentencia

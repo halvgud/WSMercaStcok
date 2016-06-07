@@ -83,6 +83,7 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
         try {
 
             HttpPost httpPost = new HttpPost(URL);
+            Log.d("URL PETICION DE API",URL);
             StringEntity entity = new StringEntity(postparams.toString(), HTTP.UTF_8);
             entity.setContentType("application/json");
             httpPost.setEntity(entity);
@@ -159,7 +160,7 @@ showToast(":(");
             super.onPostExecute(file_url);
             if(transaccionCompleta) {
                 if (!PushNotificationService.idSucursal.equals("0")) {
-                    Log.d("idSucursal:",PushNotificationService.idSucursal);
+                    Log.d("idSucursal:",Configuracion.settings.getString("idSucursal",""));
                     if (Configuracion.settings.getString("idSucursal","").equals(PushNotificationService.idSucursal)) {
                         Login(file_url);
                         Log.d("entro aqui:", PushNotificationService.idSucursal);
@@ -188,7 +189,11 @@ showToast(":(");
                 }
             }
             else if(activity!=null){
-                showToast("Conexion fallida");
+                //showToast("Conexion fallida");///// Sera Solución temporal?
+                FragmentLogin fragment = new FragmentLogin();
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                Main.inicio = 1;
 
             }else if(FLAG_ASYNCDIALOG){
                 asyncDialog.dismiss();
@@ -206,14 +211,33 @@ showToast(":(");
         if (transaccionCompleta) {
             try {
                 ClAp = file_url.getInt("estado");
+                switch (CodeResponse){
+                    case(200):{
+                        FragmentCategoria fragment = new FragmentCategoria();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }break;
+                    case(201):{
+                        FragmentSesion fragment = new FragmentSesion();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    }break;
+                    default:{
+                        FragmentLogin fragment = new FragmentLogin();
+                        FragmentManager fragmentManager = activity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                        Main.inicio = 1;
+                    }break;
+                }
+                /*
                 if (CodeResponse == 200) {
 
-                    if (/*Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") &&*/ Configuracion.settings.getString("login", "").equals("true")) {
+                    if (/*Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("true")) {
                         FragmentCategoria fragment = new FragmentCategoria();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                     }
-                    else if (/*Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") &&*/ Configuracion.settings.getString("login", "").equals("false")) {
+                    else if (/*Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("") && Configuracion.settings.getString("login", "").equals("false")) {
                         FragmentSesion fragment = new FragmentSesion();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
@@ -226,19 +250,24 @@ showToast(":(");
 
                     }
                 }
-                if (CodeResponse == 401) {
+               else {
                    /* if (Main.idSesion == 1 && !Configuracion.settings.getString("usuario", "").equals("")) {
                         FragmentSesion fragment = new FragmentSesion();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                    }else{*/
+                    }else{
                         FragmentLogin fragment = new FragmentLogin();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                         Main.inicio = 1;
-                        Log.d("CLAVE API",Configuracion.settings.getString("ClaveApi", ""));
+                        Log.d("CODE RESPONSE",CodeResponse+"");
+                    Log.d("CLAVE API",Configuracion.settings.getString(("ClaveApi"),""));
+                    Log.d("CLAVE API",Configuracion.settings.getString(("claveApi"),""));
+                    Log.d("DB PATH",Configuracion.getDBNombre());
+                    Log.d("JSON RESPONSE",file_url.toString());
+
                     //}
-                }
+                }*/
 
                 jObj = null;
             } catch (JSONException e) {

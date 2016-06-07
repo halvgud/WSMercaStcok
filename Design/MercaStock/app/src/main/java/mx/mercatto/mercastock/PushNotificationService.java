@@ -25,7 +25,7 @@ import java.util.List;
 public class PushNotificationService extends GcmListenerService {
     public static ArrayList<String> Xrray;
     public static String idSucursal="0";
-    public static String Sucursal="0";
+        public static String Sucursal="0";
     @Override
     public void onMessageReceived(String from, Bundle data) {
             String message = data.getString("message");

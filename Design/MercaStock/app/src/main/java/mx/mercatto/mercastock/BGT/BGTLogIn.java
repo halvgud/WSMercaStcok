@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import mx.mercatto.mercastock.Configuracion;
 
 
+import mx.mercatto.mercastock.FragmentCategoria;
 import mx.mercatto.mercastock.FragmentConexionPerdida;
 import mx.mercatto.mercastock.Main;
 import mx.mercatto.mercastock.R;
@@ -147,23 +148,24 @@ boolean bandera=true;
                    // editor.putString("idSucursal",settings.getString("idSucursal",""));
                     editor.putString("nombre", datos.getString("nombre"));
                     editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
-                    editor.putString("controlusuario", datos.getString("idNivelAutorizacion"));
+                    editor.putInt("controlusuario", Integer.parseInt(datos.getString("idNivelAutorizacion")));
                     editor.putString("login", "true");
-                    editor.putString("claveGCM",Main.idRegistro);
-                    editor.apply();
-                    Main.idSesion=1;
-                    Main.controlUsuario =Integer.parseInt(Configuracion.settings.getString("controlusuario",""));
-                    // Main.ClAp=Integer.parseInt(ClaveApi);
+                    editor.putString("claveGCM", Main.idRegistro);
 
+                    Main.idSesion=1;
+                    // Main.ClAp=Integer.parseInt(ClaveApi);
+                    editor.apply();
                     Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
+                    editor.putBoolean("FLAG_DESTROY",true);
+                    editor.apply();
                     activity.finish();
                     Intent intent = activity.getIntent();
                     activity.startActivity(intent);
-                 //   FragmentCategoria fragment = new FragmentCategoria();
-                   // FragmentManager fragmentManager = activity.getFragmentManager();
-                    //fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
 
+                    FragmentCategoria fragment = new FragmentCategoria();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 }
                 break;
