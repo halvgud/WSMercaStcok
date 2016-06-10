@@ -16,24 +16,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import mx.mercatto.mercastock.BGT.BGTConfigurarServidorSucursal;
 
 
 public class FragmentSucursal extends Fragment implements View.OnClickListener  {
-
+    public static  String ip="";
+    public static JSONObject js;
     Spinner listaSucSpinner;
     EditText txtIp;
     InputMethodManager imm;
     View rootView;
     Button guardar;
     Button probar;
+    ArrayList<ListaSucursal> _listaSucursal2 = new ArrayList<>();
+    Spinner listaSucSpinner2;
+    public static String hostSeleccionada="";
     public FragmentSucursal() {
 
     }
@@ -42,7 +51,7 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_sucursal, container, false);
-        getActivity().setTitle("Configurar Servidor Sucursal"+Configuracion.settings.getString("idSucursal",""));
+        getActivity().setTitle("Configurar Servidor Sucursal");
 
         txtIp= (EditText)rootView.findViewById(R.id.editText13);
         if(!Configuracion.settings.getString("ip","").equals("")){
@@ -56,6 +65,9 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
         upButton.setOnClickListener(this);
         Button upButton2 = (Button) rootView.findViewById(R.id.button9);
         upButton2.setOnClickListener(this);
+
+        ip = txtIp.getText().toString();
+
 
 
 
@@ -103,7 +115,8 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
         switch(v.getId())
         {
             case R.id.button6: {
-                peticion();
+                //peticion();
+                cargaHost();
                 guardar = (Button) getActivity().findViewById(R.id.button9);
                 guardar.setEnabled(false);
                 probar = (Button) getActivity().findViewById(R.id.button6);
@@ -120,7 +133,7 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 editor.putString("db", BGTConfigurarServidorSucursal.dbPathSucursal);
                  editor.putString("idSucursal",BGTConfigurarServidorSucursal.idSucursalInt);
                // editor.putString("idsucursal", BGTConfigurarServidorSucursal.dbPathSucursal);
-                editor.putString("ip", txtIp.getText().toString());
+                editor.putString("ip", BGTConfigurarServidorSucursal.hostSeleccionada);
                 editor.apply();
                 Configuracion.reiniciarValoresDefault();
                 Configuracion.Inicializar(getActivity());
@@ -148,15 +161,28 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
         }
     }
 
-    public void peticion() {
-        BGTConfigurarServidorSucursal bgt;
-        String ip = txtIp.getText().toString();
+    public void peticion(String host) {
+
+        //String host= BGTConfigurarServidorSucursal.dbPathSucursal;
         try {
             //JSONObject jsobj = new JSONObject();
             //jsobj.put("idSucursal","");
             //jsobj.put("nombre","");
 
-            bgt = new BGTConfigurarServidorSucursal("http://" + ip + Configuracion.getApiUrlConfigurarIp(), getActivity());
+
+
+            //showToast("Se ha establecido la conexión");
+        } catch (Exception e) {
+            //showToast("No jala");
+            e.printStackTrace();
+        }
+    }
+    public  void cargaHost() {
+       ip = txtIp.getText().toString();
+        BGTConfigurarServidorSucursal bgt;
+        try {
+            JSONObject jsobj = new JSONObject();
+            bgt = new BGTConfigurarServidorSucursal("http://"+ ip + Configuracion.getApiUrlConfigurarIp()+"/sucursalHost", getActivity(),jsobj,true);
             bgt.execute();
 
             //showToast("Se ha establecido la conexión");
@@ -168,6 +194,7 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -183,4 +210,5 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
             throw new RuntimeException(e);
         }
     }
+
 }

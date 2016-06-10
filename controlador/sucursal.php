@@ -16,33 +16,68 @@ class SUCURSAL
 
         if (empty($peticion[0]))
             return self::obtenerSucursal();
-
+        else if($peticion[0]=='sucursalHost'){
+            return self::obtenerSucursalHost();
+        }
         else
             http_response_code(404);
 
     }
-    public static function post($peticion){
-        if($peticion[0]=='login'){
-            return self::login();
+    public static function post($peticion)
+    {
+     if (empty($peticion[0])){
+            return self::obtenerSucursal();
+        }else if ($peticion[0] == 'login') {
+    return self::login();
+}
+        else if($peticion[0]=='seleccionar'){
+                return self::setearConexion();
         }
-    else if($peticion[0]=='seleccionar'){
-            return self::setearConexion();
+        else if($peticion[0]=='sucursalHost'){
+            return self::obtenerSucursalHost();
         }
 
 
     }
 
     public static function obtenerSucursal()
+{
+    try {
+        $post = json_decode(file_get_contents('php://input'),true);
+        $comando = "SELECT ".self::ID_TABLA.",".self::DESC_TABLA.",claveApi FROM " . self::TABLA_SUCURSAL ." where direccion=:direccion";
+
+        // Preparar sentencia
+        $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+        // Ligar idContacto e idUsuario
+        $sentencia->bindParam("direccion",$post['direccion']);
+        //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
+
+        // Ejecutar sentencia preparada
+        if ($sentencia->execute()) {
+            http_response_code(200);
+            $arreglo=$sentencia->fetchAll(PDO::FETCH_ASSOC);
+            return (["estado" => self::ESTADO_EXITO,"datos" => $arreglo]);
+        } else
+            throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+
+    } catch (PDOException $e) {
+        throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+    }
+    finally{
+        ConexionBD::obtenerInstancia()->_destructor();
+    }
+}
+    public static function obtenerSucursalHost()
     {
         try {
 
-                $comando = "SELECT ".self::ID_TABLA.",".self::DESC_TABLA.",claveApi FROM " . self::TABLA_SUCURSAL ;
+            $comando = "select  direccion from ms_sucursal;";
 
-                // Preparar sentencia
-                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                // Ligar idContacto e idUsuario
-                //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
-                //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
+            // Preparar sentencia
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            // Ligar idContacto e idUsuario
+            //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);
+            //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
 
             // Ejecutar sentencia preparada
             if ($sentencia->execute()) {
@@ -61,11 +96,11 @@ class SUCURSAL
     }
     public static function setearConexion(){
         $post = json_decode(file_get_contents('php://input'),true);
-        if(isset($post['idSucursal'])){
-            $comando = "select claveApi from ms_sucursal where idSucursal=:idSucursal";
+        if(isset($post['direccion'])){
+            $comando = "select claveApi from ms_sucursal where UPPER(direccion)=:direccion";
             try{
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                $sentencia->bindParam("idSucursal",$post['idSucursal']);
+                $sentencia->bindParam("direccion",$post['direccion']);
                 $sentencia->execute();
                 $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                 if($resultado){
