@@ -1,5 +1,8 @@
 package mx.mercatto.mercastock;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -39,8 +42,9 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_article, container, false);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-        getActivity().setTitle("MercaStock");
+        getActivity().setTitle("MercaStock " + settings.getInt("controlusuario",-1));
         Button upButton = (Button) rootView.findViewById(R.id.button2);
         upButton.setOnClickListener(this);
         DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
@@ -48,10 +52,21 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         FragmentConexionPerdida.conexionPerdida=false;
         Main.idSesion=0;
         Main.controlUsuario=-1;
+/*
+        if(PushNotificationService.idSucursal.equals("-1")){
+
+            PushNotificationService.idSucursal=("0");
+            Intent intent = getActivity().getIntent();
+            getActivity().startActivity(intent);
+            FragmentLogin fragment = new FragmentLogin();
+            FragmentManager fragmentManager = getActivity().getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+            Main.bandera=0;
+        }*/
 
         txSucursal=(TextView) rootView.findViewById(R.id.textView13);
 
-       SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+       //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
       //SharedPreferences.Editor editor = settings.edit();
         String auth_token_string = settings.getString("ClaveApi", ""/*default value*/);
         txtUsuario = (EditText) rootView.findViewById(R.id.editText);

@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -21,13 +23,32 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import mx.mercatto.mercastock.BGT.BGTConfigurarServidorSucursal;
+
 
 public class PushNotificationService extends GcmListenerService {
     public static ArrayList<String> Xrray;
     public static String idSucursal="0";
+        public static String host="";
         public static String Sucursal="0";
     @Override
     public void onMessageReceived(String from, Bundle data) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+            SharedPreferences.Editor editor = settings.edit();
+
+            if (!settings.getString("db","").equals(data.getString("url"))) {
+                   // idSucursal="1";
+                    editor.putInt("controlusuario", -1);
+                    editor.putInt("controlusuario",-1);
+                    editor.putString("usuario", "");
+                    editor.putString("ClaveApi", "");
+                    Main.idSesion=0;
+                    Main.controlUsuario =-1;
+                    Main.inicio=0;
+                    Main.bandera=0;
+                    Configuracion.reiniciarValoresDefault();
+
+            }
             String message = data.getString("message");
             //createNotification(mTitle, push_msg);
             // Configuracion.cat=data.getString("data");
@@ -35,6 +56,13 @@ public class PushNotificationService extends GcmListenerService {
             Log.d("data received",data.toString());
             Sucursal = data.getString("descripcionSucursal");
             idSucursal=data.getString("idSucursal");
+            host=data.getString("host");
+
+            editor.putString("sucursal", Sucursal);
+            editor.putString("ip", host);
+            editor.putString("db", data.getString("url"));
+
+            editor.apply();
             try {
                     Xrray = new ArrayList<String>();
                     JSONArray jar = new JSONArray(data.getString("data"));
@@ -46,6 +74,7 @@ public class PushNotificationService extends GcmListenerService {
                     hashSet.addAll(Xrray);
                     Xrray.clear();
                     Xrray.addAll(hashSet);
+
                     //Configuracion.cat=Xrray[1].toString();
             }catch(JSONException e){
                     Log.d("",e.getMessage());
@@ -54,7 +83,9 @@ public class PushNotificationService extends GcmListenerService {
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.ic_stat_mstockicon)
                             .setContentTitle("MercaStock! Sucursal:"+Sucursal)
-                            .setContentText(message);
+                            .setContentText(message)
+                    .setAutoCancel(true);
+
 // Creates an explicit intent for an Activity in your app
             Intent resultIntent = new Intent(this, Main.class);
 

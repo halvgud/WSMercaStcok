@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -159,12 +160,12 @@ showToast(":(");
         try {
             super.onPostExecute(file_url);
             if(transaccionCompleta) {
-                if (!PushNotificationService.idSucursal.equals("0")) {
-                    Log.d("idSucursal:",Configuracion.settings.getString("idSucursal",""));
-                    if (Configuracion.settings.getString("idSucursal","").equals(PushNotificationService.idSucursal)) {
-                        Login(file_url);
-                        Log.d("entro aqui:", PushNotificationService.idSucursal);
-                    } else {
+                    if (!PushNotificationService.idSucursal.equals("0")) {
+                //       Log.d("idSucursal:",Configuracion.settings.getString("idSucursal",""));
+                //       if (Configuracion.settings.getString("idSucursal","").equals(PushNotificationService.idSucursal)) {
+                //            Login(file_url);
+                //            Log.d("entro aqui:", PushNotificationService.idSucursal);
+                //       } else {
 
                         /**/
                       /*  Configuracion.editor = Configuracion.settings.edit();
@@ -176,17 +177,39 @@ showToast(":(");
                         Configuracion.editor.apply();
                         Configuracion.Inicializar(activity);*/
 
-                        Log.d("o aca:",PushNotificationService.idSucursal);
+                Log.d("o aca:",PushNotificationService.idSucursal);
+                       /* SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putInt("controlusuario",-1);
+                        editor.putString("usuario", "");
+                        editor.putString("ClaveApi", "");
+                        editor.apply();
+                        Main.idSesion=0;
+                        Main.controlUsuario =-1;
+                        Main.inicio=0;
+                        PushNotificationService.Sucursal="0";
+                        activity.finish();
+*/                    // SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+                      //  SharedPreferences.Editor editor = settings.edit();
+                      //  editor.putInt("controlusuario",-1);
+                      //  editor.putString("usuario", "");
+                     //   editor.putString("ClaveApi", "");
+                     //   editor.apply();
+/*
+                        PushNotificationService.Sucursal="0";
+                        PushNotificationService.idSucursal="0";
+                       // Intent intent = activity.getIntent();
+                        activity.recreate();
+                      //  activity.startActivity(intent);
                         FragmentLogin fragment = new FragmentLogin();
                         FragmentManager fragmentManager = activity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
-                        Main.inicio = 1;
-                        PushNotificationService.Sucursal="0";
-                    }
+                        ;*/
+                        Login(file_url);
                 } else {
-                    Log.d("nevermind:",PushNotificationService.idSucursal);
-                    Login(file_url);
-                }
+                Log.d("nevermind:",PushNotificationService.idSucursal);
+                Login(file_url);
+                  }
             }
             else if(activity!=null){
                 //showToast("Conexion fallida");///// Sera Solución temporal?

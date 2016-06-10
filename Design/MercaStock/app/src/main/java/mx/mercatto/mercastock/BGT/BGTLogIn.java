@@ -145,7 +145,7 @@ boolean bandera=true;
                     User = datos.getString("usuario");
                     editor.putString("ClaveApi", ClaveApi);
                     editor.putString("usuario", datos.getString("usuario"));
-                   // editor.putString("idSucursal",settings.getString("idSucursal",""));
+                    //editor.putString("idSucursal",settings.getString("idSucursal",""));
                     editor.putString("nombre", datos.getString("nombre"));
                     editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
                     editor.putInt("controlusuario", Integer.parseInt(datos.getString("idNivelAutorizacion")));
@@ -159,8 +159,8 @@ boolean bandera=true;
                     v.vibrate(300);
                     editor.putBoolean("FLAG_DESTROY",true);
                     editor.apply();
-                    activity.finish();
                     Intent intent = activity.getIntent();
+                    activity.finish();
                     activity.startActivity(intent);
 
                     FragmentCategoria fragment = new FragmentCategoria();

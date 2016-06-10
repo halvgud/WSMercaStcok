@@ -39,11 +39,8 @@ public class Configuracion {
     public  static String getApiUrl(){ return  _ApiUrl;}
     public  static  void setApiUrl(String  ApiUrl){_ApiUrl=ApiUrl;}
     public static String getDBNombre(){
-        if(settings.getString("db", "").equals("")){
+
             return settings.getString("db", "");
-        }else{
-            return settings.getString("db", "");
-        }
 
     }
     public static void setDBNombre(String DB){_Db=DB;}
@@ -138,16 +135,20 @@ public class Configuracion {
     private static String _ApiUrlLogIn ="usuario/login";
     public static String getApiUrlLogIn(){
         if (_ApiUrlLogIn.contains("http://")) {
+            Log.d("entro","1");
             return _ApiUrlLogIn;
         }
         else {
             if (!settings.getString("ip", "default").equals("default")) {
+                Log.d("entro","2");
                 return ("http://" + settings.getString("ip", "") +getDBNombre()+ "/" + _ApiUrlLogIn);
             }
             else if (_ApiUrlLogIn.contains("http://")) {
+                Log.d("entro","3");
                 return (_ApiUrlLogIn);
             }
             else {
+                Log.d("entro","4");
                 return (getApiUrl()+getDBNombre() + _ApiUrlLogIn);
             }
         }

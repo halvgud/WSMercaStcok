@@ -125,7 +125,7 @@ public class FragmentSucursal extends Fragment implements View.OnClickListener  
                 break;
 
             case R.id.button9: {
-
+                PushNotificationService.Xrray=null;
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("sucursal", BGTConfigurarServidorSucursal.sucursalSeleccionada);
