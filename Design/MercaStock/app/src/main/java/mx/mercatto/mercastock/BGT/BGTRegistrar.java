@@ -131,6 +131,7 @@ public class BGTRegistrar extends AsyncTask<String, String, JSONObject> {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
                                 android.R.layout.simple_spinner_dropdown_item, arraySpinner);
                         txtsexo.setAdapter(adapter);
+
                     }
                     break;
                     case 401:{

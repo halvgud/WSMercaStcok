@@ -6,7 +6,7 @@
             <menu>
         <item
             android:id="@+id/seleccionarsucursal"
-            android:icon="@drawable/ic_wrench"
+            android:icon="@drawable/ic_wrenchh"
             android:title="Configurar Servidor Sucursal"
             />
 

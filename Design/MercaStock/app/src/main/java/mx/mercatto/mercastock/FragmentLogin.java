@@ -44,7 +44,7 @@ public class FragmentLogin extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_article, container, false);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-        getActivity().setTitle("MercaStock " + settings.getInt("controlusuario",-1));
+        getActivity().setTitle("MercaStock");
         Button upButton = (Button) rootView.findViewById(R.id.button2);
         upButton.setOnClickListener(this);
         DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);

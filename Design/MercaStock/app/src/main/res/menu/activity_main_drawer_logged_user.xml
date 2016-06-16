@@ -8,11 +8,11 @@
         <menu>
 
 
-            <item
+            <!--<item
                 android:id="@+id/cambiarcontrasena"
                 android:icon="@drawable/ic_key"
                 android:title="Cambiar PIN"
-                />
+                />-->
             <item
                 android:id="@+id/cerrarsesion"
                 android:icon="@drawable/ic_logout"

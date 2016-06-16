@@ -11,15 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/strut"
-
-        />
+        android:textColor="#ffffff"
+        /><!-- Color del nombre de las categorias -->
 
     <TextView
         android:id="@+id/api"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/descripcionColumna"
-        />
+        android:textColor="#ffffff"
+        /><!-- Color de los artículos procesados -->
     <TextView
         android:id="@+id/cat_id"
         android:textColor="#9f3032"

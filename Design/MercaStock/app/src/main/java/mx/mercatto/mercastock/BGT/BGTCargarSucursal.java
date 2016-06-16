@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +68,8 @@ public class BGTCargarSucursal extends AsyncTask<String, String, JSONObject> {
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
         } catch (JSONException  |IOException e ) {
-            showToast(e.getMessage());
+           Log.d("ERROR",e.getMessage());
+            bandera=false;
         }
 
         return jObj;
@@ -75,6 +77,7 @@ public class BGTCargarSucursal extends AsyncTask<String, String, JSONObject> {
     }
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+
     }
     boolean bandera=true;
     @Override
