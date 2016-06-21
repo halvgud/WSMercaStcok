@@ -21,26 +21,28 @@ class importar{
     public static function post($peticion)
     {
         if ($peticion[0] == 'parametro') {
-            return self::importarParametro();
+            return self::parametro();
         } else if ($peticion[0] == 'usuario') {
-            return self::importarUsuario();
+            return self::usuario();
         } else if ($peticion[0] == 'inventario') {
-        return self::importarInventarioWS();
+        return self::inventario();
     }
         else {
             throw new ExcepcionApi(404, "Url mal formada", 404);
         }
     }
 
-    public static function importarUsuario()
+
+
+    public static function usuario()
     {
         ConexionBD::obtenerInstancia()->_destructor();
         $usuario = json_decode(file_get_contents('php://input'));
         // Preparar operaci�n de modificaci�n para cada contacto
 
-        $comando = "insert into ms_usuario (usuario,contrasena,nombre,apellido,sexo,contacto,idSucursal,claveApi,idNivelAutorizacion,idEstado,fechaEstado,fechaSesion
-      ,claveGCM) values (:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveApi,:idNivelAutorizacion,:idEstado,now(),now(),'')
-        on duplicate key update contrasena=:password,nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto,
+        $comando = "insert into ms_usuario (idUsuario,usuario,contrasena,nombre,apellido,sexo,contacto,idSucursal,claveApi,idNivelAutorizacion,idEstado,fechaEstado,fechaSesion
+      ,claveGCM) values (:idUsuario,:usuario,:password,:nombre,:apellido,:sexo,:contacto,:idSucursal,:claveApi,:idNivelAutorizacion,:idEstado,now(),now(),'')
+        on duplicate key update nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto,
         idSucursal=:idSucursal,idNivelAutorizacion=:idNivelAutorizacion,idEstado=:idEstado";
         // Preparar la sentencia update
         ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
@@ -52,6 +54,7 @@ class importar{
         // Procesar array de contactos
         $contador=0;
         foreach ($usuario->data as $usuarioRow) {
+            $idusuario =$usuarioRow->idUsuario;
             $usuario =$usuarioRow->usuario;
             $password = $usuarioRow->password;
             $nombre = $usuarioRow->nombre;
@@ -71,7 +74,7 @@ class importar{
             $sentencia->bindParam("contacto", $contacto);
             $sentencia->bindParam("idNivelAutorizacion", $idNivelAutorizacion);
             $sentencia->bindParam("idEstado", $idEstado);
-            //$sentencia->bindParam("claveGCM",$claveGCM);
+            $sentencia->bindParam("idUsuario",$idusuario);
             $sentencia->bindParam("usuario",$usuario);
             $sentencia->bindParam("idSucursal",$idSucursal);
             $sentencia->execute();
@@ -85,7 +88,7 @@ class importar{
         ConexionBD::obtenerInstancia()->obtenerBD()->commit();
     }
 
-    public static function importarParametro(){
+    public static function parametro(){
         $postrequest = json_decode(file_get_contents('php://input'));
         ConexionBD::obtenerInstancia()->_destructor();
         $comando = "insert into ms_parametro (accion, parametro, valor, comentario, usuario, fechaActualizacion) values (:accion, :parametro, :valor, :comentario, :usuario, :fechaActualizacion)
@@ -103,10 +106,10 @@ class importar{
                     $sentencia->bindParam("comentario", $post->comentario);
                     $sentencia->bindParam("usuario", $post->usuario);
                     $sentencia->bindParam("fechaActualizacion", $post->fechaActualizacion);
-                    $sentencia->execute();
+                    $resultado = $sentencia -> execute();
                     $contador++;
                 }
-                $resultado = $sentencia -> execute();
+
                 if($resultado){
                     http_response_code(200);
                     ConexionBD::obtenerInstancia()->obtenerBD()->commit();
@@ -139,23 +142,22 @@ class importar{
             throw new ExcepcionApi($e->getCode(), $error, 401);
         }
     }
-    public static function importarInventarioWS()
+    public static function inventario()
     {//Checar
         ConexionBD::obtenerInstancia()->_destructor();
         $json = json_decode(file_get_contents('php://input'));
 
         $comando = "INSERT INTO ms_inventario (idInventario,art_id,existenciaSolicitud,existenciaRespuesta,idUsuario,
-                      fechaSolicitud,fechaRespuesta,existenciaEjecucion,idEstado,idInventarioExterno)
-                      VALUES (0,:art_id,:existenciaSolicitud,:existenciaRespuesta,:idUsuario,:fechaSolicitud,
-                      :fechaRespuesta,:existenciaEjecucion,:idEstado,:idInventarioExterno);";
+                      fechaSolicitud,fechaRespuesta,existenciaEjecucion,idEstado)
+                      VALUES (:idInventario,:art_id,:existenciaSolicitud,:existenciaRespuesta,:idUsuario,:fechaSolicitud,
+                      :fechaRespuesta,:existenciaEjecucion,:idEstado)
+                      on duplicate key update art_id=:art_id;";
         $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
 
         $contador = 0;
         ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
         foreach ($json->data as $jsonRow) {
             $idInventario = $jsonRow->idInventario;
-            $idInventarioLocal = $jsonRow->idInventarioLocal;
-            $idSucursal = $jsonRow->idSucursal;
             $art_id = $jsonRow->art_id;
             $existenciaSolicitud = self::obtenerExistencia($art_id);
             $existenciaRespuesta = $jsonRow->existenciaRespuesta;
@@ -172,7 +174,7 @@ class importar{
             $sentencia->bindParam("fechaRespuesta", $fechaRespuesta);
             $sentencia->bindParam("existenciaEjecucion", $existenciaEjecucion);
             $sentencia->bindParam("idEstado", $idEstado);
-            $sentencia->bindParam("idInventarioExterno",$idInventario);
+            $sentencia->bindParam("idInventario",$idInventario);
 
             $sentencia->execute();
             $contador++;
