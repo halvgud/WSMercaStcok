@@ -67,7 +67,7 @@ public class BGTCargarSucursal extends AsyncTask<String, String, JSONObject> {
             json = sb.toString();
             jObj = new JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1));
         } catch (JSONException  |IOException e ) {
-            showToast(e.getMessage());
+            //showToast(e.getMessage());
         }
 
         return jObj;
