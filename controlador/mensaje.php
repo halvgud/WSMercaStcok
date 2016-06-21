@@ -22,7 +22,9 @@ class ACTUALIZAR_PARAMETRO
 
     public static function cambiarEstado()
     {
+        ConexionBD::obtenerInstancia()->_destructor();
         try {
+            ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
             $post = json_decode(file_get_contents('php://input'),true);
             //return var_dump($post);
                 $comando = "UPDATE ".self::TABLA_PARAMETRO." SET ".self::VALOR." ='".$post['valor']."' WHERE parametro='CONFIRMACION_MENSAJE_GUARDADO'";
@@ -31,20 +33,23 @@ class ACTUALIZAR_PARAMETRO
             // Ejecutar sentencia preparada
             if ($sentencia->execute()) {
                 http_response_code(200);
+                ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                 return
                     [
                         "estado" => self::ESTADO_EXITO,
                         "datos" => $sentencia->rowCount()
                     ];
-            } else
+            } else {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                 throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+            }
 
         } catch (PDOException $e) {
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
         finally{
             ConexionBD::obtenerInstancia()->_destructor();
         }
     }
-
 }

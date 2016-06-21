@@ -1,5 +1,4 @@
 <?php
-
     class exportar2{
         public static function post($peticion)
         {
@@ -9,6 +8,4 @@
                 throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
             }
         }
-
-
     }

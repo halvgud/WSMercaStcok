@@ -59,7 +59,7 @@ public class BGTCargarListadoArticulo extends AsyncTask<String, String, JSONObje
         _Listado = new ArrayList<>();
         _JsonGenerico = null;
         if (activity!= null)
-            asyncDialog = new ProgressDialog(activity);
+            asyncDialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
     }
     protected void onPreExecute() {
         super.onPreExecute();

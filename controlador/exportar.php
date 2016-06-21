@@ -1,5 +1,4 @@
 <?php
-    //require '../conexion/ConexionBD.php';
     class exportar
     {
         const ESTADO_USUARIO_BLOQUEADO=11;
@@ -42,7 +41,6 @@
         public static function seleccionarDepartamento()
         {
             $comando = "SELECT d.dep_id as dep_idLocal, d.nombre, d.restringido, d.porcentaje, d.status, ms.idSucursal FROM departamento d INNER JOIN ms_sucursal ms on (ms.idSucursal=ms.idSucursal)";
-
             try {
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 if ($sentencia->execute()) {
@@ -57,7 +55,6 @@
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
-
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
             }
@@ -67,7 +64,6 @@
         {
             $comando = "SELECT c.cat_id as cat_id_Local,c.nombre,c.status,c.dep_id,ms.idSucursal FROM categoria c inner join ms_sucursal
             ms on (ms.idSucursal =ms.idSucursal)";
-
             try {
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 if ($sentencia->execute()) {
@@ -82,7 +78,6 @@
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
-
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
             }
@@ -97,7 +92,6 @@
                         a.invMin, a.invMax, a.factor, a.precioCompra, a.preCompraProm as precioCompraProm, a.margen1, a.precio1, a.existencia,
                         a.lote, a.receta, a.granel, a.tipo, a.status, a.unidadCompra, a.unidadVenta, a.cat_id,
                         a.srp_id, ms.idSucursal FROM articulo a INNER JOIN ms_sucursal ms on (ms.idSucursal=ms.idSucursal)";
-
             try {
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 if ($sentencia->execute()) {
@@ -142,7 +136,6 @@
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
-
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
             }
@@ -173,7 +166,6 @@
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
-
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
             }
@@ -189,26 +181,24 @@
             try{
                 $db = ConexionBD::obtenerInstancia()->obtenerBD();
                 $sentencia = $db->prepare($query);
-                //sentencia->bindParam("",$postrequest->algunargumento);
                 $sentencia -> execute();
                 $resultado = $sentencia->fetchAll(PDO::FETCH_COLUMN,0);
                 if($resultado){
                      $arreglo =
-                                [
-                                    "estado" => 200,
-                                    "success" => "",
-                                    "data" => $resultado
-                                ];
+                        [
+                            "estado" => 200,
+                            "success" => "",
+                            "data" => $resultado
+                        ];
 
-                        } else {
-                            $arreglo =
-                                [
-                                    "estado" => "warning",
-                                    "mensaje" => "",
-                                    "data" => $resultado
-                                ];
-
-                          }//else
+                } else {
+                    $arreglo =
+                        [
+                            "estado" => "warning",
+                            "mensaje" => "",
+                            "data" => $resultado
+                        ];
+                  }
             }catch(PDOException $e){
                 $arreglo = [
                     "estado" =>$e -> getCode(),
@@ -234,7 +224,6 @@
                     $comando2="UPDATE ms_inventario SET idEstado='E' WHERE idEstado='P' and fechaRespuesta>curdate()";
                     $sentencia2=ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando2);
                     $sentencia2->execute();
-
                     http_response_code(200);
                     return
                         [
@@ -246,7 +235,6 @@
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "No se han encontrado resultados",402);
-
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
             }

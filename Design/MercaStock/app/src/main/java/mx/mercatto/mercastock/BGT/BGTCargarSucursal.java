@@ -44,7 +44,7 @@ public class BGTCargarSucursal extends AsyncTask<String, String, JSONObject> {
         this.URL = url;
         this.activity = activity;
         if (activity!= null)
-            asyncDialog = new ProgressDialog(activity);
+            asyncDialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
     }
     protected void onPreExecute() {
         super.onPreExecute();

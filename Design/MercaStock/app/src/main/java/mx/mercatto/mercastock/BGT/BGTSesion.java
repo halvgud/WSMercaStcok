@@ -54,7 +54,7 @@ public class BGTSesion extends AsyncTask<String, String, JSONObject> {
         this.activity = activity;
         this.postparams = postparams;
         if (activity!= null)
-            asyncDialog = new ProgressDialog(activity);
+            asyncDialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
     }
     protected void onPreExecute() {
         super.onPreExecute();

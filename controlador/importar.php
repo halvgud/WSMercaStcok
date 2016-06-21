@@ -34,6 +34,7 @@ class importar{
 
     public static function importarUsuario()
     {
+        ConexionBD::obtenerInstancia()->_destructor();
         $usuario = json_decode(file_get_contents('php://input'));
         // Preparar operaci�n de modificaci�n para cada contacto
 
@@ -42,6 +43,7 @@ class importar{
         on duplicate key update contrasena=:password,nombre=:nombre,apellido=:apellido,sexo=:sexo,contacto=:contacto,
         idSucursal=:idSucursal,idNivelAutorizacion=:idNivelAutorizacion,idEstado=:idEstado";
         // Preparar la sentencia update
+        ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
         $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
 
 
@@ -80,17 +82,17 @@ class importar{
             "success" => "",
             "data" => $contador
         ];
-
+        ConexionBD::obtenerInstancia()->obtenerBD()->commit();
     }
 
     public static function importarParametro(){
         $postrequest = json_decode(file_get_contents('php://input'));
-
+        ConexionBD::obtenerInstancia()->_destructor();
         $comando = "insert into ms_parametro (accion, parametro, valor, comentario, usuario, fechaActualizacion) values (:accion, :parametro, :valor, :comentario, :usuario, :fechaActualizacion)
         on duplicate key update accion=:accion, parametro=:parametro, valor=:valor, comentario=:comentario, usuario=:usuario, fechaActualizacion=:fechaActualizacion";
 
-
         try{
+            ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
             $contador=0;
             if(isset($postrequest->data)){
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
@@ -107,6 +109,7 @@ class importar{
                 $resultado = $sentencia -> execute();
                 if($resultado){
                     http_response_code(200);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                      return
                                 [
                                     "estado" => 200,
@@ -116,6 +119,7 @@ class importar{
 
                         } else {
                             http_response_code(400);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                             return
                                 [
                                     "estado" => "warning",
@@ -125,9 +129,11 @@ class importar{
 
                           }//else
                 }else {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                     throw new ExcepcionApi(401, "parametro data no recibido", 401);
                 }
         }catch(PDOException $e){
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
             $codigoDeError=$e->getCode();
             $error =self::traducirMensaje($codigoDeError,$e);
             throw new ExcepcionApi($e->getCode(), $error, 401);
@@ -135,7 +141,7 @@ class importar{
     }
     public static function importarInventarioWS()
     {//Checar
-
+        ConexionBD::obtenerInstancia()->_destructor();
         $json = json_decode(file_get_contents('php://input'));
 
         $comando = "INSERT INTO ms_inventario (idInventario,art_id,existenciaSolicitud,existenciaRespuesta,idUsuario,
@@ -145,6 +151,7 @@ class importar{
         $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
 
         $contador = 0;
+        ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
         foreach ($json->data as $jsonRow) {
             $idInventario = $jsonRow->idInventario;
             $idInventarioLocal = $jsonRow->idInventarioLocal;
@@ -170,6 +177,7 @@ class importar{
             $sentencia->execute();
             $contador++;
         }
+        ConexionBD::obtenerInstancia()->obtenerBD()->commit();
         return $arreglo = [
             "estado" => 200,
             "success" => "",
@@ -195,4 +203,4 @@ class importar{
             throw new ExcepcionApi(402, $e->getMessage(), 402);
         }
     }
-}//class
+}

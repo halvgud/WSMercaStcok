@@ -1,7 +1,5 @@
 <?php
     
-    //require '/conexion/ConexionBD.php';
-    
     class parametro{
         const TABLA_PARAMETRO = 'ms_parametro';
 

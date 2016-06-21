@@ -14,6 +14,7 @@
     require 'vista/VistaJson.php';
     require 'controlador/exportar.php';
     require 'utilidad/ExcepcionApi.php';
+    require 'controlador/tipo_pago.php';
     // Constantes de estado
     const ESTADO_URL_INCORRECTA = 2;
     const ESTADO_EXISTENCIA_RECURSO = 3;
@@ -59,7 +60,7 @@
     $recurso2 = array_shift($segmentos);
     $recurso = array_shift($segmentos);
     $_SESSION['DB']=$recurso2;
-    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar','actualizar_parametro','exportar','importar');
+    $recursos_existentes = array('articulo', 'usuario', 'sincronizar','sucursal','categoria','inventario','parametro','actualizar','actualizar_parametro','exportar','importar','tipo_pago');
 
     // Comprobar si existe el recurso
     if (!in_array($recurso, $recursos_existentes)) {

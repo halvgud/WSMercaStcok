@@ -99,6 +99,7 @@
         
         public static function crear()//$datosUsuario
         {
+            ConexionBD::obtenerInstancia()->_destructor();
             $post = json_decode(file_get_contents('php://input'),true);
             
             //$idusuario=$post['idUsuario'];
@@ -119,7 +120,7 @@
             $fechaSesion = $post['fechaSesion'];
             //return var_dump($datosUsuario);
             try {
-    
+                ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
                 $pdo = ConexionBD::obtenerInstancia()->obtenerBD();
     
                 // Sentencia INSERT
@@ -158,17 +159,21 @@
                 if(!self::apiregistro($claveApi2)==null){
                 $resultado = $sentencia->execute();
                     if ($resultado) {
+                        ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                         return self::ESTADO_CREACION_EXITOSA;
                     } else {
+                        ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                         return self::ESTADO_CREACION_FALLIDA;
                     }
                 }
                 else{
+                    ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
                         "Clave Api invalida",401);
                 }
                 
             } catch (PDOException $e) {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
             finally{
@@ -235,22 +240,27 @@
             //$usuario=$post['usuario'];
             //$gcm=$post['claveGCM'];
             // $correo = $usuario['usuario'];
+            ConexionBD::obtenerInstancia()->_destructor();
             $comando2 = "UPDATE ms_usuario SET fechaSesion=NOW(),claveGCM='".$gcm."' WHERE usuario='".$correo."'";
     
             try {
-    
+                ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
                 $sentencia2 = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando2);
     
                if ($sentencia2->execute()) {
                     http_response_code(200);
+                   ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                     return
                         [
                             "estado" => self::ESTADO_EXITO,
                             "datos" => $sentencia2->rowCount()
                         ];
-                } else
+                } else{
+                   ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+               }
             } catch (PDOException $e) {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(),401);
             }
             finally{
@@ -434,7 +444,9 @@
         }
         public static function bloqueo()
         {
+            ConexionBD::obtenerInstancia()->_destructor();
             try {
+                ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
                 $post = json_decode(file_get_contents('php://input'),true);
                 //return var_dump($post);
                     $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::ID_ESTADO." ='B', fechaEstado=NOW() WHERE usuario='".$post['usuario']."'";
@@ -443,93 +455,51 @@
                 // Ejecutar sentencia preparada
                 if ($sentencia->execute()) {
                     http_response_code(200);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                     return
                         [
                             "estado" => self::ESTADO_EXITO,
                             "datos" => $sentencia->rowCount()
                         ];
-                } else
+                } else{
+                    ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+                }
     
             } catch (PDOException $e) {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
             finally{
                 ConexionBD::obtenerInstancia()->_destructor();
             }
         }
-        //public static function validarEstado($idEstado,$idUsuario)
-        //{
-        //    try{
-        //        $comando ="select valor, fechaEstado from ms_usuario mu left join
-        //        ms_parametro mp on (mp.accion='CONFIGURACION_GENERAL' and mp.parametro='ESTADO_VALIDO_LOGIN'
-        //        and valor = ?) where mu.idUsuario = ?";
-        //       // $comando = "SELECT VALOR FROM ms_parametro mp
-        //       // inner join ms_usuario mu (mp.idUsuario = ? ) WHERE accion='CONFIGURACION_GENERAL' AND parametro='ESTADO_VALIDO_LOGIN' and valor = ?";
-        //        $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-        //        $sentencia->bindParam(1,$idEstado);
-        //        $sentencia->bindParam(2,$idUsuario);
-        //        
-        //        if($sentencia->execute()){
-        //            $resultado = $sentencia->fetch();
-        //           
-        //            if(isset($resultado['valor'])){
-        //                return true;
-        //            }else{
-        //                
-        //                throw new ExcepcionApi(self::ESTADO_USUARIO_BLOQUEADO,'El Usuario ha sido bloqueado desde '.$resultado['fechaEstado'].'                                          Favor de esperar 5 minutos a partir de dicha hora',401);
-        //            }
-        //            
-        //        }else {return false;}
-        //    }catch (PDOException $e){
-        //        throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
-        //    }
-        //}
-            /*
-            try {
-                $post = json_decode(file_get_contents('php://input'),true);
-                //return var_dump($post);
-                    $comando = "SELECT idEstado FROM ".self::NOMBRE_TABLA." WHERE usuario='".$post['usuario']."'";
-                    // Preparar sentencia
-                    $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-    
-            $sentencia->bindParam(1, $usuario);
-    
-            if ($sentencia->execute()) {
-                $resultado = $sentencia->fetch();
-                return $resultado['usuario'];
-            } else
-                return null;
-    
-            } catch (PDOException $e) {
-                throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
-            }*/
-            public static function cambiar_pin()
-        {
-                  $post = json_decode(file_get_contents('php://input'),true);
-                   $usuario = $post['usuario'];
-                   $pin_viejo=$post['pin_viejo'];
-                    $gcm=$post['gcm'];
 
-            //$contrasena = $usuario['contrasena'];
-       $apiNueva=self::autenticar($usuario, $pin_viejo,$gcm);
+        public static function cambiar_pin() {
+            $post = json_decode(file_get_contents('php://input'),true);
+            ConexionBD::obtenerInstancia()->_destructor();
+            $usuario = $post['usuario'];
+            $pin_viejo=$post['pin_viejo'];
+            $gcm=$post['gcm'];
+
+            $apiNueva=self::autenticar($usuario, $pin_viejo,$gcm);
             if ($apiNueva==TRUE) {
-                //$usuarioBD = self::obtenerUsuarioPorUsuario($correo);self::encriptarContrasena($pin_nuevo);
-
+                ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
                  $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::CONTRASENA." ='".self::encriptarContrasena($post['pin_nuevo'])."' WHERE usuario='".$post['usuario']."'";
-                    // Preparar sentencia
-                    $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                // Ejecutar sentencia preparada
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+
                 if ($sentencia->execute()) {
                     http_response_code(200);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                     return
                         [
                             "estado" => self::ESTADO_EXITO,
                             "datos" => $apiNueva['api']
                         ];
-                } else
+                } else {
+                    ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+                }
     
                 if ($usuarioBD != NULL) {
                     http_response_code(200);
@@ -538,9 +508,9 @@
                         "Ha ocurrido un error",401);
                 }
             } else {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                 throw new ExcepcionApi(self::ESTADO_PARAMETROS_INCORRECTOS,
-                    utf8_encode("usuario o contraseña inválidos"),401);
-
+                utf8_encode("usuario o contraseña inválidos"),401);
             }
         }
         public static function api()

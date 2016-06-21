@@ -157,12 +157,11 @@ class INVENTARIO
      */
     public static function insertar($idUsuario, $contacto)
     {
+        ConexionBD::obtenerInstancia()->_destructor();
         if ($contacto) {
             try {
-
+                ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
                 $pdo = ConexionBD::obtenerInstancia()->obtenerBD();
-
-                // Sentencia INSERT
                 $comando = 'INSERT INTO ' . self::TABLA_INVENTARIO . ' ( ' .
                     self::ID_INVENTARIO . ',' .
                     self::PRIMER_NOMBRE . ',' .
@@ -192,17 +191,19 @@ class INVENTARIO
                 $correo = $contacto->correo;
 
                 $sentencia->execute();
-
+                ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                 // Retornar en el �ltimo id insertado
                 return $idContacto;
 
             } catch (PDOException $e) {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
             }
             finally{
                 ConexionBD::obtenerInstancia()->_destructor();
             }
         } else {
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
             throw new ExcepcionApi(
                 self::ESTADO_MALA_SINTAXIS,
                 utf8_encode("Error en existencia o sintaxis de par�metros"));
@@ -220,7 +221,9 @@ class INVENTARIO
      */
     public static function modificar($idUsuario, $contacto, $idContacto)
     {
+        ConexionBD::obtenerInstancia()->_destructor();
         try {
+            ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
             // Creando consulta UPDATE
             $consulta = "UPDATE " . self::TABLA_INVENTARIO .
                 " SET " . self::PRIMER_NOMBRE . "=?," .
@@ -246,10 +249,11 @@ class INVENTARIO
 
             // Ejecutar la sentencia
             $sentencia->execute();
-
+            ConexionBD::obtenerInstancia()->obtenerBD()->commit();
             return $sentencia->rowCount();
 
         } catch (PDOException $e) {
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
         finally{
@@ -267,7 +271,9 @@ class INVENTARIO
      */
     public static function eliminar($idUsuario, $idContacto)
     {
+        ConexionBD::obtenerInstancia()->_destructor();
         try {
+            ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
             // Sentencia DELETE
             $comando = "DELETE FROM " . self::TABLA_INVENTARIO .
                 " WHERE " . self::ID_INVENTARIO . "=? AND " .
@@ -280,10 +286,11 @@ class INVENTARIO
             $sentencia->bindParam(2, $idUsuario);
 
             $sentencia->execute();
-
+            ConexionBD::obtenerInstancia()->obtenerBD()->commit();
             return $sentencia->rowCount();
 
         } catch (PDOException $e) {
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }
         finally{
@@ -300,6 +307,8 @@ class INVENTARIO
      */
     public static function insertarEnBatch(PDO $pdo, $listaContactos, $idUsuario)
     {
+        ConexionBD::obtenerInstancia()->_destructor();
+        ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
         // Sentencia INSERT
         $comando = 'INSERT INTO ' . self::TABLA_INVENTARIO . ' ( ' .
             self::ID_INVENTARIO . ',' .
@@ -330,6 +339,7 @@ class INVENTARIO
             $correo = $item[self::FECHA_SOLICITUD];
             $version = $item[self::FECHA_RESPUESTA];
             $sentencia->execute();
+            ConexionBD::obtenerInstancia()->obtenerBD()->commit();
 
         }
 
@@ -343,7 +353,8 @@ class INVENTARIO
      */
     public static function modificarEnBatch(PDO $pdo, $arrayContactos, $idUsuario)
     {
-
+        ConexionBD::obtenerInstancia()->_destructor();
+        ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
         // Preparar operaci�n de modificaci�n para cada contacto
         $comando = 'UPDATE ' . self::TABLA_INVENTARIO . ' SET ' .
             self::PRIMER_NOMBRE . '=?,' .
@@ -374,6 +385,7 @@ class INVENTARIO
             $correo = $contacto[self::FECHA_SOLICITUD];
             $version = $contacto[self::FECHA_RESPUESTA];
             $sentencia->execute();
+            ConexionBD::obtenerInstancia()->obtenerBD()->commit();
         }
 
     }
@@ -386,6 +398,8 @@ class INVENTARIO
      */
     public static function eliminarEnBatch(PDO $pdo, $arrayIds, $idUsuario)
     {
+        ConexionBD::obtenerInstancia()->_destructor();
+        ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
         // Crear sentencia DELETE
         $comando = 'DELETE FROM ' . self::TABLA_INVENTARIO .
             ' WHERE ' . self::ID_INVENTARIO . ' = ? AND ' . self::ID_USUARIO . '=?';
@@ -397,6 +411,7 @@ class INVENTARIO
         // Procesar todas las ids
         foreach ($arrayIds as $id) {
             $sentencia->execute(array($id, $idUsuario));
+            ConexionBD::obtenerInstancia()->obtenerBD()->commit();
         }
 
     }

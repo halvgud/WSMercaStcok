@@ -64,7 +64,7 @@ public class BGTAPI extends AsyncTask<String, String, JSONObject> {
         this.activity = activity;
         this.postparams = postparams;
         if (activity!= null)
-            asyncDialog = new ProgressDialog(activity);
+            asyncDialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
         this.FLAG_ASYNCDIALOG=flag_asyncdialog;
     }
     protected void onPreExecute() {

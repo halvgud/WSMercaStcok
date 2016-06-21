@@ -50,7 +50,7 @@ public class BGTRegistrar extends AsyncTask<String, String, JSONObject> {
         this.activity = activity;
         this.postparams = postparams;
         if (activity!= null)
-            asyncDialog = new ProgressDialog(activity);
+            asyncDialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
     }
     public void showToast(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();

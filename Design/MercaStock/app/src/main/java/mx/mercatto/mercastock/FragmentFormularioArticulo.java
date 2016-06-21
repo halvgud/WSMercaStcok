@@ -2,6 +2,7 @@ package mx.mercatto.mercastock;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -126,7 +128,7 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
         valor = (EditText) getActivity().findViewById(R.id.editText3);
         if (Configuracion.getConfirmacion_Mensaje_Gurdado().equals("TRUE")) {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getActivity());
-            dialogo1.setTitle("Aviso");
+            dialogo1.setTitle(Html.fromHtml("<font color='#000'>Aviso</font>"));
             dialogo1.setMessage("Se va a registrar la cantidad de \n" + valor.getText().toString() + "\n ¿Desea continuar?");
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
@@ -140,21 +142,16 @@ public class FragmentFormularioArticulo extends Fragment  implements View.OnClic
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-                    //doNothing();
-
                 }
             });
             AlertDialog dialogo=dialogo1.show();
             TextView messageView = (TextView)dialogo.findViewById(android.R.id.message);
             messageView.setGravity(Gravity.CENTER);
-            //}
         }
         else {
             aceptar(valor.getText().toString());
         }
-
     }
-
 
     public void aceptar(String valor) {
         try{

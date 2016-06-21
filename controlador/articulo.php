@@ -31,6 +31,8 @@ class ARTICULO
         }
         else if($peticion[0]=='actualizar'){
             return self::cambiarEstado();
+        }else if ($peticion[0] == 'impuesto') {
+            return self::seleccionar();
         }
         else{
             return self::obtenerArticulo();
@@ -41,8 +43,7 @@ class ARTICULO
     public static function obtenerArticulo()
     {
         try {
-                $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-
+            $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
             if(isset($post['cat_id'])&&isset($post['claveApi'])){
                 $comando = "SELECT a.art_id,mi.idInventario, a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO.",a.granel,a.clave FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
                 MI ON ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") inner join ms_usuario mu on (mu.claveApi='". $post['claveApi']."' AND mu.claveApi!='') INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
@@ -52,12 +53,9 @@ class ARTICULO
                 PARAMETRO='".self::PARAMETRO_FILTRO."')";
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
 
-
             $sentencia->execute();
             $resultado=$sentencia->fetchAll(PDO::FETCH_ASSOC);
-            // Ejecutar sentencia preparada
             if ($resultado>0) {
-
                 http_response_code(200);
                 return
                     [
@@ -78,49 +76,59 @@ class ARTICULO
     }
     public static function cambiarEstado()
     {
+        ConexionBD::obtenerInstancia()->_destructor();
         try {
+            ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-
             $claveApi2=$post['claveApi2'];
-                $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado =(SELECT distinct VALOR FROM MS_PARAMETRO WHERE PARAMETRO='ID_ESTADO_PROCESADO'),
+            $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado =(SELECT distinct VALOR FROM MS_PARAMETRO WHERE PARAMETRO='ID_ESTADO_PROCESADO'),
                 fechaRespuesta=NOW(), existenciaRespuesta='".$post['existenciaRespuesta']."' ,
                 existenciaEjecucion=(SELECT EXISTENCIA FROM ARTICULO WHERE art_id='".$post['art_id']."')
                 WHERE idInventario='".$post['idInventario']."'";
-                // Preparar sentencia
-                //return $comando;
-                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-                // Ligar idContacto e idUsuario<
-                //$sentencia->bindParam(1, $idTabla, PDO::PARAM_INT);a
-                //$sentencia->bindParam(2, $nombre, PDO::PARAM_INT);
-                //for ($i = 0 ;$i<100000000;$i++){
-
-
-                //}
-
-            // Ejecutar sentencia preparada
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
             if(!usuario::apiregistro($claveApi2)==null){
                if ($sentencia->execute()) {
-                    http_response_code(200);
+                   http_response_code(200);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                     return
                         [
                             "estado" => self::ESTADO_EXITO,
                             "datos" => $sentencia->rowCount()
                         ];
                 } else{
+                   ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
-/*
-                    if ($resultado) {
-                        return self::ESTADO_CREACION_EXITOSA;
-                    } else {
-                        return self::ESTADO_CREACION_FALLIDA;
-                    }*/
-                    }//
+                    }
 
                 }
                 else{
+                    ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
                      throw new ExcepcionApi(self::ESTADO_FALLA_DESCONOCIDA,
                         "Clave Api invalida",401);
                 }
+
+        } catch (PDOException $e) {
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
+            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+        }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
+        }
+    }
+    public static function seleccionar()
+    {
+        try {
+            $comando = "SELECT art_id,imp_id FROM articuloimpuesto limit 500;";
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            if ($sentencia->execute()) {
+                http_response_code(200);
+                return
+                    [
+                        "estado" => self::ESTADO_EXITO,
+                        "datos" => $sentencia->fetchAll(PDO::FETCH_ASSOC)
+                    ];
+            } else
+                throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
 
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
@@ -129,5 +137,4 @@ class ARTICULO
             ConexionBD::obtenerInstancia()->_destructor();
         }
     }
-
 }
