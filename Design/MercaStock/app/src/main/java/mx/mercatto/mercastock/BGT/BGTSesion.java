@@ -154,6 +154,35 @@ boolean bandera = true;
                     v.vibrate(300);
                     // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     */
+
+                    BGTCargarListadoCategoria.banderaTest=true;
+                    JSONObject datos = file_url.getJSONObject("datos");
+                    ClaveApi = datos.getString("claveApi");
+                    User = datos.getString("usuario");
+                    editor.putString("ClaveApi", ClaveApi);
+                    editor.putString("usuario", datos.getString("usuario"));
+                    //editor.putString("idSucursal",settings.getString("idSucursal",""));
+                    editor.putString("nombre", datos.getString("nombre"));
+                    editor.putString("idNivelAutorizacion",datos.getString("idNivelAutorizacion"));
+                    editor.putInt("controlusuario", Integer.parseInt(datos.getString("idNivelAutorizacion")));
+                    editor.putString("login", "true");
+                    editor.putString("claveGCM", Main.idRegistro);
+
+                    Main.idSesion=1;
+                    // Main.ClAp=Integer.parseInt(ClaveApi);
+                    editor.apply();
+                    Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(300);
+                    editor.putBoolean("FLAG_DESTROY",true);
+                    editor.apply();
+                    Intent intent = activity.getIntent();
+                    activity.finish();
+                    activity.startActivity(intent);
+
+                    FragmentCategoria fragment = new FragmentCategoria();
+                    FragmentManager fragmentManager = activity.getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    /*
                     BGTCargarListadoCategoria.banderaTest=true;
                     JSONObject datos = file_url.getJSONObject("datos");
                     ClaveApi = datos.getString("claveApi");
@@ -181,7 +210,7 @@ boolean bandera = true;
 
                     FragmentCategoria fragment = new FragmentCategoria();
                     FragmentManager fragmentManager = activity.getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();*/
                 }
                 break;
                 case 400:{

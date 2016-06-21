@@ -28,7 +28,7 @@ public class FragmentCategoria extends Fragment {
            // if (PushNotificationService.Xrray != null) {
           //      getActivity().setTitle("Lista de Categorias" + PushNotificationService.Xrray.get(0));
           //  } else {
-                getActivity().setTitle("Lista de Categorias"+Configuracion.settings.getString("idSucursal",null));
+                getActivity().setTitle("Lista de Categorias");
           //  }
 
             cargarListadoCategoria();

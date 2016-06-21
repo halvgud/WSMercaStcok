@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -15,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -92,16 +95,24 @@ boolean bandera=true;
             super.onPostExecute(file_url);
 
             if(bandera) {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+                //String auth_token_string = settings.getString("ClaveApi", ""*//*default value*//*);
+
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("ClaveApi",file_url.getString("datos"));
+                editor.apply();
+
                 cambiarPIN();
+
             }else{
                 FragmentConexionPerdida fragment = new FragmentConexionPerdida();
                 FragmentManager fragmentManager = activity.getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
             }
                }
-        /*catch (Exception e) {
-            throw e;
-        }*/
+        catch (JSONException e) {
+
+        }
         finally{
             if(activity!=null){
                 asyncDialog.dismiss();
@@ -116,10 +127,12 @@ boolean bandera=true;
             case 200: {
                 Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
                 showToast("Se ha guardado correctamente");
+
                 FragmentCategoria fragment = new FragmentCategoria();
                 FragmentManager fragmentManager = activity.getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 v.vibrate(300);
+
             }break;
             case 401: {
                 Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);

@@ -279,8 +279,7 @@
                         $claveApi = self::generarClaveApi();
                         
                         try {
-                            $post = json_decode(file_get_contents('php://input'),true);
-                            //return var_dump($post);
+                             //return var_dump($post);
                                 $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::CLAVE_API." ='".$claveApi."' WHERE idUsuario='".$resultado['idUsuario']."'";
                                 // Preparar sentencia
                                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
@@ -290,7 +289,8 @@
                                 return
                                     [
                                         "estado" => self::ESTADO_EXITO,
-                                        "datos" => $sentencia->rowCount()
+                                        "datos" => $sentencia->rowCount(),
+                                        "api"=>$claveApi
                                     ];
                             } else
                                 throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
@@ -511,9 +511,10 @@
                    $usuario = $post['usuario'];
                    $pin_viejo=$post['pin_viejo'];
                     $gcm=$post['gcm'];
+
             //$contrasena = $usuario['contrasena'];
-       
-            if (self::autenticar($usuario, $pin_viejo,$gcm)==TRUE) {
+       $apiNueva=self::autenticar($usuario, $pin_viejo,$gcm);
+            if ($apiNueva==TRUE) {
                 //$usuarioBD = self::obtenerUsuarioPorUsuario($correo);self::encriptarContrasena($pin_nuevo);
 
                  $comando = "UPDATE ".self::NOMBRE_TABLA." SET ".self::CONTRASENA." ='".self::encriptarContrasena($post['pin_nuevo'])."' WHERE usuario='".$post['usuario']."'";
@@ -525,7 +526,7 @@
                     return
                         [
                             "estado" => self::ESTADO_EXITO,
-                            "datos" => $sentencia->rowCount()
+                            "datos" => $apiNueva['api']
                         ];
                 } else
                     throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");

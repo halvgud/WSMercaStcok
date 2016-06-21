@@ -187,7 +187,7 @@ public class BGTConfigurarServidorSucursal extends AsyncTask<String, String, JSO
                             String dburl = c.getString("claveApi");
                             map.put("db", dburl);
                             map.put("idSucursal", id);
-                            _listaSucursal.add(new ListaSucursal(dburl, name.toUpperCase() + id));
+                            _listaSucursal.add(new ListaSucursal(dburl, name.toUpperCase()));
                             _Listado.add(map);
                         }
 

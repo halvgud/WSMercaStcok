@@ -47,7 +47,7 @@ public class Main extends AppCompatActivity
         controlUsuario=settings.getInt("controlusuario",-1);
             if (controlUsuario == -1) {
                 setContentView(R.layout.activity_main);
-            } else if (controlUsuario == 0)
+            } else if (controlUsuario == 1)
                 setContentView(R.layout.activity_main_logged);
             else
                 setContentView(R.layout.activity_main_logged_user);
