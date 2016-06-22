@@ -23,7 +23,10 @@
             }else if($peticion[0]=='venta'){
                 if(isset($peticion[1])&&$peticion[1]=='detalle'){
                     return self::seleccionarDetalleVenta();
-                }else{
+                }else if(isset($peticion[1])&&$peticion[1]=='tipoPago'){
+                    return self::ventaTipoPago();
+                }
+                else{
                 return self::seleccionarVenta();
                 }
             }
@@ -156,7 +159,7 @@
             $postrequest= json_decode(file_get_contents('php://input'));
             $comando = "SELECT v.ven_id,v.fecha,v.subtotal0,v.subtotal,v.descuento,v.total,v.cambio,v.letra,v.monSubtotal0,v.monSubtotal,v.monDescuento,v.monTotal,v.monCambio,v.monLetra,v.monAbr,v.monTipoCambio,v.comentario,v.decimales,v.porPeriodo,v.ventaPorAjuste,v.puntos,v.monedas,v.status,v.tic_id,v.not_id,v.rem_id,v.caj_id,v.mon_id,v.rcc_id,v.can_caj_id,v.can_rcc_id,v.vnd_id,ms.idSucursal
                         from venta v inner join ms_sucursal ms
-                        where v.ven_id>:ven_id limit 1000";
+                        where v.ven_id<:ven_id+1000";
             try {
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
                 $sentencia->bindParam("ven_id",$postrequest->data[0]->ven_id);
@@ -310,6 +313,39 @@
                     throw new ExcepcionApi(self::ESTADO_ERROR, "No se han encontrado resultados",202);
             } catch (PDOException $e) {
                 throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
+            }
+        }
+        public static function VentaTipoPago()
+        {
+            ConexionBD::obtenerInstancia()->_destructor();
+            try {
+                ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
+                $post = json_decode(file_get_contents('php://input'));
+                $ultimoId=$post->data[0]->ven_id;
+                $comando = "SELECT vtp.ven_id, vtp.tpa_id, vtp.total, vtp.monTotal,ms.idSucursal FROM ventatipopago vtp
+                inner join ms_sucursal ms on (ms.idEstado = '1')
+                WHERE ven_id>:ultimoId and ven_id<:ultimoId+500";
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                $sentencia->bindParam("ultimoId", $ultimoId);
+                $sentencia->execute();
+                $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+                if ($resultado > 0) {
+                    http_response_code(200);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->commit();
+                    return
+                        [
+                            "estado" => self::ESTADO_EXITO,
+                            "data" => $resultado
+                        ];
+                }else{
+
+                }
+            }catch (PDOException $e) {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
+                throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+            }
+            finally{
+                ConexionBD::obtenerInstancia()->_destructor();
             }
         }
     }
