@@ -11,18 +11,6 @@ class SUCURSAL
     const ESTADO_NO_ENCONTRADO = 104;
 
 
-    public static function get($peticion)
-    {
-
-        if (empty($peticion[0]))
-            return self::obtenerSucursal();
-        else if($peticion[0]=='sucursalHost'){
-            return self::obtenerSucursalHost();
-        }
-        else
-            http_response_code(404);
-
-    }
     public static function post($peticion)
     {
      if (empty($peticion[0])){
