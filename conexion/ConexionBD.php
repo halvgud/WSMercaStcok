@@ -5,9 +5,9 @@
 
 class ConexionBD
 {
-    static $NOMBRE_HOST ="192.168.1.185";// Nombre del host
+    static $NOMBRE_HOST ="mercattoserver";// Nombre del host
     static $USUARIO ="root"; // Nombre del usuario
-    static $CONTRASENA ="sysadmin"; // Constraseña
+    static $CONTRASENA ="javac"; // Constraseña
 
     static $DB_NOMBRE = "sicar"; // Nombre de la base de controladores
 
@@ -71,7 +71,7 @@ class ConexionBD
         return self::$pdo;
         }catch (mysqli_sql_exception $e)
         {
-            return json_encode(var_dump(($e)));
+            return json_encode($e);
         }
     }
 

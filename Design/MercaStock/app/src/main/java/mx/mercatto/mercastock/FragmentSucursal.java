@@ -33,16 +33,12 @@ import mx.mercatto.mercastock.BGT.BGTConfigurarServidorSucursal;
 
 public class FragmentSucursal extends Fragment implements View.OnClickListener  {
     public static  String ip="";
-    public static JSONObject js;
     Spinner listaSucSpinner;
     EditText txtIp;
     InputMethodManager imm;
     View rootView;
     Button guardar;
     Button probar;
-    ArrayList<ListaSucursal> _listaSucursal2 = new ArrayList<>();
-    Spinner listaSucSpinner2;
-    public static String hostSeleccionada="";
     public FragmentSucursal() {
 
     }

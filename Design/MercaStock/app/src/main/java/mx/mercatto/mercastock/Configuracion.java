@@ -33,7 +33,7 @@ public class Configuracion {
     public static String cat;
     public static Boolean Finalizado=false;
 
-    private static String _ApiUrl="http://192.168.1.185/";
+    private static String _ApiUrl="http://192.168.0.2/";
     private static String _Db="/wsMercaStock/sicar";
 
     public  static String getApiUrl(){ return  _ApiUrl;}
@@ -304,7 +304,7 @@ public class Configuracion {
     public  static  SharedPreferences settings=null; //= PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
     public  static  SharedPreferences.Editor editor;// = settings.edit();
 
-    private static String _ApiUrlConfiguracion="parametro/accion/CONFIGURACION_PRUEBA";
+    private static String _ApiUrlConfiguracion="parametro/accion/CONFIGURACION_TERMINAL";
     public static String getApiUrlConfiguracion(){
         if (!settings.getString("ip", "default").equals("default")) {
             if (_ApiUrlConfiguracion.contains("http://")) {
@@ -344,7 +344,7 @@ public class Configuracion {
         setApiUrlRegistro("usuario/registro");
         setApiUrlArticulo("articulo/obtener");
         setApiUrlCategoria("categoria");
-        setApiUrlConfiguracion("parametro/accion/CONFIGURACION_PRUEBA");
+        setApiUrlConfiguracion("parametro/accion/CONFIGURACION_TERMINAL");
         setApiUrlLogIn("usuario/login");
         setApiUrlRevisarApi("usuario/api");
     }

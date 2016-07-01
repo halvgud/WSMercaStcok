@@ -101,7 +101,6 @@ class SUCURSAL
     public static function login()
     {
          $post = json_decode(file_get_contents('php://input'),true);
-       // var_dump($post);
         if($post['usuario']=="admin"&& $post['password']=="sysadmin11"){
             $comando = "select idSucursal,usuario,password from ms_sucursal where idSucursal=:idSucursal";
             try {

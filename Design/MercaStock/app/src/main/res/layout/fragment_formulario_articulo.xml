@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="58dp"
         android:shadowColor="#9f3032"
-        android:textColor="#fff"
+        android:textColor="@color/blanco"
         android:shadowDx="0" android:shadowDy="0" android:shadowRadius="10"/>
 
     <Button

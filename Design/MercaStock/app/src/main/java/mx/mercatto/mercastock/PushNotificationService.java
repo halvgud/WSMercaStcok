@@ -39,7 +39,6 @@ public class PushNotificationService extends GcmListenerService {
             if (!settings.getString("db","").equals(data.getString("url"))) {
                    // idSucursal="1";
                     editor.putInt("controlusuario", -1);
-                    editor.putInt("controlusuario",-1);
                     editor.putString("usuario", "");
                     editor.putString("ClaveApi", "");
                     Main.idSesion=0;
@@ -50,9 +49,6 @@ public class PushNotificationService extends GcmListenerService {
 
             }
             String message = data.getString("message");
-            //createNotification(mTitle, push_msg);
-            // Configuracion.cat=data.getString("data");
-            //String x="15,15";
             Log.d("data received",data.toString());
             Sucursal = data.getString("descripcionSucursal");
             idSucursal=data.getString("idSucursal");

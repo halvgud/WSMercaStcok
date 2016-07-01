@@ -26,21 +26,38 @@ class CATEGORIA
     public static function obtenerCategoria()
     {
         try {
-            $post=json_decode(file_get_contents('php://input'),true);
-            $comando = "select * from (SELECT a.".self::ID_CATEGORIA.", d.".self::DESCRIPCION.",sum(case when existenciaRespuesta>0 then 1 else 0 end)
-            as procesado,count(*) AS CANTIDAD FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO." MI ON
-            ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
-             inner join ms_usuario mu on (mu.claveApi='". $post['claveApi']."' AND mu.claveApi!='') group by d.nombre) tt where tt.procesado<tt.cantidad;";
+            $post = json_decode(file_get_contents('php://input'), true);
+            /*$comando = "select * from (SELECT a.cat_id, d.nombre,sum(case when existenciaRespuesta>0 then 1 else 0 end)
+            as procesado,count(*) AS CANTIDAD FROM articulo A INNER JOIN ms_inventario MI ON
+            ( MI.art_id=A.art_id) INNER JOIN categoria D ON ( D.cat_id=A.cat_id)
+             inner join ms_usuario mu on (mu.claveApi=:claveApi AND mu.claveApi!='') group by d.nombre) tt where tt.procesado<tt.cantidad;";*/
+            $comando = "SELECT * FROM (
+                            SELECT a.cat_id, d.nombre,sum(CASE WHEN mi.idEstado IN('P','E') THEN 1 WHEN mi.idEstado='A' THEN 0 END)
+                            AS procesado,sum(1) AS CANTIDAD
+                            FROM articulo a
+                            INNER JOIN ms_inventario mi ON (mi.art_id=a.art_id)
+                            INNER JOIN categoria d ON (d.cat_id = a.cat_id)
+                            INNER JOIN ms_usuario mu ON (mu.claveApi=:claveApi AND mu.claveApi!='')
+                            GROUP BY d.nombre) tt WHERE tt.procesado<tt.cantidad;";
             $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-            if ($sentencia->execute()) {
+            $sentencia->bindParam("claveApi", $post['claveApi']);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if ($resultado) {
                 http_response_code(200);
                 return
                     [
                         "estado" => self::ESTADO_EXITO,
-                        "datos" => $sentencia->fetchAll(PDO::FETCH_ASSOC)
+                        "datos" => $resultado
                     ];
-            } else
-                throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error");
+            } else {
+                http_response_code(202);
+                return
+                    [
+                        "estado" => "vacio",
+                        "datos" => $resultado
+                    ];
+            }
         } catch (PDOException $e) {
             throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
         }

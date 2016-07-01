@@ -149,7 +149,7 @@ class importar{
 
         $comando = "INSERT INTO ms_inventario (idInventario,art_id,existenciaSolicitud,existenciaRespuesta,idUsuario,
                       fechaSolicitud,fechaRespuesta,existenciaEjecucion,idEstado)
-                      VALUES (:idInventario,:art_id,:existenciaSolicitud,:existenciaRespuesta,:idUsuario,:fechaSolicitud,
+                      VALUES (:idInventario,:art_id,:existenciaSolicitud,:existenciaRespuesta,:idUsuario,now(),
                       :fechaRespuesta,:existenciaEjecucion,:idEstado)
                       on duplicate key update art_id=:art_id;";
         $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
@@ -162,7 +162,7 @@ class importar{
             $existenciaSolicitud = self::obtenerExistencia($art_id);
             $existenciaRespuesta = $jsonRow->existenciaRespuesta;
             $idUsuario = $jsonRow->idUsuario;
-            $fechaSolicitud = $jsonRow->fechaSolicitud;
+            //$fechaSolicitud = $jsonRow->fechaSolicitud;
             $fechaRespuesta = $jsonRow->fechaRespuesta;
             $existenciaEjecucion = $jsonRow->existenciaEjecucion;
             $idEstado = $jsonRow->idEstado;
@@ -170,7 +170,7 @@ class importar{
             $sentencia->bindParam("existenciaSolicitud", $existenciaSolicitud);
             $sentencia->bindParam("existenciaRespuesta", $existenciaRespuesta);
             $sentencia->bindParam("idUsuario", $idUsuario);
-            $sentencia->bindParam("fechaSolicitud", $fechaSolicitud);
+            //$sentencia->bindParam("fechaSolicitud", $fechaSolicitud);
             $sentencia->bindParam("fechaRespuesta", $fechaRespuesta);
             $sentencia->bindParam("existenciaEjecucion", $existenciaEjecucion);
             $sentencia->bindParam("idEstado", $idEstado);

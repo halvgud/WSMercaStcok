@@ -6,6 +6,6 @@
     <color name="blanco">#fff</color><!-- Color de los textos en los los fragments y en los asyn dialog -->
     <color name="background_material_light">#505355</color><!-- Color del fondo del navbar -->
     <color name="foreground_material_light">#deffffff</color>
-    <color name="black">#fff</color>
+    <color name="black">#505355</color>
     <color name="primary_text_default_material_light">#deffffff</color><!-- Color editText-->
 </resources>

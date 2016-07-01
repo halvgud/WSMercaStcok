@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp" android:textAlignment="center"
         android:background="#3c3f41"
-        android:textColor="#fff">
+        android:textColor="@color/blanco">
     </TextView>
 
     <TextView

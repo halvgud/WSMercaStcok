@@ -45,14 +45,19 @@ class ARTICULO
         try {
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
             if(isset($post['cat_id'])&&isset($post['claveApi'])){
-                $comando = "SELECT a.art_id,mi.idInventario, a.".self::ID_CATEGORIA.", a.".self::DESCRIPCION. " AS NombreArticulo, a.".self::EXISTENCIA." AS Existencia, U.".self::UNIDAD." AS Unidad, MI.".self::ID_ESTADO.",a.granel,a.clave FROM " . self::TABLA_ARTICULO . " A INNER JOIN ".self::TABLA_INVENTARIO."
-                MI ON ( MI.".self::ID_ARTICULO."=A.".self::ID_ARTICULO.") inner join ms_usuario mu on (mu.claveApi='". $post['claveApi']."' AND mu.claveApi!='') INNER JOIN ".self::TABLA_CATEGORIA." D ON ( D.".self::ID_CATEGORIA."=A.".self::ID_CATEGORIA.")
-                INNER JOIN Unidad U ON (a.UnidadCompra=U.Uni_ID) WHERE a.".self::ID_CATEGORIA."=".$post['cat_id']." AND a.".self::SERVICIO."=0 AND ".self::EXISTENCIA." >0
-                AND MI.".self::ID_ESTADO." IN (SELECT ".self::VALOR_FILTRO." 
-                FROM ".self::TABLA_PARAMETRO." WHERE ACCION='".self::ACCION_FILTRO."' AND
-                PARAMETRO='".self::PARAMETRO_FILTRO."')";
+                $comando = "SELECT a.art_id,mi.idInventario, a.cat_id, a.descripcion AS NombreArticulo, a.existencia
+                 AS Existencia, U.nombre AS Unidad, MI.idEstado,a.granel,a.clave
+                 FROM articulo A INNER JOIN ms_inventario MI ON ( MI.art_id=A.art_id)
+                 inner join ms_usuario mu on (mu.claveApi=:claveApi AND mu.claveApi!='')
+                 INNER JOIN categoria D ON ( D.cat_id=A.cat_id)
+                INNER JOIN Unidad U ON (a.UnidadCompra=U.Uni_ID)
+                 WHERE a.cat_id=:cat_id AND a.servicio=0
+                AND MI.idEstado IN (SELECT valor
+                FROM ms_parametro WHERE ACCION='CONFIGURACION_ARTICULO' AND
+                PARAMETRO='FILTRO')";
                 $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
-
+                $sentencia->bindParam("claveApi",$post['claveApi']);
+                $sentencia->bindParam("cat_id",$post['cat_id']);
             $sentencia->execute();
             $resultado=$sentencia->fetchAll(PDO::FETCH_ASSOC);
             if ($resultado>0) {
