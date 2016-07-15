@@ -25,6 +25,8 @@ class exportar
                 return self::seleccionarDetalleVenta();
             }else if(isset($peticion[1])&&$peticion[1]=='tipoPago'){
                 return self::ventaTipoPago();
+            }else if (isset($peticion[1])&&$peticion[1]=='cancelacion'){
+                return self::VentaCancelacion();
             }
             else{
                 return self::seleccionarVenta();
@@ -329,7 +331,35 @@ class exportar
             $sentencia->bindParam("ultimoId", $ultimoId);
             $sentencia->execute();
             $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-            if ($resultado > 0) {
+            if ($resultado) {
+                http_response_code(200);
+                ConexionBD::obtenerInstancia()->obtenerBD()->commit();
+                return
+                    [
+                        "estado" => self::ESTADO_EXITO,
+                        "data" => $resultado
+                    ];
+            }else{
+                throw new ExcepcionApi(self::ESTADO_ERROR, "No se han encontrado resultados",202);
+            }
+        }catch (PDOException $e) {
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
+            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage());
+        }
+        finally{
+            ConexionBD::obtenerInstancia()->_destructor();
+        }
+    }
+
+    public static function VentaCancelacion(){
+        try {
+            ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
+            $comando = "SELECT ven_id,ms.idSucursal from venta v
+                        inner join ms_sucursal ms on (ms.idEstado='1') where status!='1'";
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            $sentencia->execute();
+            $resultado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            if ($resultado) {
                 http_response_code(200);
                 ConexionBD::obtenerInstancia()->obtenerBD()->commit();
                 return
