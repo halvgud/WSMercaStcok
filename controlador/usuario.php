@@ -219,6 +219,7 @@
                     http_response_code(200);
                     $respuesta["nombre"] = $usuarioBD["nombre"];
                     $respuesta["usuario"] = $usuarioBD["usuario"];
+                    $respuesta["idUsuario"] = $usuarioBD["idUsuario"];
                     $respuesta["claveApi"] = $usuarioBD["claveApi"];
                     $respuesta['idNivelAutorizacion']=$usuarioBD["idNivelAutorizacion"];
                     return ["estado" => 1, "datos" => $respuesta];
@@ -337,7 +338,7 @@
     
         public static function obtenerUsuarioPorUsuario($correo)
         {
-            $comando = "SELECT " .
+            $comando = "SELECT idUsuario," .
                 self::NOMBRE . "," .
                 self::CONTRASENA . "," .
                 self::USUARIO . "," .

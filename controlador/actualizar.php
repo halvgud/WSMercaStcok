@@ -28,8 +28,7 @@ class ACTUALIZAR
         try {
             ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
             $post = json_decode(file_get_contents('php://input'),true);//ID_CATEGORIA
-            $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado ='X
-            ' WHERE idInventario='".$post['idInventario']."'";
+            $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado ='X' WHERE idInventario='".$post['idInventario']."'";
             $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
             if ($sentencia->execute()) {
                 http_response_code(200);

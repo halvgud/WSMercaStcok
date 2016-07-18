@@ -88,7 +88,8 @@ class ARTICULO
             $claveApi2=$post['claveApi2'];
             $comando = "UPDATE ".self::TABLA_INVENTARIO." SET idEstado =(SELECT distinct VALOR FROM MS_PARAMETRO WHERE PARAMETRO='ID_ESTADO_PROCESADO'),
                 fechaRespuesta=NOW(), existenciaRespuesta='".$post['existenciaRespuesta']."' ,
-                existenciaEjecucion=(SELECT EXISTENCIA FROM ARTICULO WHERE art_id='".$post['art_id']."')
+                existenciaEjecucion=(SELECT EXISTENCIA FROM ARTICULO WHERE art_id='".$post['art_id']."'),
+                idUsuario='".$post['idUsuario']."'
                 WHERE idInventario='".$post['idInventario']."'";
             $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
             if(!usuario::apiregistro($claveApi2)==null){
