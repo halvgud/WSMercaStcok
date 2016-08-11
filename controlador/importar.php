@@ -25,8 +25,10 @@ class importar{
         } else if ($peticion[0] == 'usuario') {
             return self::usuario();
         } else if ($peticion[0] == 'inventario') {
-        return self::inventario();
-    }
+            return self::inventario();
+        }else if ($peticion[0]=='ajuste'){
+            return self::Ajuste();
+        }
         else {
             throw new ExcepcionApi(404, "Url mal formada", 404);
         }
@@ -113,28 +115,28 @@ class importar{
                 if($resultado){
                     http_response_code(200);
                     ConexionBD::obtenerInstancia()->obtenerBD()->commit();
-                     return
-                                [
-                                    "estado" => 200,
-                                    "success" => "",
-                                    "data" => $resultado
-                                ];
+                    return
+                        [
+                            "estado" => 200,
+                            "success" => "",
+                            "data" => $resultado
+                        ];
 
-                        } else {
-                            http_response_code(400);
+                } else {
+                    http_response_code(400);
                     ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
-                            return
-                                [
-                                    "estado" => "warning",
-                                    "mensaje" => "",
-                                    "data" => $resultado
-                                ];
+                    return
+                        [
+                            "estado" => "warning",
+                            "mensaje" => "",
+                            "data" => $resultado
+                        ];
 
-                          }//else
-                }else {
+                }//else
+            }else {
                 ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
-                    throw new ExcepcionApi(401, "parametro data no recibido", 401);
-                }
+                throw new ExcepcionApi(401, "parametro data no recibido", 401);
+            }
         }catch(PDOException $e){
             ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
             $codigoDeError=$e->getCode();
@@ -203,6 +205,83 @@ class importar{
 
         } catch (PDOException $e) {
             throw new ExcepcionApi(402, $e->getMessage(), 402);
+        }
+    }
+    public static function Ajuste(){
+        $postrequest = json_decode(file_get_contents('php://input'));
+        ConexionBD::obtenerInstancia()->_destructor();
+        $resultado=false;
+        $comando = "insert into ms_ajuste(idAjuste,
+                                          idInventario,
+                                          fecha,
+                                          idUsuario,
+                                          clave,
+                                          precioCompra,
+                                          factor,
+                                          cantidadAnterior,
+                                          cantidadAjuste,
+                                          idEstado)
+                                          values(
+                                          :idAjuste,
+                                          :idInventario,
+                                          now(),
+                                          :idUsuario,
+                                          :clave,
+                                          :precioCompra,
+                                          :factor,
+                                          :cantidadAnterior,
+                                          :cantidadAjuste,
+                                          :idEstado
+                                          )";
+
+        try{
+            ConexionBD::obtenerInstancia()->obtenerBD()->beginTransaction();
+            $contador=0;
+            if(isset($postrequest->data)){
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                foreach ($postrequest->data as $post) {
+                    $sentencia->bindParam("idAjuste", $post->idAjuste);
+                    $sentencia->bindParam("idInventario", $post->idInventario);
+                    $sentencia->bindParam("idUsuario", $post->idUsuario);
+                    $sentencia->bindParam("clave", $post->clave);
+                    $sentencia->bindParam("precioCompra", $post->precioCompra);
+                    $sentencia->bindParam("factor", $post->factor);
+                    $sentencia->bindParam("cantidadAnterior", $post->cantidadAnterior);
+                    $sentencia->bindParam("cantidadAjuste", $post->cantidadAjuste);
+                    $sentencia->bindParam("idEstado", $post->idEstado);
+                    $resultado = $sentencia -> execute();
+                    $contador++;
+                }
+                if($resultado){
+                    http_response_code(200);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->commit();
+                    return
+                        [
+                            "estado" => 200,
+                            "success" => "",
+                            "data" => $contador
+                        ];
+
+                } else {
+                    http_response_code(202);
+                    ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
+                    return
+                        [
+                            "estado" => "warning",
+                            "mensaje" => "",
+                            "data" => $resultado
+                        ];
+
+                }//else
+            }else {
+                ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
+                throw new ExcepcionApi(401, "parametro data no recibido", 401);
+            }
+        }catch(PDOException $e){
+            ConexionBD::obtenerInstancia()->obtenerBD()->rollBack();
+            $codigoDeError=$e->getCode();
+            $error =self::traducirMensaje($codigoDeError,$e);
+            throw new ExcepcionApi($e->getCode(), $error, 401);
         }
     }
 }
