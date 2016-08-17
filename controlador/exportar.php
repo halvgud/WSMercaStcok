@@ -45,6 +45,13 @@ class exportar
                 return self::exportarInventarioWS();
             }
         }
+        else if($peticion[0]=='proveedor'){
+            if(isset($peticion[1])&&$peticion[1]=='articulo'){
+                return self::ProveedorArticulo();
+            }else{
+                return self::Proveedor();
+            }
+        }
         else {
             throw new ExcepcionApi(self::ESTADO_URL_INCORRECTA, "Url mal formada", 400);
         }
@@ -376,6 +383,52 @@ class exportar
         }
         finally{
             ConexionBD::obtenerInstancia()->_destructor();
+        }
+    }
+    public static function ProveedorArticulo(){
+        $postrequest= json_decode(file_get_contents('php://input'));
+        $comando = "SELECT pa.*, ms.idSucursal FROM proveedorarticulo pa INNER JOIN ms_sucursal ms on (ms.idEstado=1)";
+        try {
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            $sentencia->bindParam("idSucursal",$postrequest->idSucursal);
+            if ($sentencia->execute()) {
+                http_response_code(200);
+                return
+                    [
+                        $arreglo = [
+                            "estado" => 200,
+                            "success" => "Se cargo con éxito los articulos por proveedor",
+                            "data" => $sentencia->FetchAll(PDO::FETCH_ASSOC)
+                        ]
+                    ];
+            } else{
+                throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error",202);
+            }
+
+        } catch (PDOException $e) {
+            ConexionBD::obtenerInstancia()->_destructor();
+            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
+        }
+    }
+    public static function Proveedor(){
+        $comando = "SELECT p.*, ms.idSucursal FROM proveedor p INNER JOIN ms_sucursal ms on (ms.idEstado=1)";
+
+        try {
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            if ($sentencia->execute()) {
+                http_response_code(200);
+                return
+                    [
+                        $arreglo = [
+                            "estado" => 200,
+                            "success" => "Se cargo con éxito los proveedores",
+                            "data" => $sentencia->FetchAll(PDO::FETCH_ASSOC)
+                        ]
+                    ];
+            } else
+                throw new ExcepcionApi(self::ESTADO_ERROR, "Se ha producido un error",202);
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(self::ESTADO_ERROR_BD, $e->getMessage(), 401);
         }
     }
 }

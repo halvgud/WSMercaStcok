@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="labelUsuario">USUARIO</string>
-    <string name="labelPass">CONTRASEÑA</string>
-    <string name="buttonIniciarSesion">Iniciar Sesión</string>
-</resources>
